@@ -1,30 +1,44 @@
+<nav class="ui container">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-navbar p-3 ">
-
-    <a class="navbar-brand" href=<?php echo $PRINCIPAL;?> style="display:flex; flex-direction:row;">
-
-        <?php $img = '
-                <div class="marca">
-                    <h1>Página</h1>
-                    <span>by grupo 12</span>   
-                </div>
-            ';
-        echo $img;
-        ?>
-       
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navegacion" aria-controls="navegacion" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon "></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navegacion">
     <?php
-        echo $menu_dinamico;
+    if ($rol >= 1) {
     ?>
-    </div>
 
-    <?php 
-        echo $navegacionDerecha;
+        <div class="sixteen wide column">
+
+            <div class="ui menu">
+                <a class="browse item">
+                    Browse
+                    <i class="dropdown icon"></i>
+                </a>
+                <?php
+                mostrarPopup($productos);
+                ?>
+                <a class="item">
+                    <i class="cart icon"></i>
+                    Mi Carrito
+                </a>
+                <a href="infoUsuario.php" class="item">
+                    <i class="user icon"></i>
+                    Cuenta
+                </a>
+                <a href="cerrarSesion.php" class="item">
+
+                    <i class="sign out alternate icon"></i>
+                    Cerrar Sesion
+                </a>
+                <?php if ($rol == 2) {
+                    echo '<a href="menu/menu_list.php" class="item">
+        <i class="user secret icon"></i>
+        Modulo Administracion
+    </a>';
+                } ?>
+            </div>
+        </div>
+
+    <?php
+    }
     ?>
+
 
 </nav>

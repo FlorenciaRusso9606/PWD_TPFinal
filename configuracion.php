@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=utf-8');
 header("Cache-Control: no-cache, must-revalidate");
 
 // Configuración de la aplicación
-$PROYECTO = 'TPS/TpFinalRo/TpFinal';
+$PROYECTO = 'Proyectos/PWD_TPFinal';
 $ROOT = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
 
 $_SESSION['ROOT'] = $ROOT;
@@ -18,7 +18,7 @@ $LOGIN = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/login.php";
 $PRINCIPAL = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/index.php";
 $RUTAVISTA = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/";
 $REGISTRARSE = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/registrarse.php";
-
+$RUTANAV = $ROOT . 'Estructura/navbar.php';
 $rutalogo = "./img/";
 
 // Variables de entorno
@@ -26,6 +26,3 @@ $_SERVER['LOGIN'] = $LOGIN;
 $_SERVER['PRINCIPAL'] = $PRINCIPAL;
 $_SERVER['REGISTRARSE'] = $REGISTRARSE;
 $_SERVER['RUTAVISTA'] = $RUTAVISTA;
-
-
-
