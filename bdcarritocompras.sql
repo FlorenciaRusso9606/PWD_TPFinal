@@ -132,6 +132,14 @@ CREATE TABLE `producto` (
   `procantstock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+INSERT INTO `producto` (`pronombre`, `prodetalle`, `procantstock`) VALUES
+('Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 50),
+('Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 30),
+('1984', 'Una novela escrita por el autor británico George Orwell.', 40),
+('El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60),
+('Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20);
+
 -- --------------------------------------------------------
 
 --

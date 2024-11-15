@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    // alert("Hola");
     $('#loginForm').on('submit', function (e) {
         e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
 
@@ -18,7 +19,11 @@ $(document).ready(function () {
             data: formData,
             success: function (response) {
                 // Manejar la respuesta del servidor
-                $('#mensaje').html(response);
+                if (response.includes("true")) {
+                    window.location.href =  
+                } else {
+                    $('#mensaje').html('<p>Usuario o contraseña incorrectos</p>');
+                }
             },
             error: function (xhr, status, error) {
                 // Manejar errores
