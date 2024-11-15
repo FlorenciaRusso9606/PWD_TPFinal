@@ -28,6 +28,9 @@ footer {
 .bg-navbar {
   background: rgba(14, 14, 15, 0.473);
 }
+a{
+    text-decoration: none;
+}
   
   
     
