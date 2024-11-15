@@ -127,18 +127,19 @@ CREATE TABLE `menurol` (
 
 CREATE TABLE `producto` (
   `idproducto` bigint(20) NOT NULL,
-  `pronombre` int(11) NOT NULL,
+  `pronombre` varchar(512) NOT NULL,
   `prodetalle` varchar(512) NOT NULL,
-  `procantstock` int(11) NOT NULL
+  `procantstock` int(11) NOT NULL,
+  `proprecio` DECIMAL(10, 2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-INSERT INTO `producto` (`pronombre`, `prodetalle`, `procantstock`) VALUES
-('Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 50),
-('Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 30),
-('1984', 'Una novela escrita por el autor británico George Orwell.', 40),
-('El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60),
-('Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20);
+INSERT INTO `producto` (`pronombre`, `prodetalle`, `procantstock`, `proprecio`) VALUES
+('Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 50, 15000.00),
+('Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 30, 12000.00),
+('1984', 'Una novela escrita por el autor británico George Orwell.', 40, 8000.00),
+('El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60, 9000.00),
+('Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20, 8500.00);
 
 -- --------------------------------------------------------
 
@@ -152,7 +153,11 @@ CREATE TABLE `rol` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
-
+-- Insertar roles en la tabla `rol`
+INSERT INTO rol (idrol, roldescripcion) VALUES
+(1, 'Administrador'),
+(2, 'Depósito'),
+(3, 'Cliente');
 --
 -- Estructura de tabla para la tabla `usuario`
 --
@@ -165,6 +170,10 @@ CREATE TABLE `usuario` (
   `usdeshabilitado` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO usuario (idusuario, usnombre, uspass, usmail, usdeshabilitado) VALUES
+(1, 'admin', 'adminpass', 'admin@example.com', NULL),
+(2, 'deposito', 'depositopass', 'deposito@example.com', NULL),
+(3, 'cliente', 'clientepass', 'cliente@example.com', NULL);
 -- --------------------------------------------------------
 
 --
@@ -176,6 +185,11 @@ CREATE TABLE `usuariorol` (
   `idrol` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Insertar datos en la tabla `usuariorol`
+INSERT INTO usuariorol (idusuario, idrol) VALUES
+(1, 1), -- El usuario 'admin' tiene el rol 'Administrador'
+(2, 2), -- El usuario 'deposito' tiene el rol 'Depósito'
+(3, 3); -- El usuario 'cliente' tiene el rol 'Cliente'
 --
 -- Índices para tablas volcadas
 --
