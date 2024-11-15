@@ -52,12 +52,8 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
                 </div>
                 <?php if ($producto[0]->getProCantStock() > 0) { ?>
                     <form action="carritoCompra.php" method="POST">
-<<<<<<< HEAD
                         <input type="number" class="cantidad" name="cantidad">
                         <input type="hidden" class="idproducto" name="idproducto" value="<?= $producto[0]->getIdProducto(); ?>">
-=======
-                        <input type="number" class="hide" value="<?= $producto[0]->getIdProducto(); ?>" name="idproducto">
->>>>>>> aae3f5bf79df3e4050ec1358ef362c1f0842dccd
                         <button type="submit" <?php if (!$session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
                     </form>
                 <?php } ?>
