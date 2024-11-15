@@ -46,13 +46,13 @@ $arrayProductos = $objProducto->buscar(NULL);
                 <p class='fw-bold text-danger'>Producto sin stock</span></p>
               
 
-                <!--<p class="text-nowrap">
-                  <span class='text-muted text-decoration-line-through'>$<?=  //$producto->getProPrecio()  ?></span>
+                <p class="text-nowrap">
+                  <span class='text-muted text-decoration-line-through'>$<?=  $producto->getProPrecio()  ?></span>
             
-                </p>!-->
+                </p>
 
               <?php } else { ?>
-                <p class='fs-4'>$<?= /* $producto->getProPrecio()  */?> </p>
+                <p class='fs-4'>$<?= $producto->getProPrecio()  ?> </p>
               <?php } ?>
 
               <?php if ($rolActual == 2) { ?>
@@ -62,7 +62,7 @@ $arrayProductos = $objProducto->buscar(NULL);
               <?php } ?>
 
             </div>
-      <?php }?>
+      <?php }}?>
   </div>
 
 </div>

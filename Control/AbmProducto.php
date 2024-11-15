@@ -29,9 +29,9 @@ class AbmProducto {
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('idproducto',$param) and array_key_exists('pronombre',$param) and array_key_exists('prodetalle',$param) and array_key_exists('precio',$param) and array_key_exists('procantstock',$param)){
+        if( array_key_exists('idproducto',$param) and array_key_exists('pronombre',$param) and array_key_exists('prodetalle',$param) and array_key_exists('precio',$param) and array_key_exists('procantstock',$param) and array_key_exists('proprecio',$param)){
             $obj = new Producto();
-            $obj->cargar($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precio'], $param['procantstock']);
+            $obj->cargar($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precio'], $param['procantstock'], $param['proprecio']);
         }
         return $obj;
     }
@@ -46,7 +46,7 @@ class AbmProducto {
         
         if( isset($param['idproducto']) ){
             $obj = new Producto();
-            $obj->cargar($param['idproducto'], null, null, null, null);
+            $obj->cargar($param['idproducto'], null, null, null, null, null);
         }
         return $obj;
     }
@@ -130,6 +130,8 @@ class AbmProducto {
                  $where.=" and prodetalle ='".$param['prodetalle']."'";
             if  (isset($param['procantstock']))
                  $where.=" and procantstock ='".$param['procantstock']."'";
+                 if  (isset($param['proprecio']))
+                 $where.=" and proprecio ='".$param['proprecio']."'";    
         }
         $obj = new Producto();
         $arreglo = $obj->listar($where);
