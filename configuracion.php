@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=utf-8');
 header("Cache-Control: no-cache, must-revalidate");
 
 // Configuración de la aplicación
-$PROYECTO = 'Proyectos/PWD_TPFinal';
+$PROYECTO = '/TPS/PWD_TPFinal/PWD_TPFinal';
 $ROOT = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
 
 $_SESSION['ROOT'] = $ROOT;

@@ -1,8 +1,13 @@
-
+body {
+	display: grid;
+	min-height: 100dvh;
+	grid-template-rows: auto 1fr auto;
+	background-color:azure;
+}
 
 
   
-  html, body {
+ /*  html, body {
     height: 100%;
    margin: 0;
 
@@ -29,6 +34,6 @@ footer {
 .bg-navbar {
   background: rgba(14, 14, 15, 0.473);
 }
- 
+  */
   
     

@@ -58,6 +58,20 @@ class Session {
         return $_SESSION['idUsuario'] ?? null;
     }
 
+    
+    /**
+     * Devuelve el ID de la compra
+     * @return mixed
+     */
+    public function getCompra() {
+        return $_SESSION['idUsuario'] ?? null;
+    }
+
+ 
+    public function setCompra($id){
+        $_SESSION['idCompra'] =$id;
+    }
+
     /**
      * Devuelve el rol del usuario logueado
      * @return mixed

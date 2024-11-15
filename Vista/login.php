@@ -50,11 +50,11 @@ if (isset($data["error"])) {
     </div>
 
 <script>
-        function encriptarPassword() {
+       /* function encriptarPassword() {
             var passwordField = document.getElementById('password');
             var hashedPasswordField = document.getElementById('hashedPassword');
             hashedPasswordField.value = hex_md5(passwordField.value);
             passwordField.value = ''; // Clear the visible password field
-        }
+        }*/
     </script>
     <?php include_once "../Estructura/footer.php";?>

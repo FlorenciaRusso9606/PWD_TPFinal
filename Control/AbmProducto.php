@@ -141,18 +141,14 @@ class AbmProducto {
      /**
      * Verifica si la cantidad enviada es mayor o igual a la cantidad de stock del producto
      */
-    public function verificarStock($idProducto, $cantidad){
+    public function verificarStock($data){
         $objProducto = new abmProducto();
-        $producto = $objProducto->buscar(array('idproducto' => $idProducto));
-        if(isset($producto[0]) && $producto[0]->getProCantStock() >= $cantidad){
-            return true;
-        }else{
-            return false;
+        $producto = $objProducto->buscar($data);
+        if(isset($producto[0])){
+            $cantidad = $producto[0]->getProCantStock();
         }
+        return $cantidad;
     }
-
-
- 
   
 
 
