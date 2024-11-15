@@ -5,6 +5,13 @@ $session = new Session;
 
 $data = data_submitted();
 
+$validado = $session->validar();
+if($validado){
+    echo "si esta";
+}else{
+    echo "no está";
+}
+
 $title = (array_key_exists("nombrelibro", $data)) ? $data["nombrelibro"] : "Libro";
 
 $controlProducto = new AbmProducto();
@@ -15,11 +22,11 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
     $producto = $controlProducto->buscar($param);
 
     $detallesPro = $producto[0]->getProDetalle();
-    $dirImg = "img/Productos/" . $producto[0]->getProPrecio() . ".jpg";
+    $dirImg = "img/Productos/" . $producto[0]->getIdProducto() . ".jpg";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<?php include_once "../Estructura/header.php";?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <?php include_once "../Estructura/header.php"; ?>
     <div id="contenido-principal" class="container mt-5 d-flex border">
         <div class="w-100 m-3">
             <div id="producto" class="w-75 me-5">
@@ -45,8 +52,9 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
                 </div>
                 <?php if ($producto[0]->getProCantStock() > 0) { ?>
                     <form action="carritoCompra.php" method="POST">
-                        <input type="number" class="hide" value="<?= $producto[0]->getIdProducto(); ?>" name="idproducto">
-                        <button type="submit" <?php if ($session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
+                        <input type="number" class="cantidad" name="cantidad">
+                        <input type="hidden" class="idproducto" name="idproducto" value="<?= $producto[0]->getIdProducto(); ?>">
+                        <button type="submit" <?php if (!$session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
                     </form>
                 <?php } ?>
                 <hr>

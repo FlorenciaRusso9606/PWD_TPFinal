@@ -99,4 +99,18 @@ class Session {
         session_unset();
         session_destroy();
     }
+
+
+    public function getCarrito(){
+        
+        if(!isset($_SESSION['carrito'])){
+            $_SESSION['carrito'] = [];
+        }
+        return $_SESSION['carrito'] ; 
+    }
+    
+    public function setCarrito($array){
+        $_SESSION['carrito']= $array;
+    }
+
 }
