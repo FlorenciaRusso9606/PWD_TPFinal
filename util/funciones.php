@@ -20,10 +20,10 @@ function verEstructura($e) {
 
 spl_autoload_register(function ($class_name) {
     $directories = array(
-        isset($_SESSION['ROOT']) ? $_SESSION['ROOT'] . 'Modelo/' : '',
-        isset($_SESSION['ROOT']) ? $_SESSION['ROOT'] . 'Modelo/conector/' : '',
-        isset($_SESSION['ROOT']) ? $_SESSION['ROOT'] . 'Control/' : '',
-        isset($_SESSION['ROOT']) ? $_SESSION['ROOT'] . 'util/' : ''
+        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Modelo/' : '',
+        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Modelo/conector/' : '',
+        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Control/' : '',
+        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'util/' : ''
     );
     foreach ($directories as $directory) {
         if ($directory && file_exists($directory . $class_name . '.php')) {
