@@ -15,7 +15,7 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
     $producto = $controlProducto->buscar($param);
 
     $detallesPro = $producto[0]->getProDetalle();
-    $dirImg = "img/Productos/" . $producto[0]->getProPrecio() . ".jpg";
+    $dirImg = "img/Productos/" . $producto[0]->getIdProducto() . ".jpg";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +46,7 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
                 <?php if ($producto[0]->getProCantStock() > 0) { ?>
                     <form action="carritoCompra.php" method="POST">
                         <input type="number" class="hide" value="<?= $producto[0]->getIdProducto(); ?>" name="idproducto">
-                        <button type="submit" <?php if ($session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
+                        <button type="submit" <?php if (!$session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
                     </form>
                 <?php } ?>
                 <hr>
