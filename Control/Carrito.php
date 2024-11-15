@@ -26,6 +26,7 @@ class Carrito
                     $producto = $abmProducto->buscar($param);
                     $carrito[]= $producto;
                     array_push($carrito, $producto);
+                    //huevada para que cargue carrito
                     
                 }
                 $i++;
