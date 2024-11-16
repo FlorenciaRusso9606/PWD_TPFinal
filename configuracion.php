@@ -45,7 +45,7 @@ include_once($ROOT . 'util/funciones.php');
 
 // Definición de rutas
 $LOGIN = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/login.php";
-$PRINCIPAL = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/index.php";
+$PRINCIPAL = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/Vista/index.php";
 $RUTAVISTA = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/";
 $REGISTRARSE = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/registrarse.php";
 $RUTANAV = $ROOT . 'Estructura/navbar.php';

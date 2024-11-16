@@ -6,7 +6,6 @@ class Carrito
 
     public function agregarProducto($param)
     {
-        echo "<br>Entro a agregarProducto";
         $productoAgregado = false;
         $session = new Session;
         $carrito = $session->getCarrito();
@@ -32,25 +31,35 @@ class Carrito
                         $producto = $productos[0]; 
                         $nuevoItem = [
                             'idproducto' => $producto->getIdProducto(),
-                            'nombre' => $producto->getNombre(),
-                            'precio' => $producto->getPrecio(),
+                            'nombre' => $producto->getProNombre(),
+                            'precio' => $producto->getProPrecio(),
                             'cantidadproducto' => $param['cantidad']
                         ];
                         $carrito[] = $nuevoItem;
                         $productoAgregado = true;
-                    }
-                    return $productoAgregado;
-                }
-                else{
-                    echo "no devuelve nada";
+                    } 
                 }
             }
+        }else{
+            $productos = $abmProducto->buscar($param);
+            if (!empty($productos)) {
+                $producto = $productos[0]; 
+                $nuevoItem = [
+                    'idproducto' => $producto->getIdProducto(),
+                    'nombre' => $producto->getProNombre(),
+                    'precio' => $producto->getProPrecio(),
+                    'cantidadproducto' => $param['cantidad']
+                ];
+                $carrito[] = $nuevoItem;
+                $productoAgregado = true;
+            }
         }
-        //Setea el carrito
-        $session->setCarrito($carrito);
+       //Setea el carrito
+       $session->setCarrito($carrito);
+       //Devuelve valor booleano
+        return $productoAgregado;
+
     }
-
-
     public function eliminarProducto($param)
     {
         $session = new Session;

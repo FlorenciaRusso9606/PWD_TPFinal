@@ -100,7 +100,9 @@ class Session {
         session_destroy();
     }
 
-
+    /**
+     * 
+     */
     public function getCarrito(){
         
         if(!isset($_SESSION['carrito'])){

@@ -6,9 +6,9 @@ $session = new Session;
 $data = data_submitted();
 
 $validado = $session->validar();
-if($validado){
+if ($validado) {
     echo "si esta";
-}else{
+} else {
     echo "no está";
 }
 
@@ -45,14 +45,14 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
                     <p class="me-5 text-success text-nowrap"><i class="fas fa-check fa-xs text-success"></i> Envio Gratis</p>
                     <!-- ¿HAY STOCK? -->
                     <?php if ($producto[0]->getProCantStock() > 0) { ?>
-                        <p class="text-success text-nowrap"><i class="fas fa-check fa-xs text-success"></i> Hay stock </p>
+                        <p class="text-success text-nowrap"><i class="fas fa-check fa-xs text-success"></i> Hay <?= $producto[0]->getProCantStock(); ?> productos en stock </p>
                     <?php } else { ?>
                         <p class="text-danger text-nowrap"><i class="fas fa-times fa-xs text-danger"></i> No hay stock </p>
                     <?php } ?>
                 </div>
                 <?php if ($producto[0]->getProCantStock() > 0) { ?>
                     <form action="carritoCompra.php" method="POST">
-                        <input type="number" class="cantidad" name="cantidad">
+                        <input type="number" class="cantidad" name="cantidad" min="1" max="<?= $producto[0]->getProCantStock() ?>">
                         <input type="hidden" class="idproducto" name="idproducto" value="<?= $producto[0]->getIdProducto(); ?>">
                         <button type="submit" <?php if (!$session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
                     </form>
@@ -67,6 +67,7 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
             </div>
         </div>
     </div>
+
 
 
 <?php } else { ?>

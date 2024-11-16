@@ -5,6 +5,13 @@ include_once "../configuracion.php";
 $session = new Session();
 $idUsuario = $session->getUsuario();
 
+//por si se ingresa a través de la url
+if ($idUsuario == null) {
+    header("Location: " . $PRINCIPAL);
+}
+
+
+
 $res = false;
 if ($idUsuario) {
     $abmUsuario = new AbmUsuario();

@@ -34,7 +34,7 @@ class abmCompra {
            
         if( array_key_exists('idcompra',$param)){
             $obj = new Compra();
-            $obj->cargar($param['idcompra'],$param['cofecha'],$param['usuario']);
+            $obj->cargar($param['idcompra'],$param['cofecha'],$param['idusuario']);
         }
         return $obj;
     }
@@ -141,89 +141,6 @@ class abmCompra {
 
 
 
-    /**
-     * Funcion que se usa en el area de administracion para listar las compras por estado
-     * Devuelve un arreglo de compras agrupadas por estado, sin incluir las compras en estado carrito.
-     * @return array
-     */
-    public function obtenerComprasPorTodosLosEstados(){
-        $arr_compras = [];
-        $arr_porconfirmar = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
-        $arr_confirmadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
-        $arr_enviadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
-        $arr_canceladas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
-
-        $arr_compras = array("porconfirmar"=>$arr_porconfirmar, "confirmadas"=>$arr_confirmadas, "enviadas"=>$arr_enviadas, "canceladas"=>$arr_canceladas);
-        return $arr_compras;
-    }
-
-
-
-
-    /**
-     * Listar todas las compras en JSON
-     */
-    public function listarCompras(){
-        $compra = $this->buscar(null);
-        $compraJSON = array();
-        foreach ($compra as $compra) {
-            array_push($compraJSON,$compra->jsonSerialize());
-        }
-        handleResponse($compraJSON);
-    }
-
-
-    /**
-     * Devuelve un string del ultimo estado de la compra
-     */
-    public function obtenerUltimoEstadoCompra($compra){
-        $arr_estados = $compra->getEstados();
-        $ultimo_estado = end($arr_estados);
-        if($ultimo_estado == false){
-            $ultimo_estado = new CompraEstado();
-            $ultimo_estado->setCompraEstadoTipo(new CompraEstadoTipo());
-            $ultimo_estado->getCompraEstadoTipo()->setIdCompraEstadoTipo(COMPRA_EN_CARRITO);
-        }
-        return $ultimo_estado;
-    }
-
-
-
-    public function obtenerTotalCompra($compra){
-        $total = 0;
-        $items = $compra->getItems();
-        foreach($items as $item){
-            $total += $item->getProducto()->getPrecio()*$item->getCiCantidad();
-        }
-        return $total;
-    }
-
-    public function obtenerCantItemsCompra($compra){
-        $items = $compra->getItems();
-        $cantItems  = 0;
-        foreach($items as $item){
-            $cantItems += $item->getCiCantidad();
-        }
-        return $cantItems;
-    }
-
-    public function obtenerComprasJSON($idusuario){
-        $arr_compras = Compra::listar("idusuario = ".$idusuario->getIdUsuario() );
-        $salida = [];
-       
-       foreach($arr_compras as $compra){
-        $estado = $this->obtenerUltimoEstadoCompra($compra);
-        if($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() != 0){
-            $total = $this->obtenerTotalCompra($compra);
-         
-            $cantItems = $this->obtenerCantItemsCompra($compra);
-            $comp = ["idcompra" => $compra->getIdCompra(), "cofecha" => $compra->getCoFecha(), "cantitems"=> $cantItems, "total" => $total, "estado"=>$estado->getCompraEstadoTipo()->getCetDescripcion(), "acciones"=>renderBotonesAccionesCompra($compra->getIdCompra())];
-                array_push($salida, $comp);
-        }
-          
-       }    
-        return $salida;
-    }
 
 
    

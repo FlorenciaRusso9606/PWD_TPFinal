@@ -1,3 +1,3 @@
 <?php
 include_once 'configuracion.php';
-header("Location:".$LOGIN);
+header("Location:".$PRINCIPAL);
