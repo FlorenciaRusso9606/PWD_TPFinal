@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 16-11-2024 a las 14:36:36
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: localhost
+-- Tiempo de generación: 15-10-2018 a las 23:12:45
+-- Versión del servidor: 10.1.34-MariaDB
+-- Versión de PHP: 7.2.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bd_tpfinal`
+-- Base de datos: `bdcarritocompras`
 --
 
 -- --------------------------------------------------------
@@ -29,9 +30,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `compra` (
   `idcompra` bigint(20) NOT NULL,
-  `cofecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `cofecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `idusuario` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -43,9 +44,9 @@ CREATE TABLE `compraestado` (
   `idcompraestado` bigint(20) UNSIGNED NOT NULL,
   `idcompra` bigint(11) NOT NULL,
   `idcompraestadotipo` int(11) NOT NULL,
-  `cefechaini` timestamp NOT NULL DEFAULT current_timestamp(),
+  `cefechaini` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cefechafin` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -57,7 +58,7 @@ CREATE TABLE `compraestadotipo` (
   `idcompraestadotipo` int(11) NOT NULL,
   `cetdescripcion` varchar(50) NOT NULL,
   `cetdetalle` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `compraestadotipo`
@@ -80,7 +81,7 @@ CREATE TABLE `compraitem` (
   `idproducto` bigint(20) NOT NULL,
   `idcompra` bigint(20) NOT NULL,
   `cicantidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -93,8 +94,8 @@ CREATE TABLE `menu` (
   `menombre` varchar(50) NOT NULL COMMENT 'Nombre del item del menu',
   `medescripcion` varchar(124) NOT NULL COMMENT 'Descripcion mas detallada del item del menu',
   `idpadre` bigint(20) DEFAULT NULL COMMENT 'Referencia al id del menu que es subitem',
-  `medeshabilitado` timestamp NULL DEFAULT current_timestamp() COMMENT 'Fecha en la que el menu fue deshabilitado por ultima vez'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `medeshabilitado` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en la que el menu fue deshabilitado por ultima vez'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `menu`
@@ -116,7 +117,7 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 CREATE TABLE `menurol` (
   `idmenu` bigint(20) NOT NULL,
   `idrol` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -126,22 +127,19 @@ CREATE TABLE `menurol` (
 
 CREATE TABLE `producto` (
   `idproducto` bigint(20) NOT NULL,
-  `pronombre` varchar(255) NOT NULL,
+  `pronombre` varchar(512) NOT NULL,
   `prodetalle` varchar(512) NOT NULL,
   `procantstock` int(11) NOT NULL,
-  `proprecio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `proprecio` DECIMAL(10, 2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `producto`
---
 
-INSERT INTO `producto` (`idproducto`, `pronombre`, `prodetalle`, `procantstock`, `proprecio`) VALUES
-(1, 'Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 50, 15000.00),
-(2, 'Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 30, 12000.00),
-(3, '1984', 'Una novela escrita por el autor británico George Orwell.', 40, 8000.00),
-(4, 'El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60, 9000.00),
-(5, 'Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20, 8500.00);
+INSERT INTO `producto` (`pronombre`, `prodetalle`, `procantstock`, `proprecio`) VALUES
+('Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 50, 15000.00),
+('Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 30, 12000.00),
+('1984', 'Una novela escrita por el autor británico George Orwell.', 40, 8000.00),
+('El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60, 9000.00),
+('Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20, 8500.00);
 
 -- --------------------------------------------------------
 
@@ -152,19 +150,14 @@ INSERT INTO `producto` (`idproducto`, `pronombre`, `prodetalle`, `procantstock`,
 CREATE TABLE `rol` (
   `idrol` bigint(20) NOT NULL,
   `roldescripcion` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `rol`
---
-
-INSERT INTO `rol` (`idrol`, `roldescripcion`) VALUES
+-- --------------------------------------------------------
+-- Insertar roles en la tabla `rol`
+INSERT INTO rol (idrol, roldescripcion) VALUES
 (1, 'Administrador'),
 (2, 'Depósito'),
 (3, 'Cliente');
-
--- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `usuario`
 --
@@ -175,17 +168,12 @@ CREATE TABLE `usuario` (
   `uspass` varchar(50) NOT NULL,
   `usmail` varchar(50) NOT NULL,
   `usdeshabilitado` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`idusuario`, `usnombre`, `uspass`, `usmail`, `usdeshabilitado`) VALUES
-(1, 'admin', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example.com', NULL),
-(2, 'deposito', '71a071b0fa4e1a671c5dc9cfbd6e5b27', 'deposito@example.com', NULL),
-(3, 'cliente', '8e1be2d5700ed83423c3ce6532c277a2', 'cliente@example.com', NULL);
-
+INSERT INTO usuario (idusuario, usnombre, uspass, usmail, usdeshabilitado) VALUES
+(1, 'admin', 'adminpass', 'admin@example.com', NULL),
+(2, 'deposito', 'depositopass', 'deposito@example.com', NULL),
+(3, 'cliente', 'clientepass', 'cliente@example.com', NULL);
 -- --------------------------------------------------------
 
 --
@@ -195,17 +183,13 @@ INSERT INTO `usuario` (`idusuario`, `usnombre`, `uspass`, `usmail`, `usdeshabili
 CREATE TABLE `usuariorol` (
   `idusuario` bigint(20) NOT NULL,
   `idrol` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `usuariorol`
---
-
-INSERT INTO `usuariorol` (`idusuario`, `idrol`) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
-
+-- Insertar datos en la tabla `usuariorol`
+INSERT INTO usuariorol (idusuario, idrol) VALUES
+(1, 1), -- El usuario 'admin' tiene el rol 'Administrador'
+(2, 2), -- El usuario 'deposito' tiene el rol 'Depósito'
+(3, 3); -- El usuario 'cliente' tiene el rol 'Cliente'
 --
 -- Índices para tablas volcadas
 --
@@ -318,19 +302,19 @@ ALTER TABLE `menu`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `idproducto` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idproducto` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idusuario` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idusuario` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
