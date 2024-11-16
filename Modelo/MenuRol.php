@@ -32,8 +32,8 @@ class MenuRol {
 
     // Setear objetos objMenu y objRol
     public function setear($objMenu, $objRol) {
-        $this->setobjMenu($objMenu);
-        $this->setobjRol($objRol);
+        $this->setObjMenu($objMenu);
+        $this->setObjRol($objRol);
     }
     public function setearConClave($idmenu, $idrol) {
         $this->getobjrol()->setIdRol($idrol);
@@ -78,7 +78,8 @@ class MenuRol {
     public function insertar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO menurol (idmenu, idrol) VALUES ('" . $this->getobjMenu()->getIdmenu() . "', '" . $this->getobjRol()->getIdRol() . "')";
+        $sql = "INSERT INTO menurol (idmenu, idrol) VALUES ('" . $this->getObjMenu()->getIdmenu() . "', '" . $this->getObjRol()->getIdrol() . "')";
+
         try {
             if ($base->Iniciar()) {
                 if ($base->Ejecutar($sql)) {

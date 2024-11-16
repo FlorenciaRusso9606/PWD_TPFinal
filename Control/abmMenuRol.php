@@ -2,45 +2,45 @@
 
 class abmMenuRol {
 
-    public function abm($datos){
+    public function abm($datos) {
         $resp = false;
-        if($datos['accion']=='editar'){
-            if($this->modificacion($datos)){
+        if ($datos['accion'] == 'editar') {
+            if ($this->modificacion($datos)) {
                 $resp = true;
             }
         }
-        if($datos['accion']=='borrar'){
-            if($this->baja($datos)){
-                $resp =true;
+        if ($datos['accion'] == 'borrar') {
+            if ($this->baja($datos)) {
+                $resp = true;
             }
         }
-        if($datos['accion']=='nuevo'){
-            if($this->alta($datos)){
-                $resp =true;
+        if ($datos['accion'] == 'nuevo') {
+            if ($this->alta($datos)) {
+                $resp = true;
             }
-            
         }
         return $resp;
-
     }
 
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return MenuRik
+     * @return MenuRol
      */
-    private function cargarObjeto($param)
-    {
+    private function cargarObjeto($param) {
         $obj = null;
-        if (isset($param['idmenu']) && isset($param['idrol'])) {
 
+        if (array_key_exists('idmenu', $param) and array_key_exists('idrol', $param)) {
             $obj = new MenuRol();
-            $usuario = new Menu();
-            $usuario->getIdmenu($param['idmenu']);
-            $rol = new Rol ();
-            $rol->setIdRol($param['idrol']);
-            $obj->cargar($usuario, $rol);
-         
+            $objMenu = new Menu();
+            $objMenu->setIdmenu($param['idmenu']);
+            $objMenu->cargar();
+
+            $objRol = new Rol();
+            $objRol->setIdrol($param['idrol']);
+            $objRol->cargar();
+
+            $obj->setear($objMenu, $objRol);
         }
         return $obj;
     }
@@ -53,8 +53,7 @@ class abmMenuRol {
      * @return boolean
      */
 
-    private function seteadosCamposClaves($param)
-    {
+    private function seteadosCamposClaves($param) {
         $resp = false;
         if (isset($param['idmenu']) && isset($param['idrol']))
             $resp = true;
@@ -62,15 +61,17 @@ class abmMenuRol {
     }
 
     /**
-     * Inserta un objeto
+     * Permite ingresar un registro en la base de datos
      * @param array $param
+     * @return boolean
      */
-    public function alta($param)
-    {
+    public function alta($param) {
         $resp = false;
         $obj = $this->cargarObjeto($param);
+
         if ($obj != null and $obj->insertar()) {
             $resp = true;
+        } else {
         }
         return $resp;
     }
@@ -80,8 +81,7 @@ class abmMenuRol {
      * @param array $param
      * @return boolean
      */
-    public function baja($param)
-    {
+    public function baja($param) {
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
             $obj = $this->cargarObjeto($param);
@@ -97,11 +97,11 @@ class abmMenuRol {
      * @param array $param
      * @return boolean
      */
-    public function modificacion($param){
+    public function modificacion($param) {
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
-            $obj= $this->cargarObjeto($param);
-            if($obj!=null && $obj->modificar()){
+        if ($this->seteadosCamposClaves($param)) {
+            $obj = $this->cargarObjeto($param);
+            if ($obj != null && $obj->modificar()) {
                 $resp = true;
             }
         }
@@ -109,24 +109,19 @@ class abmMenuRol {
     }
 
     /**
-     * permite buscar un objeto
+     * Permite buscar un objeto
      * @param array $param
      * @return array
      */
-    public function buscar($param){
-        $where = " true "; 
-        if ($param<>NULL){
-            $where .= '';
-            if  (isset($param['idmenu']))
-                    $where.=" and idmenu ='".$param['idmenu']."'";
-            if  (isset($param['idrol']))
-                    $where.=" and idrol ='".$param['idrol']."'";
+    public function buscar($param) {
+        $where = " true ";
+        if ($param <> NULL) {
+            if (isset($param['idmenu']))
+                $where .= " and idmenu =" . $param['idmenu'];
+            if (isset($param['idrol']))
+                $where .= " and idrol =" . $param['idrol'];
         }
-        $obj = new MenuRol();
-        $arreglo =  $obj->listar($where);  
+        $arreglo = MenuRol::listar($where);
         return $arreglo;
     }
-
- 
-    
 }

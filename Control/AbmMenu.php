@@ -59,8 +59,9 @@ class AbmMenu {
     }
 
     /**
-     * 
-     * @param array $param
+     * Permite agregar un objeto
+     * @param mixed $param
+     * @return bool
      */
     public function alta($param) {
         $resp = false;
@@ -68,21 +69,29 @@ class AbmMenu {
         $param['medeshabilitado'] = null;
         $elObjtTabla = $this->cargarObjeto($param);
 
-        //verEstructura($elObjtTabla);
-
         if ($elObjtTabla != null and $elObjtTabla->insertar()) {
             $resp = true;
+
+            // Cargar MenuRol
+            $abmMenuRol = new AbmMenuRol();
+            if ($elObjtTabla->getObjMenuPadre() != null) {
+                $menuPadre = $elObjtTabla->getObjMenuPadre();
+                $rolPadre = $abmMenuRol->buscar(['idmenu' => $menuPadre->getIdmenu()]);
+                if (!empty($rolPadre)) {
+                    $rolPadre = $rolPadre[0];
+                    
+                    $idRol = $rolPadre->getObjRol()->getIdrol();
+                    if (!empty($idRol)) {
+                        $abmMenuRol->alta(["idmenu" => $elObjtTabla->getIdmenu(), "idrol" => $idRol]);
+                    }
+                }
+            }
         }
 
-        //Cargar MenuRol
-        $abmMenuRol = new AbmMenuRol();
-        if ($elObjtTabla->getObjMenuPadre() != null) {
-            $rol = $elObjtTabla->getObjMenuPadre()->getIdmenu();
-
-            $abmMenuRol->alta(["idmenu" => $elObjtTabla->getIdmenu(), "idrol" => $rol]);
-        }
         return $resp;
     }
+
+
     /**
      * permite eliminar un objeto 
      * @param array $param
