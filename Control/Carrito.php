@@ -7,60 +7,75 @@ class Carrito
     public function agregarProducto($param)
     {
         echo "<br>Entro a agregarProducto";
+        $productoAgregado = false;
         $session = new Session;
         $carrito = $session->getCarrito();
         $abmProducto = new AbmProducto;
-        $bandera = false;
+        $productoEncontrado = false;
         $i = 0;
         if ($carrito != []) {
-            
-            //Recorre el carrito para ver si el producto ya esta agregado
-          
-            while ($i < count($carrito) && $bandera == true) {
-                //si no anda, agregar el indice $param[$i] 
-                if ($carrito[$i]["idProducto"] == $param["idProducto"]) {
-                    $carrito[$i]["cantidadProducto"] = $carrito[$i]["cantidadProducto"] + $param["cantidad"];
-                    $bandera = true;
-                }
-                if ($bandera == false) {
-                    $producto = $abmProducto->buscar($param);
-                    $carrito[]= $producto;
-                    array_push($carrito, $producto);
-                    //huevada para que cargue carrito
-                    
-                }
-                $i++;
-            }
-            
 
+            //Recorre el carrito para ver si el producto ya esta agregado
+
+            while ($i < count($carrito) && $productoEncontrado == true) {
+                //si no anda, agregar el indice $param[$i] 
+                if ($carrito[$i]["idproducto"] == $param["idproducto"]) {
+                    $carrito[$i]['cantidadproducto'] += $param['cantidad'];
+                    $productoEncontrado = true;
+                    $productoAgregado = true;
+                }
+                if (!$productoEncontrado) {
+                    $productos = $abmProducto->buscar($param);
+                    if (!empty($productos)) {
+                        echo "Devuelve productos";
+                        $producto = $productos[0]; 
+                        $nuevoItem = [
+                            'idproducto' => $producto->getIdProducto(),
+                            'nombre' => $producto->getNombre(),
+                            'precio' => $producto->getPrecio(),
+                            'cantidadproducto' => $param['cantidad']
+                        ];
+                        $carrito[] = $nuevoItem;
+                        $productoAgregado = true;
+                    }
+                    return $productoAgregado;
+                }
+                else{
+                    echo "no devuelve nada";
+                }
+            }
         }
-        $producto = $abmProducto->buscar($param);
-        $carrito[]= $producto;
-        echo "<br>Carrito<br>";
-        var_dump($carrito);
         $session->setCarrito($carrito);
     }
+
 
     public function eliminarProducto($param)
     {
         $session = new Session;
         $carrito = $session->getCarrito();
-        $bandera = false;
+        $productoEncontrado = false;
         $i = 0;
         //Verifica que el array no esté vacío
         if ($carrito != []) {
             //Recorre el carrito para ver si el producto ya esta agregado
-            while ($i < count($carrito) && $bandera == true) {
+            while ($i < count($carrito) && $productoEncontrado == true) {
                 //si no anda, agregar el indice $param[$i] 
                 if ($carrito[$i]["idProducto"] == $param["idProducto"]) {
                     $carrito[$i]["cantidadProducto"] = $param["cantidad"];
                     unset($carrito[$i]);
-                    $bandera = true;
-                    $session->setCarrito($carrito);
+                    $productoEncontrado = true;
+                    // Reindexamos el array y guardamos en la sesión
+
                 }
                 $i++;
             }
         }
+        $carrito = array_values($carrito);
+        $session->setCarrito($carrito);
+    }
+    public function obtenerCarrito() {
+        $session = new Session();
+        return $session->getCarrito();
     }
 }
 
