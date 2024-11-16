@@ -1,20 +1,18 @@
 <?php
 include_once "../../configuracion.php";
-
 $data = data_submitted();
+$response = array('respuesta' => false);
 
-$compra = new ControlCompra;
-
-var_dump($compra);
-
-$resp = $compra->confirmarCompra();
-if($resp == 5){
-    $resp = ["respuesta" => true];
-
-}elseif ($resp == 4){
-    // header("Location: ".$PRINCIPAL."?error=$resp.");
-    $resp = ["respuesta" => false];
+if (isset($data['id'])) {
+    $controlCompra = new ControlCompra();
+    if ($controlCompra->confirmarCompra()) {
+        $response['respuesta'] = true;
+        $response['mensaje'] = 'Compra confirmada';
+    } else {
+        $response['mensaje'] = 'Error al confirmar la compra';
+    }
+} else {
+    $response['mensaje'] = 'Datos incompletos';
 }
 
-
-json_encode($resp);
+echo json_encode($response);

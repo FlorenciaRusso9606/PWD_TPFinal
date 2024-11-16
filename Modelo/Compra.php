@@ -1,6 +1,5 @@
 <?php
-class Compra
-{
+class Compra {
     private $idcompra;
     private $cofecha;
     private $objUsuario;
@@ -10,32 +9,28 @@ class Compra
     /**
      * @return mixed
      */
-    public function getidcompra()
-    {
+    public function getidcompra() {
         return $this->idcompra;
     }
 
     /**
      * @param mixed $idcompra
      */
-    public function setidcompra($idcompra)
-    {
+    public function setidcompra($idcompra) {
         $this->idcompra = $idcompra;
     }
 
     /**
      * @return mixed
      */
-    public function getcofecha()
-    {
+    public function getcofecha() {
         return $this->cofecha;
     }
 
     /**
      * @param mixed $cofecha
      */
-    public function setcofecha($cofecha)
-    {
+    public function setcofecha($cofecha) {
         $this->cofecha = $cofecha;
     }
 
@@ -44,99 +39,104 @@ class Compra
     /**
      * @return mixed
      */
-    public function getobjUsuario()
-    {
+    public function getobjUsuario() {
         return $this->objUsuario;
     }
 
     /**
      * @param mixed $objUsuario
      */
-    public function setobjUsuario($objUsuario)
-    {
+    public function setobjUsuario($objUsuario) {
         $this->objUsuario = $objUsuario;
     }
 
     /**
      * @return string
      */
-    public function getMensajeoperacion()
-    {
+    public function getMensajeoperacion() {
         return $this->mensajeoperacion;
     }
 
     /**
      * @param string $mensajeoperacion
      */
-    public function setMensajeoperacion($mensajeoperacion)
-    {
+    public function setMensajeoperacion($mensajeoperacion) {
         $this->mensajeoperacion = $mensajeoperacion;
     }
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->idcompra = "";
         $this->cofecha = "";
         $this->objUsuario = null;
         $this->mensajeoperacion = "";
     }
 
-    public function setear($idcompra, $cofecha, $objUsuario)
-    {
+    public function setear($idcompra, $cofecha, $objUsuario) {
         $this->setidcompra($idcompra);
         $this->setcofecha($cofecha);
         $this->setobjUsuario($objUsuario);
     }
 
 
-    public function cargar()
-    {
+    public function cargar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compra WHERE idcompra = " . $this->getidcompra();
-        //  echo $sql;
-        if ($base->Iniciar()) {
-            $res = $base->Ejecutar($sql);
-            if ($res > -1) {
-                if ($res > 0) {
-                    $row = $base->Registro();
-                    $objUsuario = null;
-                    if ($row['idusuario'] != null or $row['idusuario'] != '') {
-                        $objUsuario = new Usuario();
-                        $objUsuario->setUsuarioId($row['idusuario']);
-                        $objUsuario->cargar();
+        $idcompra = $this->getidcompra();
+
+        if ($idcompra) {
+            $sql = "SELECT * FROM compra WHERE idcompra = " . $idcompra;
+            try {
+                if ($base->Iniciar()) {
+                    $res = $base->Ejecutar($sql);
+                    if ($res > -1) {
+                        if ($res > 0) {
+                            $row = $base->Registro();
+                            $this->setidcompra($row['idcompra']);
+                            $this->setcofecha($row['cofecha']);
+                            $this->objUsuario = new Usuario();
+                            $this->objUsuario->setUsuarioId($row['idusuario']);
+                            $this->objUsuario->cargar();
+                            $resp = true;
+                        }
                     }
-                    $this->setear($row['idcompra'], $row['cofecha'], $objUsuario);
+                } else {
+                    $this->setMensajeOperacion("compra->cargar: " . $base->getError());
                 }
+            } catch (PDOException $e) {
+                $this->setMensajeOperacion("compra->cargar: " . $e->getMessage());
             }
         } else {
-            $this->setmensajeoperacion("compra->cargar: " . $base->getError()[2]);
+            $this->setMensajeOperacion("compra->cargar: idcompra no está establecido.");
         }
         return $resp;
     }
 
-    public function insertar()
-    {
+    public function insertar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO compra( cofecha  ,  idusuario)  ";
-        $sql .= "VALUES('" . $this->getcofecha() . "'," . $this->getobjUsuario()->getUsuarioId() . ")";
-        // echo $sql;
-        if ($base->Iniciar()) {
-            if ($elid = $base->Ejecutar($sql)) {
-                $this->setidcompra($elid);
-                $resp = true;
-            } else {
-                $this->setmensajeoperacion("compra->insertar: " . $base->getError()[2]);
+        $usuario = $this->getObjUsuario();
+        if ($usuario != null) {
+            $sql = "INSERT INTO compra (cofecha, idusuario) VALUES ('" . $this->getcofecha() . "', '" . $usuario->getidusuario() . "')";
+            try {
+                if ($base->Iniciar()) {
+                    if ($base->Ejecutar($sql)) {
+                        $resp = true;
+                    } else {
+                        $this->setMensajeOperacion("compra->insertar: " . $base->getError());
+                    }
+                } else {
+                    $this->setMensajeOperacion("compra->insertar: " . $base->getError());
+                }
+            } catch (PDOException $e) {
+                $this->setMensajeOperacion("compra->insertar: " . $e->getMessage());
             }
         } else {
-            $this->setmensajeoperacion("compra->insertar: " . $base->getError()[2]);
+            $this->setMensajeOperacion("compra->insertar: Usuario no está establecido.");
         }
         return $resp;
     }
 
-    public function modificar()
-    {
+    public function modificar() {
         $resp = false;
         $base = new BaseDatos();
         $sql = "UPDATE compra SET cofecha='" . $this->getcofecha() . "', idusuario=" . $this->getobjUsuario()->getUsuarioId() . " WHERE idcompra=" . $this->getidcompra();
@@ -154,8 +154,7 @@ class Compra
         return $resp;
     }
 
-    public function eliminar()
-    {
+    public function eliminar() {
         $resp = false;
         $base = new BaseDatos();
         $sql = "DELETE FROM compra WHERE idcompra =" . $this->getidcompra();
@@ -172,8 +171,7 @@ class Compra
         return $resp;
     }
 
-    public  function listar($parametro = "")
-    {
+    public  function listar($parametro = "") {
         $arreglo = [];
         $base = new BaseDatos();
         $sql = "SELECT * FROM compra";
@@ -195,10 +193,8 @@ class Compra
                     $obj->setear($row['idcompra'], $row['cofecha'], $objUsuario);
                     $arreglo[] = $obj;
                 }
-            } 
-
-      
+            }
+        }
+        return $arreglo;
     }
-    return $arreglo;
-}
 }
