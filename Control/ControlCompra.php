@@ -12,7 +12,7 @@ class ControlCompra{
         $idcompra= null;
         $session = new Session();
         $abmCompra = new AbmCompra();
-        $idusuario = $session->getUsuario();;
+        $idusuario = $session->getUsuario();
         $param['idusuario']= $idusuario;
         $param["cofecha"] = date('Y-m-d H:i:s');
         $alta= $abmCompra->alta($param);
@@ -99,7 +99,7 @@ class ControlCompra{
     
         $msj = ($compraExitosa) ? 5 : 4;
     
-        return $msj;
+        return $compraExitosa;
       }
     //Cambiar estado
     //Eliminar compra
