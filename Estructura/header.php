@@ -5,22 +5,6 @@ include_once '../configuracion.php';
 $session = new Session();
 $rol = $session->getRol();
 
-$objProducto = new AbmProducto();
-$productos = $objProducto->buscar(NULL);
-function mostrarPopup($arregloProd) {
-    echo "<div class='ui fluid popup bottom left transition hidden'>";
-    echo "<div class='ui four column relaxed equal height divided grid'>";
-    foreach ($arregloProd as $producto) {
-        echo "<div class='column'>";
-        echo "<h4 class='ui header'>" . $producto->getProDetalle() . "</h4>";
-        echo "<div class='ui link list'>";
-        echo "<a class='item'>" . $producto->getProNombre() . "</a>";
-        echo "</div>";
-        echo "</div>";
-    }
-    echo "</div>";
-    echo "</div>";
-}
 
 ?>
 <html lang="en">

@@ -30,7 +30,7 @@ $combo .= '</select>';
     <h2>ABM - MEnu</h2>
     <p>Seleccione la acci&oacute;n que desea realizar.</p>
 
-    <table id="dg" title="Administrador de item menu" class="easyui-datagrid" style="width:700px;height:250px"
+    <table id="dg" title="Administrador de item menu" class="easyui-datagrid" style="width:700px;height:400px"
         url="accion/listar_menu.php" toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
