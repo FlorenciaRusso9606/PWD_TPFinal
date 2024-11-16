@@ -3,96 +3,82 @@ include_once "../configuracion.php";
 
 class Carrito
 {
-
-    public function agregarProducto($param)
-    {
-        $productoAgregado = false;
-        $session = new Session;
-        $carrito = $session->getCarrito();
-        $abmProducto = new AbmProducto;
-        $productoEncontrado = false;
-        $i = 0;
-        if ($carrito != []) {
-
-            //Recorre el carrito para ver si el producto ya esta agregado
-
-            while ($i < count($carrito) && $productoEncontrado == true) {
     
+        public function agregarProducto($param)
+        {
+            $productoAgregado = false;
+            $session = new Session;
+            $carrito = $session->getCarrito() ?? [];
+            $abmProducto = new AbmProducto;
+            $productoEncontrado = false;
+            $i = 0;
+    
+            // Verificar si el producto ya está en el carrito
+            while ($i < count($carrito) && !$productoEncontrado) {
                 if ($carrito[$i]["idproducto"] == $param["idproducto"]) {
-                    //Agrega más cantidad al item en el carrito
+                    // Producto encontrado, incrementar la cantidad
                     $carrito[$i]['cantidadproducto'] += $param['cantidad'];
                     $productoEncontrado = true;
                     $productoAgregado = true;
                 }
-                //Si el producto no está en el carrito lo agrega
-                if (!$productoEncontrado) {
-                    $productos = $abmProducto->buscar($param);
-                    if (!empty($productos)) {
-                        $producto = $productos[0]; 
-                        $nuevoItem = [
-                            'idproducto' => $producto->getIdProducto(),
-                            'nombre' => $producto->getProNombre(),
-                            'precio' => $producto->getProPrecio(),
-                            'cantidadproducto' => $param['cantidad']
-                        ];
-                        $carrito[] = $nuevoItem;
-                        $productoAgregado = true;
-                    } 
+                $i++;
+            }
+    
+            // Si no se encontró el producto en el carrito, buscarlo y agregarlo
+            if (!$productoEncontrado) {
+                $productos = $abmProducto->buscar($param);
+                if (!empty($productos)) {
+                    $producto = $productos[0];
+                    $nuevoItem = [
+                        'idproducto' => $producto->getIdProducto(),
+                        'nombre' => $producto->getProNombre(),
+                        'precio' => $producto->getProPrecio(),
+                        'cantidadproducto' => $param['cantidad']
+                    ];
+                    $carrito[] = $nuevoItem;
+                    $productoAgregado = true;
                 }
             }
-        }else{
-            $productos = $abmProducto->buscar($param);
-            if (!empty($productos)) {
-                $producto = $productos[0]; 
-                $nuevoItem = [
-                    'idproducto' => $producto->getIdProducto(),
-                    'nombre' => $producto->getProNombre(),
-                    'precio' => $producto->getProPrecio(),
-                    'cantidadproducto' => $param['cantidad']
-                ];
-                $carrito[] = $nuevoItem;
-                $productoAgregado = true;
-            }
+    
+            // Guardar el carrito actualizado en la sesión
+            $session->setCarrito($carrito);
+    
+            return $productoAgregado;
         }
-       //Setea el carrito
-       $session->setCarrito($carrito);
-       //Devuelve valor booleano
-        return $productoAgregado;
-
-    }
-    public function eliminarProducto($param)
-    {
-        $session = new Session;
-        $carrito = $session->getCarrito();
-        $productoEncontrado = false;
-        $i = 0;
-        //Verifica que el array no esté vacío
-        if ($carrito != []) {
-            //Recorre el carrito para ver si el producto ya esta agregado
-            while ($i < count($carrito) && $productoEncontrado == true) {
-                //si no anda, agregar el indice $param[$i] 
-                if ($carrito[$i]["idProducto"] == $param["idProducto"]) {
-                    $carrito[$i]["cantidadProducto"] = $param["cantidad"];
+    
+        public function eliminarProducto($param)
+        {
+            $session = new Session;
+            $carrito = $session->getCarrito() ?? [];
+            $productoEncontrado = false;
+            $i = 0;
+    
+            // Recorrer el carrito para encontrar y eliminar el producto
+            while ($i < count($carrito) && !$productoEncontrado) {
+                if ($carrito[$i]["idproducto"] == $param["idproducto"]) {
                     unset($carrito[$i]);
                     $productoEncontrado = true;
-                    // Reindexamos el array y guardamos en la sesión
-
                 }
                 $i++;
             }
+    
+            if ($productoEncontrado) {
+                // Reindexar el array y guardar el carrito actualizado
+                $carrito = array_values($carrito);
+                $session->setCarrito($carrito);
+            }
+    
+            return $productoEncontrado;
         }
-        //Reindexa el carrito
-        $carrito = array_values($carrito);
-        //Setea el carrito
-        $session->setCarrito($carrito);
+    
+        public function obtenerCarrito()
+        {
+            $session = new Session();
+            return $session->getCarrito() ?? [];
+        }
     }
+    
 
-
-    public function obtenerCarrito() {
-        $session = new Session();
-        return $session->getCarrito();
-    }
-}
 
 
 

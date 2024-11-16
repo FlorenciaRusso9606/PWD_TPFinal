@@ -12,10 +12,8 @@ class ControlCompra{
         $idcompra= null;
         $session = new Session();
         $abmCompra = new AbmCompra();
-        $abmUsuario = new ABMUsuario;
-        $idusuario = $session->getUsuario();
-        $usuario= $abmUsuario->buscar($idusuario);
-        $param['idusuario']= $usuario;
+        $idusuario = $session->getUsuario();;
+        $param['idusuario']= $idusuario;
         $param["cofecha"] = date('Y-m-d H:i:s');
         $alta= $abmCompra->alta($param);
         if($alta){
