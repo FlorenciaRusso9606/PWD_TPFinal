@@ -18,16 +18,17 @@ class Carrito
             //Recorre el carrito para ver si el producto ya esta agregado
 
             while ($i < count($carrito) && $productoEncontrado == true) {
-                //si no anda, agregar el indice $param[$i] 
+    
                 if ($carrito[$i]["idproducto"] == $param["idproducto"]) {
+                    //Agrega más cantidad al item en el carrito
                     $carrito[$i]['cantidadproducto'] += $param['cantidad'];
                     $productoEncontrado = true;
                     $productoAgregado = true;
                 }
+                //Si el producto no está en el carrito lo agrega
                 if (!$productoEncontrado) {
                     $productos = $abmProducto->buscar($param);
                     if (!empty($productos)) {
-                        echo "Devuelve productos";
                         $producto = $productos[0]; 
                         $nuevoItem = [
                             'idproducto' => $producto->getIdProducto(),
@@ -45,6 +46,7 @@ class Carrito
                 }
             }
         }
+        //Setea el carrito
         $session->setCarrito($carrito);
     }
 
@@ -70,9 +72,13 @@ class Carrito
                 $i++;
             }
         }
+        //Reindexa el carrito
         $carrito = array_values($carrito);
+        //Setea el carrito
         $session->setCarrito($carrito);
     }
+
+
     public function obtenerCarrito() {
         $session = new Session();
         return $session->getCarrito();

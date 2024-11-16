@@ -2,7 +2,6 @@
 include_once "../configuracion.php";
 $data = data_submitted();
 $carritoObj = new Carrito();
-var_dump($data);
 if (isset($data['idproducto']) && isset($data['cantidad'])) {
     $carritoObj->agregarProducto($data);
     echo "Producto agregado correctamente al carrito.";
