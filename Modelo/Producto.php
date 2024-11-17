@@ -106,7 +106,7 @@ class Producto {
     public function modificar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "UPDATE producto SET pronombre='" . $this->getProNombre() . "', prodetalle='" . $this->getProDetalle() . "', procantstock='" . $this->getProCantStock() . "', proprecio=" . $this->getProPrecio() . " WHERE idproducto='" . $this->getIdProducto() . "'";
+        $sql = "UPDATE producto SET pronombre='" . $this->getProNombre() . "', prodetalle='" . $this->getProDetalle() . "', procantstock=" . $this->getProCantStock() . ", proprecio=" . $this->getProPrecio() . " WHERE idproducto=" . $this->getIdProducto();
         if ($base->Iniciar() && $base->Ejecutar($sql)) {
             $resp = true;
         } else {

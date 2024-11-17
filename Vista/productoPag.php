@@ -4,6 +4,7 @@ include_once '../configuracion.php';
 $session = new Session;
 
 $data = data_submitted();
+var_dump($data);
 
 $validado = $session->validar();
 if ($validado) {
@@ -52,7 +53,7 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
                 </div>
                 <?php if ($producto[0]->getProCantStock() > 0) { ?>
                     <form action="carritoCompra.php" method="POST">
-                        <input type="number" class="cantidad" name="cantidad" min="1" max="<?= $producto[0]->getProCantStock() ?>">
+                        <input type="number" class="cantidad" name="cantidad" min="1" max="<?= $producto[0]->getProCantStock() ?>" required>
                         <input type="hidden" class="idproducto" name="idproducto" value="<?= $producto[0]->getIdProducto(); ?>">
                         <button type="submit" <?php if (!$session->validar()) { ?> disabled <?php } ?> class="btn btn-primary mt-4">Agregar al Carrito</button>
                     </form>

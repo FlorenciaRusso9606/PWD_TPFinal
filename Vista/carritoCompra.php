@@ -1,6 +1,8 @@
 <?php
 include_once "../configuracion.php";
 $data = data_submitted();
+var_dump($data);
+
 $carritoObj = new Carrito();
 
 if (isset($data['idproducto']) && isset($data['cantidad'])) {

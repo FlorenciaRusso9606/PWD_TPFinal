@@ -2,6 +2,8 @@
 
 class AbmCompraEstado {
 
+    private $mensajeOperacion;
+
     public function abm($datos){
         $resp = false;
         if($datos['accion']=='editar'){
@@ -29,15 +31,21 @@ class AbmCompraEstado {
      * @param array $param
      * @return Compraestado
      */
-    private function cargarObjeto($param)
-    {
+    private function cargarObjeto($param) {
         $obj = null;
-        if (array_key_exists('idcompraestado', $param)) {
+        if (array_key_exists('idcompraestado', $param) && array_key_exists('idcompra', $param)
+            && array_key_exists('idcompraestadotipo', $param) && array_key_exists('cefechaini', $param)
+            && array_key_exists('cefechafin', $param)) {
+            $objCompra = new Compra();
+            $objCompra->setidcompra($param['idcompra']);
+            $objCompra->cargar();
 
-            $obj = new Compraestado();
-            $obj->cargar(
-                $param['idcompraestado'],$param['compra'],$param['idcompraestadotipo'],$param['cefechaini'],$param['cefechafin']
-            );
+            $objCompraEstadoTipo = new CompraEstadoTipo();
+            $objCompraEstadoTipo->setidcompraestadotipo($param['idcompraestadotipo']);
+            $objCompraEstadoTipo->cargar();
+
+            $obj = new CompraEstado();
+            $obj->setear($param['idcompraestado'], $objCompraEstadoTipo, $objCompra, $param['cefechaini'], $param['cefechafin']);
         }
         return $obj;
     }
@@ -46,14 +54,14 @@ class AbmCompraEstado {
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de 
      * las variables instancias del objeto que son claves
      * @param array $param
-     * @return Producto
+     * @return Compraestado
      */
-    private function cargarObjetoConClave($param)
-    {
+    private function cargarObjetoConClave($param) {
         $obj = null;
         if (isset($param['idcompraestado'])) {
-            $obj = new Compraestado();
-            $obj->cargar($param['idcompraestado'], null, null, null, null);
+            $obj = new CompraEstado();
+            $obj->setidcompraestado($param['idcompraestado']);
+            $obj->cargar();
         }
         return $obj;
     }
@@ -64,8 +72,7 @@ class AbmCompraEstado {
      * @return boolean
      */
 
-    private function seteadosCamposClaves($param)
-    {
+     private function seteadosCamposClaves($param) {
         $resp = false;
         if (isset($param['idcompraestado']))
             $resp = true;
@@ -76,13 +83,14 @@ class AbmCompraEstado {
      * Inserta un objeto
      * @param array $param
      */
-    public function alta($param)
-    {
+    public function alta($param) {
         $resp = false;
         $param['idcompraestado'] = null;
         $obj = $this->cargarObjeto($param);
-        if ($obj != null and $obj->insertar()) {
+        if ($obj != null && $obj->insertar()) {
             $resp = true;
+        } else {
+            $this->mensajeOperacion = $obj->getMensajeoperacion();
         }
         return $resp;
     }
@@ -92,13 +100,14 @@ class AbmCompraEstado {
      * @param array $param
      * @return boolean
      */
-    public function baja($param)
-    {
+    public function baja($param) {
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
             $obj = $this->cargarObjetoConClave($param);
-            if ($obj != null and $obj->eliminar()) {
+            if ($obj != null && $obj->eliminar()) {
                 $resp = true;
+            } else {
+                $this->mensajeOperacion = $obj->getMensajeoperacion();
             }
         }
         return $resp;
@@ -109,12 +118,14 @@ class AbmCompraEstado {
      * @param array $param
      * @return boolean
      */
-    public function modificacion($param){
+    public function modificacion($param) {
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
-            $obj= $this->cargarObjeto($param);
-            if($obj!=null && $obj->modificar()){
+        if ($this->seteadosCamposClaves($param)) {
+            $obj = $this->cargarObjeto($param);
+            if ($obj != null && $obj->modificar()) {
                 $resp = true;
+            } else {
+                $this->mensajeOperacion = $obj->getMensajeoperacion();
             }
         }
         return $resp;
@@ -146,27 +157,13 @@ class AbmCompraEstado {
     }
 
 
-    public function buscarUltimoEstadoCompra($idCompra){
-
-        $sql = "SELECT * FROM compraestado WHERE idcompra = ".$idCompra." AND cefechafin IS NULL";
-        $bd = new BaseDatos();
-        $resp = $bd->Ejecutar($sql);
-        $ultimoEstado = null;
-        if($resp){
-            $row = $bd->Registro();
-            $ultimoEstado = new CompraEstado();
-            $ultimoEstado->setIdCompraEstado($row['idcompraestado']);
-            $ultimoEstado->buscar();
-        }
-
-        return $ultimoEstado;   
+    public function buscarUltimoEstadoCompra($idCompra) {
+        $parametro = "idcompra = " . $idCompra . " AND cefechafin IS NULL";
+        $arreglo = CompraEstado::listar($parametro);
+        return count($arreglo) > 0 ? $arreglo[0] : null;
     }
 
-
  
-
-
-
     /**
      * Cambia el estado de una compra siempre que el estado que se quiera cambiar sea mayor al ultimo estado de la compra
      * @param int $idCompra
@@ -201,7 +198,9 @@ class AbmCompraEstado {
             $estado = new CompraEstadoTipo();
             $estado->setIdCompraEstadoTipo($idEstado);
 
-            $nuevoEstado->cargar(null,$compra,$estado,date("Y-m-d H:i:s"),null);
+            $param=["idcompraestado"=>$idCompra, "compra"=>$compra, "idcompraestadotipo"=>$estado, "cefechaini"=>date("Y-m-d H:i:s"), "cefechafin"=>null];
+            $nuevoEstado= $this->cargarObjeto($param);
+            
             //Inserto el nuevo estado
             $nuevoEstado->insertar();
             $resp = ["status"=>true,"msg"=>"Se cambio el estado de la compra"];       
@@ -211,10 +210,11 @@ class AbmCompraEstado {
    
     public function confirmarCompra($idCompra){
         $resp = ["status"=>false,"msg"=>"No se pudo confirmar la compra, no hay stock suficiente"];
-        $compra = new Compra();
-        $compra->setIdCompra($idCompra);
-        $compra->buscar();
-        $items = $compra->getItems();
+        $compraItems = new CompraItem();
+        $compraItems->listar("idcompra = ".$idCompra);
+        foreach($compraItems as $item){
+            $items[] = $compraItems->getidcompraitem();
+        }
         $itemsConfirmados = true;
         foreach($items as $item){
             if($item->getProducto()->getProcantstock() < $item->getCicantidad()){
@@ -237,12 +237,12 @@ class AbmCompraEstado {
     public function devolverStock($idCompra){
         $resp = ["status"=>false,"msg"=>"No se pudo devolver el stock"];
         
-
         //Devolver stock de los productos cancelados
-        $compra = new Compra();
-        $compra->setIdCompra($idCompra);
-        $compra->buscar();
-        $items = $compra->getItems();
+        $compraItems = new CompraItem();
+        $compraItems->listar("idcompra = ".$idCompra);
+        foreach($compraItems as $item){
+            $items[] = $compraItems->getidcompraitem();
+        }
         foreach($items as $item){
             $item->getProducto()->setProcantstock($item->getProducto()->getProcantstock() + $item->getCicantidad());
             $item->getProducto()->modificar();
@@ -253,6 +253,8 @@ class AbmCompraEstado {
 
     }
 
-
+    public function getMensajeOperacion() {
+        return $this->mensajeOperacion;
+    }
 
 }

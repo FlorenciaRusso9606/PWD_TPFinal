@@ -1,5 +1,6 @@
 <?php
 class ABMCompraItem{
+    private $mensajeOperacion;
     
     public function abm($datos){
         $resp = false;
@@ -24,15 +25,22 @@ class ABMCompraItem{
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return Tabla
+     * @return CompraItem
      */
-    private function cargarObjeto($param){
+    private function cargarObjeto($param) {
         $obj = null;
-           
-        if( array_key_exists('idcompraitem',$param)  and array_key_exists('producto',$param)
-        and array_key_exists('compra',$param) and array_key_exists('cicantidad',$param)){
+        if (array_key_exists('idcompraitem', $param) && array_key_exists('idproducto', $param)
+            && array_key_exists('idcompra', $param) && array_key_exists('cicantidad', $param)) {
+            $objProducto = new Producto();
+            $objProducto->setIdProducto($param['idproducto']);
+            $objProducto->cargar();
+
+            $objCompra = new Compra();
+            $objCompra->setIdCompra($param['idcompra']);
+            $objCompra->cargar();
+
             $obj = new CompraItem();
-            $obj->cargar($param['idcompraitem'],$param['producto'],$param['compra'],$param['cicantidad']);
+            $obj->setear($param['idcompraitem'], $objProducto, $objCompra, $param['cicantidad']);
         }
         return $obj;
     }
@@ -40,14 +48,15 @@ class ABMCompraItem{
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto que son claves
      * @param array $param
-     * @return Tabla
+     * @return CompraItem
      */
     
     private function cargarObjetoConClave($param){
         $obj = null;
         if( isset($param['idcompraitem']) ){
             $obj = new CompraItem();
-            $obj->cargar($param['idcompraitem'], null,null,null,null);
+            $obj->setidcompraitem($param['idcompraitem']);
+            $obj->cargar();
         }
         return $obj;
     }
@@ -70,10 +79,15 @@ class ABMCompraItem{
         $resp = false;
         $param['idcompraitem'] =null;
         $elObjtTabla = $this->cargarObjeto($param);
-//        verEstructura($elObjtTabla);
-        if ($elObjtTabla!=null and $elObjtTabla->insertar()){
-            $resp = true;
-            
+
+        if ($elObjtTabla != null) {
+            if ($elObjtTabla->insertar()) {
+                $resp = true;
+            } else {
+                $this->mensajeOperacion = $elObjtTabla->getMensajeOperacion();
+            }
+        } else {
+            $this->mensajeOperacion = "Error al cargar el objeto CompraItem.";
         }
         return $resp;
         
@@ -86,10 +100,16 @@ class ABMCompraItem{
      */
     public function baja($param){
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
+        if ($this->seteadosCamposClaves($param)) {
             $elObjtTabla = $this->cargarObjetoConClave($param);
-            if ($elObjtTabla!=null and $elObjtTabla->eliminar()){
-                $resp = true;
+            if ($elObjtTabla != null) {
+                if ($elObjtTabla->modificar()) {
+                    $resp = true;
+                } else {
+                    $this->mensajeOperacion = $elObjtTabla->getMensajeOperacion();
+                }
+            } else {
+                $this->mensajeOperacion = "Error al cargar el objeto CompraItem.";
             }
         }
         
@@ -108,6 +128,8 @@ class ABMCompraItem{
             $elObjtTabla = $this->cargarObjeto($param);
             if($elObjtTabla!=null and $elObjtTabla->modificar()){
                 $resp = true;
+            } else {
+                $this->mensajeOperacion = $elObjtTabla->getMensajeOperacion();
             }
         }
         return $resp;
@@ -134,6 +156,8 @@ class ABMCompraItem{
         $arreglo = $obj->listar($where);
         return $arreglo;
     }
-    
+    public function getMensajeOperacion() {
+        return $this->mensajeOperacion;
+    }
 }
 ?>

@@ -19,67 +19,63 @@ class AbmProducto {
             }
         }
         return $resp;
-
     }
+
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return Tabla
+     * @return Producto
      */
     private function cargarObjeto($param){
         $obj = null;
-           
-        if( array_key_exists('idproducto',$param) and array_key_exists('pronombre',$param) and array_key_exists('prodetalle',$param) and array_key_exists('precio',$param) and array_key_exists('procantstock',$param) and array_key_exists('proprecio',$param)){
+        if( array_key_exists('idproducto',$param) && array_key_exists('pronombre',$param) && array_key_exists('prodetalle',$param) && array_key_exists('procantstock',$param) && array_key_exists('proprecio',$param)){
             $obj = new Producto();
-            $obj->cargar($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precio'], $param['procantstock'], $param['proprecio']);
+            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['procantstock'], $param['proprecio']);
         }
         return $obj;
     }
-    
+
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto que son claves
      * @param array $param
-     * @return Tabla
+     * @return Producto
      */
     private function cargarObjetoConClave($param){
         $obj = null;
-        
         if( isset($param['idproducto']) ){
             $obj = new Producto();
-            $obj->cargar($param['idproducto'], null, null, null, null, null);
+            $obj->setIdProducto($param['idproducto']);
+            $obj->cargar();
         }
         return $obj;
     }
-    
-    
+
     /**
      * Corrobora que dentro del arreglo asociativo estan seteados los campos claves
      * @param array $param
      * @return boolean
      */
-    
     private function seteadosCamposClaves($param){
         $resp = false;
         if (isset($param['idproducto']))
             $resp = true;
         return $resp;
     }
-    
+
     /**
      * 
      * @param array $param
      */
     public function alta($param){
         $resp = false;
-        $param['idproducto'] =null;
+        $param['idproducto'] = null;
         $elObjtTabla = $this->cargarObjeto($param);
-//        verEstructura($elObjtTabla);
-        if ($elObjtTabla!=null and $elObjtTabla->insertar()){
+        if ($elObjtTabla != null and $elObjtTabla->insertar()){
             $resp = true;
         }
         return $resp;
-        
     }
+
     /**
      * permite eliminar un objeto 
      * @param array $param
@@ -89,31 +85,29 @@ class AbmProducto {
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
             $elObjtTabla = $this->cargarObjetoConClave($param);
-            if ($elObjtTabla!=null and $elObjtTabla->eliminar()){
+            if ($elObjtTabla != null and $elObjtTabla->eliminar()){
                 $resp = true;
             }
         }
-        
         return $resp;
     }
-    
+
     /**
      * permite modificar un objeto
      * @param array $param
      * @return boolean
      */
     public function modificacion($param){
-        //echo "Estoy en modificacion";
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
             $elObjtTabla = $this->cargarObjeto($param);
-            if($elObjtTabla!=null and $elObjtTabla->modificar()){
+            if($elObjtTabla != null and $elObjtTabla->modificar()){
                 $resp = true;
             }
         }
         return $resp;
     }
-    
+
     /**
      * permite buscar un objeto
      * @param array $param
@@ -130,7 +124,7 @@ class AbmProducto {
                  $where.=" and prodetalle ='".$param['prodetalle']."'";
             if  (isset($param['procantstock']))
                  $where.=" and procantstock ='".$param['procantstock']."'";
-                 if  (isset($param['proprecio']))
+            if  (isset($param['proprecio']))
                  $where.=" and proprecio ='".$param['proprecio']."'";    
         }
         $obj = new Producto();
@@ -138,9 +132,7 @@ class AbmProducto {
         return $arreglo;
     }
 
-
-
-     /**
+    /**
      * Verifica si la cantidad enviada es mayor o igual a la cantidad de stock del producto
      */
     public function verificarStock($data){
@@ -151,12 +143,5 @@ class AbmProducto {
         }
         return $cantidad;
     }
-  
-
-
-
-
-
-    
 }
 ?>

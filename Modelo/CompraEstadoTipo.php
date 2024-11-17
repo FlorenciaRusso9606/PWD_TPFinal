@@ -54,7 +54,7 @@ class CompraEstadoTipo {
     public function cargar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compraestadotipo WHERE idcompraestadotipo = '".$this->getidcompraestadotipo()."', cetdescripcion='".$this->getcetdescripcion()."', cetdescripcion='".$this->getcetdetalle()."'";
+        $sql = "SELECT * FROM compraestadotipo WHERE idcompraestadotipo = " . $this->getidcompraestadotipo();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res > -1){
@@ -65,7 +65,7 @@ class CompraEstadoTipo {
                 }
             }
         } else {
-            $this->setMensajeOperacion("compraestadotipo->cargar: ".$base->getError());
+            $this->setMensajeoperacion("compraestadotipo->cargar: ".$base->getError());
         }
         return $resp;
     }
@@ -73,7 +73,7 @@ class CompraEstadoTipo {
     public function insertar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO compraestadotipo (cetdescripcion, cetdescripcion) VALUES ('" . $this->getcetdescripcion() . "', '".$this->getcetdetalle()."')";
+        $sql = "INSERT INTO compraestadotipo (cetdescripcion, cetdetalle) VALUES ('" . $this->getcetdescripcion() . "', '" . $this->getcetdetalle() . "')";
         try {
             if ($base->Iniciar()) {
                 if ($base->Ejecutar($sql)) {
@@ -83,13 +83,13 @@ class CompraEstadoTipo {
                         $resp = true;
                     }
                 } else {
-                    $this->setMensajeOperacion("compraestadotipo->insertar: " . $base->getError());
+                    $this->setMensajeoperacion("compraestadotipo->insertar: " . $base->getError());
                 }
             } else {
-                $this->setMensajeOperacion("compraestadotipo->insertar: " . $base->getError());
+                $this->setMensajeoperacion("compraestadotipo->insertar: " . $base->getError());
             }
         } catch (PDOException $e) {
-            $this->setMensajeOperacion("compraestadotipo->insertar: " . $e->getMessage());
+            $this->setMensajeoperacion("compraestadotipo->insertar: " . $e->getMessage());
         }
         return $resp;
     }
@@ -97,15 +97,15 @@ class CompraEstadoTipo {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "UPDATE compraestadotipo SET cetdescripcion='".$this->getcetdescripcion()."', cetdetalle ='".$this->getcetdetalle()."' WHERE idcompraestadotipo='".$this->getidcompraestadotipo()."'";
+        $sql = "UPDATE compraestadotipo SET cetdescripcion='" . $this->getcetdescripcion() . "', cetdetalle='" . $this->getcetdetalle() . "' WHERE idcompraestadotipo=" . $this->getidcompraestadotipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
             } else {
-                $this->setMensajeOperacion("compraestadotipo->modificar: ".$base->getError());
+                $this->setMensajeoperacion("compraestadotipo->modificar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("compraestadotipo->modificar: ".$base->getError());
+            $this->setMensajeoperacion("compraestadotipo->modificar: " . $base->getError());
         }
         return $resp;
     }
@@ -113,15 +113,15 @@ class CompraEstadoTipo {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "DELETE FROM compraestadotipo WHERE idcompraestadotipo='".$this->getidcompraestadotipo()."'";
+        $sql = "DELETE FROM compraestadotipo WHERE idcompraestadotipo=" . $this->getidcompraestadotipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
             } else {
-                $this->setMensajeOperacion("compraestadotipo->eliminar: ".$base->getError());
+                $this->setMensajeoperacion("compraestadotipo->eliminar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("compraestadotipo->eliminar: ".$base->getError());
+            $this->setMensajeoperacion("compraestadotipo->eliminar: " . $base->getError());
         }
         return $resp;
     }
@@ -131,19 +131,19 @@ class CompraEstadoTipo {
         $base = new BaseDatos();
         $sql = "SELECT * FROM compraestadotipo";
         if ($parametro != "") {
-            $sql .= ' WHERE '.$parametro;
+            $sql .= ' WHERE ' . $parametro;
         }
         $res = $base->Ejecutar($sql);
         if($res > -1){
             if($res > 0){
                 while ($row = $base->Registro()){
-                    $obj = new Rol();
+                    $obj = new CompraEstadoTipo();
                     $obj->setear($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']);
                     array_push($arreglo, $obj);
                 }
             }
         } else {
-            error_log("compraestadotipo->listar: ".$base->getError());
+            error_log("compraestadotipo->listar: " . $base->getError());
         }
         return $arreglo;
     }

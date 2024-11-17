@@ -1,6 +1,7 @@
 <?php
 
 class abmCompra {
+    private $mensajeOperacion; 
 
     public function abm($datos){
         $resp = false;
@@ -27,14 +28,17 @@ class abmCompra {
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return Tabla
+     * @return Compra
      */
     private function cargarObjeto($param){
         $obj = null;
            
         if( array_key_exists('idcompra',$param)){
             $obj = new Compra();
-            $obj->cargar($param['idcompra'],$param['cofecha'],$param['idusuario']);
+            $obj->setidcompra($param['idcompra']);
+            $obj->setcofecha($param['cofecha']);
+            $obj->setobjUsuario($param['idusuario']);
+            $obj->cargar();
         }
         return $obj;
     }
@@ -43,14 +47,15 @@ class abmCompra {
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de 
      * las variables instancias del objeto que son claves
      * @param array $param
-     * @return Tabla
+     * @return Compra
      */
     private function cargarObjetoConClave($param)
     {
         $obj = null;
         if (isset($param['idcompra'])) {
             $obj = new Compra();
-            $obj->cargar($param['idcompra'], null, null);
+            $obj->setidcompra($param['idcompra']);
+            $obj->cargar();
         }
         return $obj;
     }
@@ -81,6 +86,9 @@ class abmCompra {
         if ($obj != null and $obj->insertar()) {
             $resp = true;
         }
+        else {
+            $this->mensajeOperacion = $obj->getMensajeoperacion();
+        }
         return $resp;
     }
 
@@ -96,6 +104,8 @@ class abmCompra {
             $obj = $this->cargarObjetoConClave($param);
             if ($obj != null and $obj->eliminar()) {
                 $resp = true;
+            } else {
+                $this->mensajeOperacion = $obj->getMensajeoperacion();
             }
         }
         return $resp;
@@ -112,6 +122,8 @@ class abmCompra {
             $obj= $this->cargarObjeto($param);
             if($obj!=null && $obj->modificar()){
                 $resp = true;
+            } else {
+                $this->mensajeOperacion = $obj->getMensajeoperacion();
             }
         }
         return $resp;
@@ -140,8 +152,13 @@ class abmCompra {
 
 
 
-
-
+/**
+     * Devuelve el mensaje de operación
+     * @return string
+     */
+    public function getMensajeOperacion() {
+        return $this->mensajeOperacion;
+    }
 
    
 

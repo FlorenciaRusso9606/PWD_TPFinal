@@ -6,7 +6,7 @@ class AbmMenu {
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return Tabla
+     * @return Menu
      */
     private function cargarObjeto($param) {
         $obj = null;
@@ -32,7 +32,7 @@ class AbmMenu {
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto que son claves
      * @param array $param
-     * @return Tabla
+     * @return Menu
      */
     private function cargarObjetoConClave($param) {
         $obj = null;
@@ -130,7 +130,7 @@ class AbmMenu {
     /**
      * permite buscar un objeto
      * @param array $param
-     * @return boolean
+     * @return array
      */
     public function buscar($param) {
         $where = " true ";

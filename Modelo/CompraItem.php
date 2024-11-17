@@ -129,10 +129,10 @@ class CompraItem {
                     }
                     if ($row['idproducto']!=null or $row['idproducto']!='' ){
                         $objProducto = new Producto();
-                        $objProducto->getProductoId($row['idproducto']);
+                        $objProducto->setIdProducto($row['idproducto']);
                         $objProducto->cargar();
                     }
-                    $this->setear($row['idcompraitem'],$objProducto,$row['medescripcion'],$objCompra,$row['medeshabilitado']); 
+                    $this->setear($row['idcompraitem'],$objProducto,$row['medescripcion'],$objCompra); 
                     
                 }
             }
@@ -147,28 +147,20 @@ class CompraItem {
     public function insertar() {
         $resp = false;
         $base = new BaseDatos();
-        
-        // Construcción de la consulta SQL
         $sql = "INSERT INTO compraitem (idproducto, idcompra, cicantidad) ";
-        $sql .= "VALUES (" . $this->getobjProducto()->getidcompraitemtipo() . ", "
-                         . $this->getobjCompra()->getidcompra() . ", '"
-                         . $this->getobjProducto()->getProductoId() . "', '"
-                         . $this->getcicantidad() . "')";
-        
-        // Descomentar esta línea para depurar la consulta SQL
-        // echo $sql;
-        
+        $sql .= "VALUES (" . $this->getobjProducto()->getIdProducto() . ", "
+                         . $this->getobjCompra()->getidcompra() . ", "
+                         . $this->getcicantidad() . ")";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
                 $this->setidcompraitem($elid);
                 $resp = true;
             } else {
-                $this->setmensajeoperacion("compraitem->insertar: " . $base->getError()[2]);
+                $this->setMensajeoperacion("compraitem->insertar: " . $base->getError());
             }
         } else {
-            $this->setmensajeoperacion("compraitem->insertar: " . $base->getError()[2]);
+            $this->setMensajeoperacion("compraitem->insertar: " . $base->getError());
         }
-        
         return $resp;
     }
     
@@ -229,7 +221,7 @@ class CompraItem {
                     }
                     if ($row['idproducto']!=null){
                         $objProducto = new Producto();
-                        $objProducto->setProductoId($row['idproducto']);
+                        $objProducto->setIdProducto($row['idproducto']);
                         $objProducto->cargar();
                     }
                     $obj->setear($row['idcompraitem'], $$objProducto,$row['medescripcion'],$objCompra,$row['medeshabilitado']); 

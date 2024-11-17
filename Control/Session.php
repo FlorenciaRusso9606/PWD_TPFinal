@@ -115,4 +115,13 @@ class Session {
         $_SESSION['carrito']= $array;
     }
 
+
+    /**
+     * Devuelve una representación en cadena de la sesión
+     * @return string
+     */
+    public function __toString() {
+        return json_encode($_SESSION, JSON_PRETTY_PRINT);
+    }
+
 }
