@@ -64,6 +64,9 @@ $carrito = $carritoObj->obtenerCarrito();
         success: function(result) {
           var result = JSON.parse(result);
           alert(result.respuesta);
+          if (result.respuesta) {
+            window.location.href = "index.php";
+          }
         }
       });
     }
