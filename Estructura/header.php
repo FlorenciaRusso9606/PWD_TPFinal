@@ -5,8 +5,8 @@ include_once '../configuracion.php';
 $session = new Session();
 $rol = $session->getRol();
 
-$objProducto = new AbmProducto();
-$productos = $objProducto->buscar(NULL);
+// $objProducto = new AbmProducto();
+// $productos = $objProducto->buscar(NULL);
 // function mostrarPopup($arregloProd)
 // {
 //     echo "<div class='ui fluid popup bottom left transition hidden'>";
