@@ -16,6 +16,10 @@
                 <a href="historietas.php" class="item">
                     Historietas
                 </a>
+                <a href="carritoCompra.php" class="item">
+                    <i class="shopping cart icon"></i>
+                    Carrito
+                </a>
                 <a href="infoUsuario.php" class="item">
                     <i class="user icon"></i>
                     Mi Cuenta
@@ -24,12 +28,12 @@
                     <i class="sign out alternate icon"></i>
                     Cerrar Sesión
                 </a>
-                <?php if ($rol == 1) {
-                    echo '<a href="menu/menu_list.php" class="item">
-        <i class="user secret icon"></i>
-        Módulo Administración
-    </a>';
-                } ?>
+                <?php if ($rol == 1) { ?>
+                    <a href="menu/menu_list.php" class="item">
+                        <i class="user secret icon"></i>
+                        Módulo Administración
+                    </a>
+                <?php } ?>
             </div>
         </div>
     <?php

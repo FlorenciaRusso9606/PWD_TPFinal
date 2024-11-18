@@ -1,7 +1,6 @@
 <?php
 include_once "../configuracion.php";
 $data = data_submitted();
-var_dump($data);
 
 $carritoObj = new Carrito();
 
@@ -17,7 +16,9 @@ $carrito = $carritoObj->obtenerCarrito();
 <?php include_once "../Estructura/header.php"; ?>
 
 <body>
-  <div class="container mt-4">
+  <div class="ui horizontal divider"></div>
+  <div class="ui very padded segment sixteen wide column">
+
     <h1 class="text-center">Carrito de Compras</h1>
     <div class="row">
       <?php
@@ -39,11 +40,9 @@ $carrito = $carritoObj->obtenerCarrito();
             <!-- Botón Comprar -->
 
             <button type="submit" class=" btn btn-success my-2">
-              <a onclick="agregarCarrito(<?= $producto['idproducto']; ?>)" >Comprar
-              </a> 
-              </button>
-    
-           
+              <a onclick="agregarCarrito(<?= $producto['idproducto']; ?>)">Comprar
+              </a>
+            </button>
 
           </div>
         <?php }
@@ -63,7 +62,7 @@ $carrito = $carritoObj->obtenerCarrito();
         },
         success: function(result) {
           var result = JSON.parse(result);
-          alert(result.respuesta);
+          alert(result.mensaje);
           if (result.respuesta) {
             window.location.href = "index.php";
           }
