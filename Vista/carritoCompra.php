@@ -90,7 +90,7 @@ if (empty($carrito)) {
         var result = JSON.parse(result);
         alert(result.respuesta);
         if (result.respuesta) {
-          window.location.href = "index.php";
+          window.location.href = "compraEstado.php";
         }
       }
     });
