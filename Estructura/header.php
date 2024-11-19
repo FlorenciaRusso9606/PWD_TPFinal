@@ -131,19 +131,3 @@ $productos = $objProducto->buscar(NULL);
     </style>
 </head>
 
-<body>
-    <!-- <script>
-        $('.menu .browse')
-            .popup({
-                inline: true,
-                hoverable: true,
-                position: 'bottom left',
-                delay: {
-                    show: 300,
-                    hide: 800
-                }
-            });
-    </script> -->
-    <?php include $RUTANAV; ?>
-    <main>
-        <div class="ui container">
