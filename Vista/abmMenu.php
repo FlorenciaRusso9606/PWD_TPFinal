@@ -28,7 +28,7 @@ $combo .= '</select>';
         <p>Seleccione la acci&oacute;n que desea realizar.</p>
 
         <table id="dg" title="Administrador de item menu" class="easyui-datagrid" style="width:700px;height:400px"
-            url="Accion/listar_menu.php" toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
+            url="Accion/accionMenu.php?accion=listar" toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
             <thead>
                 <tr>
                     <th field="idmenu" width="50">ID</th>

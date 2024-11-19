@@ -4,58 +4,51 @@ include_once "../../configuracion.php";
 $data = data_submitted();
 $respuesta = false;
 $mensaje = "";
-$abmMenu = new AbmMenu();
-$controlTablaMenu = new ControlTablaMenu();
+$abmRol = new AbmRol();
 
 if (isset($data['accion'])) {
     $accion = $data['accion'];
 
     switch ($accion) {
         case 'alta':
-            if (isset($data['menombre'])) {
-                $respuesta = $controlTablaMenu->altaMenu($data);
+            if (isset($data['roldescripcion'])) {
+                $respuesta = $abmRol->alta($data);
                 if (!$respuesta) {
-                    $mensaje = "No se pudo dar de alta el menú";
+                    $mensaje = "No se pudo dar de alta el rol";
                 }
             } else {
-                $mensaje = "Datos incompletos para dar de alta el menú";
+                $mensaje = "Datos incompletos para dar de alta el rol";
             }
             break;
 
         case 'mod':
-            if (isset($data['idmenu'])) {
-                $respuesta = $controlTablaMenu->modificarMenu($data);
+            if (isset($data['idrol'])) {
+                $respuesta = $abmRol->modificacion($data);
                 if (!$respuesta) {
                     $mensaje = "La acción MODIFICACIÓN no pudo concretarse";
                 }
             } else {
-                $mensaje = "Datos incompletos para modificar el menú";
+                $mensaje = "Datos incompletos para modificar el rol";
             }
             break;
 
         case 'baja':
-            if (isset($data['idmenu'])) {
-                $respuesta = $controlTablaMenu->bajaMenu($data);
+            if (isset($data['idrol'])) {
+                $respuesta = $abmRol->baja($data);
                 if (!$respuesta) {
                     $mensaje = "La acción ELIMINACIÓN no pudo concretarse";
                 }
             } else {
-                $mensaje = "Datos incompletos para eliminar el menú";
+                $mensaje = "Datos incompletos para eliminar el rol";
             }
             break;
 
         case 'listar':
-            $list = $abmMenu->buscar($data);
+            $list = $abmRol->buscar($data);
             $arreglo_salida = array();
             foreach ($list as $elem) {
-                $nuevoElem['idmenu'] = $elem->getIdMenu();
-                $nuevoElem["menombre"] = $elem->getMenombre();
-                $nuevoElem["medescripcion"] = $elem->getMedescripcion();
-                $nuevoElem["idpadre"] = $elem->getObjMenuPadre();
-                if ($elem->getObjMenuPadre() != null) {
-                    $nuevoElem["idpadre"] = $elem->getObjMenuPadre()->getMeNombre();
-                }
-                $nuevoElem["medeshabilitado"] = $elem->getMedeshabilitado();
+                $nuevoElem['idrol'] = $elem->getIdRol();
+                $nuevoElem["roldescripcion"] = $elem->getRolDescripcion();
                 array_push($arreglo_salida, $nuevoElem);
             }
             echo json_encode($arreglo_salida, null, 2);
