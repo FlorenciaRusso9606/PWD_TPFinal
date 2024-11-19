@@ -114,12 +114,17 @@ class CompraEstado
         $this->idcompraestado = "";
         $this->objCompra = null;
         $this->objCompraEstadoTipo = null;
+
+        $this->objCompraEstadoTipo = null;
+        $this->objCompra = null;
         $this->cefechaini = "";
         $this->cefechafin = "";
         $this->mensajeoperacion = "";
     }
-
     public function setear($idcompraestado, $objCompra, $objCompraEstadoTipo, $cefechaini, $cefechafin)
+
+    public function setear($idcompraestado, $objCompraEstadoTipo, $objCompra, $cefechaini, $cefechafin)
+
     {
         $this->setidcompraestado($idcompraestado);
         $this->setobjCompra($objCompra);
@@ -167,7 +172,11 @@ class CompraEstado
         $base = new BaseDatos();
         $sql = "INSERT INTO compraestado (idcompra, idcompraestadotipo, cefechaini, cefechafin) ";
         $sql .= "VALUES (" . $this->getobjCompra()->getidcompra() . ", "
+
             . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() . ", '"
+
+            . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() .  ", '"
+
             . $this->getcefechaini() . "', '"
             . $this->getcefechafin() . "')";
         if ($base->Iniciar()) {
@@ -243,7 +252,11 @@ class CompraEstado
                         $objCompraEstadoTipo->setidcompraestadotipo($row['idcompraestadotipo']);
                         $objCompraEstadoTipo->cargar();
                     }
+
                     $obj->setear($row['idcompraestado'], $objCompra, $objCompraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
+
+                    $obj->setear($row['idcompraestado'], $$objCompraEstadoTipo, $row['medescripcion'], $objCompra, $row['medeshabilitado']);
+
                     array_push($arreglo, $obj);
                 }
             }

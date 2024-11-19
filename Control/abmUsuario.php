@@ -20,7 +20,7 @@ class ABMUsuario
                 $resp = true;
             }
         }
-        
+
         return $resp;
     }
     /**
@@ -31,10 +31,9 @@ class ABMUsuario
     private function cargarObjeto($param)
     {
         $obj = null;
-
+        var_dump($param);
         if (
-            array_key_exists('idusuario', $param)  and array_key_exists('usnombre', $param) and array_key_exists('uspass', $param)
-            and array_key_exists('usmail', $param) and array_key_exists('usdeshabilitado', $param)
+            array_key_exists('idusuario', $param)  and array_key_exists('usnombre', $param) and array_key_exists('uspass', $param) and array_key_exists('usmail', $param) and array_key_exists('usdeshabilitado', $param)
         ) {
             $obj = new Usuario();
             $obj->cargar($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], $param['usdeshabilitado']);
@@ -113,8 +112,11 @@ class ABMUsuario
     {
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
-            $elObjtTabla = $this->cargarObjeto($param);
+
+            $elObjtTabla = $this->cargarObjetoConClave($param);
+            
             if ($elObjtTabla != null and $elObjtTabla->modificar()) {
+
                 $resp = true;
             }
         }
@@ -147,7 +149,7 @@ class ABMUsuario
         return $arreglo;
     }
 
-   
+
 
 
     /*public function cargarComprasUser()
@@ -176,7 +178,7 @@ class ABMUsuario
         compras que tienen estadotipo 0 y 
         tienen fecha fin null de ese estado
         y tienen idusuario actual*/
-        /*$bd = new BaseDatos();
+    /*$bd = new BaseDatos();
         $sql = "SELECT * FROM compra c INNER JOIN compraestado ce ON c.idcompra = ce.idcompra WHERE ce.idcompraestadotipo = 0 AND ce.cefechafin IS NULL AND c.idusuario = " . $idUser;
         $res = $bd->Ejecutar($sql);
         if ($res > -1) {

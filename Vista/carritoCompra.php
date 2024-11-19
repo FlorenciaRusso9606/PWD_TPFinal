@@ -97,8 +97,6 @@ if (empty($carrito)) {
   }
 </script>
 
+</body>
 
-<?php
-var_dump($_SESSION);
-
-include_once "../Estructura/footer.php"; ?>
+</html>

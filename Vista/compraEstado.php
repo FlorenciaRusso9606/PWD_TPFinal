@@ -66,7 +66,7 @@ if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
 
 ?>
   <div class="d-flex flex-column justify-content-center align-items-center w-25">
-    <form class="d-flex flex-column justify-content-center align-items-center " action="./accion/cambiarEstado.php" method="POST">
+    <form class="d-flex flex-column justify-content-center align-items-center " action="accion/cambiarEstado.php" method="POST">
       <select class="form-select" name="nuevoestado">
         <option selected>Cambiar estado</option>
         <option value="1">Iniciada</option>
@@ -79,7 +79,7 @@ if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
   </div>
   <?php } ?>
 <div class="ms-5 d-flex justify-content-center align-items-center">
-  <form method="POST" action="./accion/cancelarCompra.php">
+  <form method="POST" action="accion/cancelarCompra.php">
     <input class="" style="display: none;" type="number" name="idcompracancelar" for="idcompracancelar" value='<?= $compra->getIdCompra() ?>'>
     <button class="btn btn-danger" type="submit" <?php if ($idTipoEstado["idcompraestadotipo"] == 4) { ?> disabled <?php } ?>>Cancelar Compra</button>
   </form>

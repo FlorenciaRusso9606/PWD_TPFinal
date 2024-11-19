@@ -127,7 +127,7 @@ class ControlCompra {
                 "idcompra" => $idcompra,
                 "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
                 "cefechaini" => date('Y-m-d H:i:s'),
-                "cefechafin" => null,
+                "cefechafin" => date('1970-01-01 00:00:00') //el valor anterior era null
             ];
             $abmCompraEstado = new AbmCompraEstado();
             $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
