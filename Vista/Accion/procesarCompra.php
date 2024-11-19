@@ -15,4 +15,11 @@ if (isset($data['id'])) {
     $response['mensaje'] = 'Datos incompletos';
 }
 
+if (isset($data['limpiar'])) {
+    $session = new Session();
+    $session->setCarrito([]);
+    $response['respuesta'] = true;
+    $response['mensaje'] = 'Carrito limpiado';
+}
+
 echo json_encode($response);
