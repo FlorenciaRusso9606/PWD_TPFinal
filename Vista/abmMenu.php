@@ -2,7 +2,7 @@
 include_once "../configuracion.php";
 $objControl = new AbmMenu();
 $List_Menu = $objControl->buscar(null);
-$combo = '<select class="easyui-combobox"  id="idpadre"  name="idpadre" label="Submenu de?:" labelPosition="top" style="width:90%;" required>
+$combo = '<select class="easyui-combobox" id="idpadre" name="idpadre" label="Submenu de?:" labelPosition="top" style="width:90%;" required>
 <option></option>';
 foreach ($List_Menu as $objMenu) {
     $combo .= '<option value="' . $objMenu->getIdmenu() . '">' . $objMenu->getMenombre() . ':' . $objMenu->getMedescripcion() . '</option>';
@@ -28,7 +28,7 @@ $combo .= '</select>';
         <p>Seleccione la acci&oacute;n que desea realizar.</p>
 
         <table id="dg" title="Administrador de item menu" class="easyui-datagrid" style="width:700px;height:400px"
-            url="Accion/listar_menu.php" toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
+            url="Accion/accionMenu.php?accion=listar" toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" singleSelect="true">
             <thead>
                 <tr>
                     <th field="idmenu" width="50">ID</th>
@@ -49,6 +49,7 @@ $combo .= '</select>';
             <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px">
                 <h3>Menu Informacion</h3>
                 <div style="margin-bottom:10px">
+                    <input name="idmenu" id="idmenu" type="hidden">
                     <input name="menombre" id="menombre" class="easyui-textbox" required="true" label="Nombre:" style="width:100%">
                 </div>
                 <div style="margin-bottom:10px">
@@ -72,7 +73,7 @@ $combo .= '</select>';
             function newMenu() {
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Nuevo Menu');
                 $('#fm').form('clear');
-                url = 'Accion/alta_menu.php';
+                url = 'Accion/accionMenu.php?accion=alta';
             }
 
             function editMenu() {
@@ -80,12 +81,12 @@ $combo .= '</select>';
                 if (row) {
                     $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Editar Menu');
                     $('#fm').form('load', row);
-                    url = 'Accion/edit_menu.php?accion=mod&idmenu=' + row.idmenu;
+                    $('#idpadre').combobox('setValue', row.idpadre); // Asegúrate de que el valor del combo se establezca correctamente
+                    url = 'Accion/accionMenu.php?accion=mod&idmenu=' + row.idmenu;
                 }
             }
 
             function saveMenu() {
-                //alert(" Accion");
                 $('#fm').form('submit', {
                     url: url,
                     onSubmit: function() {
@@ -93,8 +94,6 @@ $combo .= '</select>';
                     },
                     success: function(result) {
                         var result = eval('(' + result + ')');
-
-                        alert("Volvio Serviodr");
                         if (!result.respuesta) {
                             $.messager.show({
                                 title: 'Error',
@@ -113,11 +112,10 @@ $combo .= '</select>';
                 if (row) {
                     $.messager.confirm('Confirm', 'Seguro que desea eliminar el menu?', function(r) {
                         if (r) {
-                            $.post('Accion/eliminar_menu.php?idmenu=' + row.idmenu, {
+                            $.post('Accion/accionMenu.php?accion=baja&idmenu=' + row.idmenu, {
                                     idmenu: row.id
                                 },
                                 function(result) {
-                                    alert("Volvio Serviodr");
                                     if (result.respuesta) {
                                         $('#dg').datagrid('reload'); // reload the  data
                                     } else {
