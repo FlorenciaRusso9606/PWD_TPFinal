@@ -26,3 +26,15 @@ if (isset($mensaje)) {
     $retorno['errorMsg'] = $mensaje;
 }
 echo json_encode($retorno);
+
+
+if (isset($data['menombre'])) {
+    $control = new ControlTablaMenu($data);
+} else {
+    $mensaje = "No se pudo dar de alta el menu";
+}
+$retorno['respuesta'] = $control;
+if (isset($mensaje)) {
+    $retorno['errorMsg'] = $mensaje;
+}
+echo json_encode($retorno);

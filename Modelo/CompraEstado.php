@@ -112,6 +112,9 @@ class CompraEstado
     public function __construct()
     {
         $this->idcompraestado = "";
+        $this->objCompra = null;
+        $this->objCompraEstadoTipo = null;
+
         $this->objCompraEstadoTipo = null;
         $this->objCompra = null;
         $this->cefechaini = "";
@@ -119,11 +122,12 @@ class CompraEstado
         $this->mensajeoperacion = "";
     }
 
-    public function setear($idcompraestado, $objCompraEstadoTipo, $objCompra, $cefechaini, $cefechafin)
+    public function setear($idcompraestado, $objCompra, $objCompraEstadoTipo, $cefechaini, $cefechafin)
+
     {
         $this->setidcompraestado($idcompraestado);
-        $this->setobjCompraEstadoTipo($objCompraEstadoTipo);
         $this->setobjCompra($objCompra);
+        $this->setobjCompraEstadoTipo($objCompraEstadoTipo);
         $this->setcefechaini($cefechaini);
         $this->setcefechafin($cefechafin);
     }
@@ -151,7 +155,7 @@ class CompraEstado
                         $objCompraEstadoTipo->setidcompraestadotipo($row['idcompraestadotipo']);
                         $objCompraEstadoTipo->cargar();
                     }
-                    $this->setear($row['idcompraestado'], $objCompraEstadoTipo, $objCompra, $row['cefechaini'], $row['cefechafin']);
+                    $this->setear($row['idcompraestado'], $objCompra,  $objCompraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
                     $resp = true;
                 }
             }
@@ -167,7 +171,9 @@ class CompraEstado
         $base = new BaseDatos();
         $sql = "INSERT INTO compraestado (idcompra, idcompraestadotipo, cefechaini, cefechafin) ";
         $sql .= "VALUES (" . $this->getobjCompra()->getidcompra() . ", "
-            . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() .  ", '"
+
+            . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() . ", '"
+
             . $this->getcefechaini() . "', '"
             . $this->getcefechafin() . "')";
         if ($base->Iniciar()) {
@@ -243,7 +249,10 @@ class CompraEstado
                         $objCompraEstadoTipo->setidcompraestadotipo($row['idcompraestadotipo']);
                         $objCompraEstadoTipo->cargar();
                     }
-                    $obj->setear($row['idcompraestado'], $$objCompraEstadoTipo, $row['medescripcion'], $objCompra, $row['medeshabilitado']);
+
+                    $obj->setear($row['idcompraestado'], $objCompra, $objCompraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
+
+
                     array_push($arreglo, $obj);
                 }
             }

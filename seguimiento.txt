@@ -1,0 +1,47 @@
+Hoja de Seguimiento
+
+Objetivo del Trabajo:
+Integrar todos los conceptos vistos en la materia. Se espera que el alumno implemente un Carrito de Compra que tendrá 2 vistas: Pública y Privada. Desde el acceso público se van a poder visualizar todos los artículos que pueden ser seleccionados de la tienda, información de contacto de la tienda y el acceso a la parte Privada. El acceso a la parte privada del Carrito solo podrá ser realizado por aquellos usuarios habilitados de la aplicación que pueden tener uno de los siguientes roles: Cliente, Administrador.
+
+Pautas Básicas:
+La aplicación debe ser desarrollada sobre una arquitectura MVC (Vista-Control-Dato) utilizando PHP como lenguaje de programación. Se otorgará una estructura de directorio inicial. Utilizar la Base de Datos MySql bdcarritocompras otorgada por la cátedra. Realizar el MOR de las tablas del modelo de base de datos. La aplicación tendrá páginas públicas y otras restringidas que sólo podrán ser accedidas a partir de un usuario y contraseña. Utilizar el módulo de autenticación implementado en el TP 5. La aplicación debe tener como mínimo 2 roles: Cliente, Administrador. El menú de la aplicación debe ser un menú dinámico que pueda ser gestionado por el administrador de la aplicación. El modelo de datos será otorgado por la cátedra. Desde el módulo los usuarios registrados con el rol Clientes podrán: Gestionar los datos de su cuenta como: cambiar su e-mail, contraseña, etc. Realizar la compra de uno o más productos con stock. Módulo de Administración, solo podrá ser accedido por el perfil de usuarios de mayor nivel. Dentro de las operaciones que pueden realizar encontramos: Administración de Usuarios, roles, menú y productos. Alta Baja y Modificación (ABM). Acceso a los procedimientos que permite el cambio de estado de los productos.
+
+Tareas Pendientes
+
+Cliente
+- [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
+- [ ] Realizar Compra 
+- [ ] Ver el estado de su compra
+
+Deposito
+- [ ] abmProductos - Rocio
+- [ ] Ver todos los estados de compra
+
+Administrador
+- [X] abmUsuarios - Rocio
+- [X] abmRoles - Rocio
+- [X] abmMenu - Rocio
+- [ ] abmProductos -Rocio
+
+
+
+
+Controladores
+- [ ] Implementar el envío de un correo electrónico al cliente cada vez que la compra tenga un cambio de estado.
+
+Modelos
+- [ ] Registrar todos los cambios de estados de una compra.
+
+Vistas
+- [ ] Mejorar la interfaz de usuario.
+- [ ] Implementar todas las interfaces con AJAX.
+- [ ] Asegurar que las páginas seguras controlen que el usuario está logueado y tiene permiso de acceso.
+
+Requisitos Adicionales
+- [ ] La implementación de los script PHP correspondientes a las acciones de las interfaces NO deben implementar funcionalidad vinculada al proceso. Recuerde que los script tienen la responsabilidad de obtener los datos de la interfaz, crear el/los objetos del control y retornar la respuesta a la interfaz.
+- [-] El menú debe generarse automáticamente según los permisos configurados al rol del usuario.
+- [ ] La gestión del stock debe implementarse correctamente, quitando o devolviendo según corresponda.
+
+---
+
+Actualizado el: [Fecha de hoy]
