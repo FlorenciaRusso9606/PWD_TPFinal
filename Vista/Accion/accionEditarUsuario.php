@@ -2,30 +2,27 @@
 
 include_once '../../configuracion.php';
 $datos = data_submitted();
-var_dump($datos);
-$resp = false;
-$objModUser = new abmUsuario();
-$mensaje = '';
+
+$retorno = [];
+
 if (isset($datos['idusuario'])) {
-    if ($objModUser->modificacion($datos)) {
-        
-        $resp = true;
-        $mensaje = 'La modificación se realizó correctamente';
+    $objModUser = new abmUsuario();
+    $resp = $objModUser->modificacion($datos);
+
+    if ($resp) {
+        $retorno['respuesta'] = true;
+        $retorno['usnombre'] = $datos['usnombre'];
+        $retorno['usmail'] = $datos['usmail'];
+        $retorno['uspassLength'] = strlen($datos['uspass']);
     } else {
-        $mensaje = 'La modificación no pudo concretarse';
+
+        $retorno['respuesta'] = false;
+        $retorno['errorMsg'] = 'La modificación no pudo concretarse.';
     }
 } else {
-    $mensaje = 'No se pudo obtener el id del usuario';
+
+    $retorno['respuesta'] = false;
+    $retorno['errorMsg'] = 'ID de usuario no proporcionado.';
 }
-?>
 
-<div class="container mt-5 text-center">
-
-<?php
-
-    echo $mensaje;
-?>
-    
-</div>
-
-
+echo json_encode($retorno);

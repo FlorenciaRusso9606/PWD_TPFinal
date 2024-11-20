@@ -31,12 +31,17 @@ class ABMUsuario
     private function cargarObjeto($param)
     {
         $obj = null;
-        var_dump($param);
+
         if (
-            array_key_exists('idusuario', $param)  and array_key_exists('usnombre', $param) and array_key_exists('uspass', $param) and array_key_exists('usmail', $param) and array_key_exists('usdeshabilitado', $param)
+            array_key_exists('idusuario', $param) &&
+            array_key_exists('usnombre', $param) &&
+            array_key_exists('uspass', $param) &&
+            array_key_exists('usmail', $param)/*  &&
+            array_key_exists('usdeshabilitado', $param) */
         ) {
             $obj = new Usuario();
-            $obj->cargar($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], $param['usdeshabilitado']);
+
+            $obj->setear($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], null);
         }
         return $obj;
     }
@@ -53,6 +58,7 @@ class ABMUsuario
         if (isset($param['idusuario'])) {
             $obj = new Usuario();
             $obj->cargar($param['idusuario'], null, null, null, null);
+            /* var_dump($obj); */
         }
         return $obj;
     }
@@ -113,13 +119,13 @@ class ABMUsuario
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
 
-            $elObjtTabla = $this->cargarObjetoConClave($param);
-            
-            if ($elObjtTabla != null and $elObjtTabla->modificar()) {
-
+            $obj = $this->cargarObjeto($param);
+            /* var_dump($obj); */
+            if ($obj != null && $obj->modificar()) {
                 $resp = true;
             }
         }
+        /* var_dump($resp); */
         return $resp;
     }
 
