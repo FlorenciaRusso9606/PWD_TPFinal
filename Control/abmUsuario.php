@@ -36,8 +36,8 @@ class ABMUsuario
             array_key_exists('idusuario', $param) &&
             array_key_exists('usnombre', $param) &&
             array_key_exists('uspass', $param) &&
-            array_key_exists('usmail', $param)  &&
-            array_key_exists('usdeshabilitado', $param)
+            array_key_exists('usmail', $param)  /*&&
+            array_key_exists('usdeshabilitado', $param)*/
         ) {
             $obj = new Usuario();
 
