@@ -23,7 +23,7 @@ Administrador
 - [X] abmUsuarios - Rocio
 - [X] abmRoles - Rocio
 - [X] abmMenu - Rocio
-- [ ] abmProductos -Rocio
+- [X] abmProductos -Rocio
 - [ ] Crear archivo control tabla -Rocio
 - [ ] agregar verificacion de idUsuario para Administrador y Deposito
 

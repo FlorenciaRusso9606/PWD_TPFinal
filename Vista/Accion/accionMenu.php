@@ -4,7 +4,6 @@ include_once "../../configuracion.php";
 $data = data_submitted();
 $respuesta = false;
 $mensaje = "";
-$abmMenu = new AbmMenu();
 $controlTablaMenu = new ControlTablaMenu();
 
 if (isset($data['accion'])) {
@@ -45,22 +44,10 @@ if (isset($data['accion'])) {
             break;
 
         case 'listar':
-            $list = $abmMenu->buscar($data);
-            $arreglo_salida = array();
-            foreach ($list as $elem) {
-                $nuevoElem['idmenu'] = $elem->getIdMenu();
-                $nuevoElem["menombre"] = $elem->getMenombre();
-                $nuevoElem["medescripcion"] = $elem->getMedescripcion();
-                $nuevoElem["idpadre"] = $elem->getObjMenuPadre();
-                if ($elem->getObjMenuPadre() != null) {
-                    $nuevoElem["idpadre"] = $elem->getObjMenuPadre()->getMeNombre();
-                }
-                $nuevoElem["medeshabilitado"] = $elem->getMedeshabilitado();
-                array_push($arreglo_salida, $nuevoElem);
-            }
+            $arreglo_salida = $controlTablaMenu->listarMenu($data);
+
             echo json_encode($arreglo_salida, null, 2);
-            exit; // Salir para no ejecutar el resto del script
-            break;
+            exit;
 
         default:
             $mensaje = "Acción no válida";
