@@ -1,16 +1,21 @@
 <?php
 include_once "../../configuracion.php";
-$response = ["success" => false, "message" => "Error desconocido"];
-include_once "../configuracion.php";
-$data = data_submitted();
-if (isset($data['idcompracancelar'])) {
-  $controlCompra = new ControlCompra;
-  $compraCanceladaConExito = $controlCompra->cancelarCompra($data);
-  if ($compraCanceladaConExito) {
-    $response = ["success" => true, "message" => "Compra cancelada exitosamente"];
-  } else {
-    $response["message"] = "No se pudo cancelar la compra";
-  }
 
-  echo json_encode($response);
+$data = data_submitted();
+$response = ["success" => false, "message" => "Ocurrió un error al procesar la solicitud."];
+
+if (isset($data['idcompracancelar'])) {
+    $controlCompra = new ControlCompra();
+    if ($controlCompra->cancelarCompra($data)) {
+        $response["success"] = true;
+        $response["message"] = "Compra cancelada exitosamente.";
+    } else {
+        $response["message"] = "No se pudo cancelar la compra.";
+    }
+} else {
+    $response["message"] = "Faltan datos para cancelar la compra.";
 }
+
+// Enviar la respuesta en formato JSON
+header("Content-Type: application/json");
+echo json_encode($response);

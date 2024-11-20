@@ -1,144 +1,210 @@
 <?php
 include_once "../configuracion.php";
+
 $data = data_submitted();
 $session = new Session;
-if (isset($data["compraexitosa"]) && $data["compraexitosa"]) {
-?>
-      <div class="bg-success text-white">Compra realizada exitosamente</div>
-    <?php}else{?>
-        <div class="bg-danger text-white">No se pudo realizar su compra</div>
-
-
-<?php }
-$abmEstadoTipo = new ABMcompraEstadoTipo;
-$abmCompraItem = new AbmCompraItem();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?include_once "../Estructura/header.php";?>
-<h2 class="container my-5">Estado de Compra</h2>
+<?php include_once "../Estructura/header.php"; ?>
+
+<h2 class="container my-5 text-center">Estado de Compra</h2>
+<div class="card my-4 shadow-sm" data-id="<?= $idCompra ?>">
+    <!-- Contenido de la tarjeta -->
+</div>
+
+<div class="container">
 <?php
-$controlCompra= new ControlCompra;
+$message = '';
+
+
+if (isset($data["resp"])) {
+    if (isset($data['message']) && $data['message'] === 'cancelarcompra') {
+        $message = $data["resp"] === "success" ? "Compra cancelada exitosamente" : "No se pudo cancelar su compra";
+    }
+    else if (isset($data['message']) && $data['message'] === 'cambiarestado') {
+        $message = $data["resp"] === "success" ? "Estado de compra cambiado exitosamente" : "No se pudo cambiar el estado de su compra";
+    }
+  }
+    $alertClass = $data["resp"] === "success" ? "alert-success" : "alert-danger";
+    echo "<div class='alert $alertClass text-center'>$message</div>";
+
+$abmEstadoTipo = new ABMcompraEstadoTipo;
+$abmCompraItem = new AbmCompraItem();
+$controlCompra = new ControlCompra;
 $compras = $controlCompra->buscarCompras($session);
-foreach($compras as $compra){
-  $precioTotal=0;
-    $idCompra = $compra->getidcompra();
-    $paramIdCompra['idcompra'] = $idCompra;
-    $ambCompraEstado =  new AbmCompraEstado;
-    $paramIdCompra["idcompra"] = $compra->getIdCompra();
-    $estado = $ambCompraEstado->buscar($paramIdCompra);    
+$abmEstadoTipo = new ABMcompraEstadoTipo();
+$abmCompraItem = new AbmCompraItem();
+$ambCompraEstado = new AbmCompraEstado();
+
+foreach ($compras as $compra) {
+    $idCompra = $compra->getIdCompra();
+    $paramIdCompra = ["idcompra" => $idCompra];
+    
+    // Obtener estado
+    $estado = $ambCompraEstado->buscar($paramIdCompra);
+    if (!$estado) {
+        continue;
+    }
+    
+    // Obtener items de la compra
     $arrItems = $abmCompraItem->buscar($paramIdCompra);
-?>
-<div class="container d-flex">
-<div class="w-50 d-flex flex-column">
-    <h3>Identificador de Compra: <?= $compra->getIdCompra(); ?></h3>
-    <?php
-      if ($session->getRol() == 2 && ($compra->getObjUsuario() != $session->getRol() || $estado != null)) {
-        echo "<span class='mb-2 badge bg-primary'>ID Usuario: {$compra->getObjUsuario()}</span>
-                ";
-      }
-      ?>
-      <h4 class="fw-bold">Estado Actual: <?php
-      $idTipoEstado["idcompraestadotipo"]= $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-      $tipoEstado = $abmEstadoTipo->buscar($idTipoEstado);
-       echo ($tipoEstado[0]->getCetDescripcion());?>
-      </h4>
-      <h4>Productos: </h4>
-        <?php
-        foreach($arrItems as $item){
-          $idProducto= $item->getobjProducto()->getProNombre() . " ({$item->getCiCantidad()})";
-        ?>
-        <div class="d-flex flex-column">
-            <p><?= $idProducto;?></p>
-           <?php  $precioTotal += $item->getObjProducto()->getProPrecio();} ?>
-           <p>
-           <?php 
-     echo "Total: $" . $precioTotal; ?>
-           </p>
-          </div>
+
+    // Mostrar información de la compra
+    echo "<div class='card my-4 shadow-sm'>";
+    echo "<div class='card-body'>";
+    echo "<h5 class='card-title'>Compra ID: $idCompra</h5>";
+    $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
+    echo "<p class='card-text'><strong>Estado:</strong> {$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</p>";
+    
+    $precioTotal = 0;
+    echo "<ul class='list-group list-group-flush mb-3'>";
+    foreach ($arrItems as $item) {
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
+        echo "<span>{$item->getobjProducto()->getProNombre()} <small>(Cantidad: {$item->getCiCantidad()})</small></span>";
+        $precioTotal += $item->getObjProducto()->getProPrecio();
+    }
+    echo "</ul>";
+    echo "<p class='card-text'><strong>Total:</strong> $$precioTotal</p>";
+
+    if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
       
-</div>
+        echo "
+        <form class='form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
+            <div class='mb-3'>
+                <select class='form-select' name='nuevoestado'>
+                    <option selected>Cambiar estado</option>
+                    <option value='1'>Iniciada</option>
+                    <option value='2'>Aceptada</option>
+                    <option value='3'>Enviada</option>
+                </select>
+            </div>
+            <input type='hidden' value='{$idCompra}' name='idcompra'>
+            <button class='btn btn-primary w-100' type='submit'>Confirmar cambio</button>
+        </form>
+        ";
+    }
 
-<?php
+    // Formulario para cancelar compra
+    echo "
+    <form method='POST' action='accion/cancelarCompra.php' class='form-cancelar-compra mt-3' data-id='{$idCompra}'>
+        <input type='hidden' name='idcompracancelar' value='{$idCompra}'>
+        <button class='btn btn-danger w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ? "disabled" : "") . ">Cancelar Compra</button>
+    </form>";
 
-if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
-
+    echo "</div></div>";}
 ?>
-  <div class="d-flex flex-column justify-content-center align-items-center w-25">
-    <form class="d-flex flex-column justify-content-center align-items-center form-cambiar-estado" data-id="<?= $compra->getIdCompra();?>" action="accion/cambiarEstado.php" method="POST">
-      <select class="form-select" name="nuevoestado">
-        <option selected>Cambiar estado</option>
-        <option value="1">Iniciada</option>
-        <option value="2">Aceptada</option>
-        <option value="3">Enviada</option>
-      </select>
-      <input type="text" style="display: none;" value="<?= $compra->getIdCompra(); ?>" name="idcompra">
-      <button class="btn btn-primary mt-3" type="submit">Confirmar cambio</button>
-    </form>
-  </div>
-  <?php } ?>
-<div class="ms-5 d-flex justify-content-center align-items-center">
-  <form method="POST" action="accion/cancelarCompra.php" class="form-cancelar-compra" data-id="<?= $compra->getIdCompra(); ?>" >
-    <input class="" style="display: none;" type="number" name="idcompracancelar" for="idcompracancelar" value='<?= $compra->getIdCompra() ?>'>
-    <button class="btn btn-danger" type="submit" <?php if ($idTipoEstado["idcompraestadotipo"] == 4) { ?> disabled <?php } ?>>Cancelar Compra</button>
-  </form>
 </div>
-</div>
-<?php }?>
-<script type="text/javascript">
-  // Cambiar estado
-  document.querySelectorAll('.btn-cambiar-estado').forEach(button => {
-    button.addEventListener('click', function () {
-      const form = this.closest('.form-cambiar-estado');
-      const formData = new FormData(form);
-      const action = form.getAttribute('action');
 
-      fetch(action, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
+
+
+<!--<script type="text/javascript">
+  /// Función para manejar el envío de formularios de forma asíncrona
+async function enviarFormulario(event, form, mensajeExito, mensajeError, callback) {
+    event.preventDefault(); // Prevenir el envío por defecto
+
+    const formData = new FormData(form); // Crear un objeto FormData
+    const action = form.getAttribute("action"); // Obtener la acción del formulario
+
+    try {
+        const response = await fetch(action, {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await response.json(); // Convertir la respuesta a JSON
+
         if (data.success) {
-          alert('Estado cambiado exitosamente');
-          location.reload(); // Recargar para ver el nuevo estado
+            mostrarMensaje("success", mensajeExito);
+            if (callback) callback(data); // Ejecutar la función callback si existe
         } else {
-          alert('Error al cambiar el estado: ' + data.message);
+            mostrarMensaje("danger", mensajeError);
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Ocurrió un error. Inténtalo nuevamente.');
-      });
-    });
-  });
+    } catch (error) {
+        console.error("Error:", error);
+        mostrarMensaje("danger", "Ocurrió un error. Intenta nuevamente.");
+    }
+}
 
-  // Cancelar compra
-  document.querySelectorAll('.btn-cancelar-compra').forEach(button => {
-    button.addEventListener('click', function () {
-      const form = this.closest('.form-cancelar-compra');
-      const formData = new FormData(form);
-      const action = form.getAttribute('action');
+// Función para mostrar un mensaje al usuario
+function mostrarMensaje(tipo, mensaje) {
+    let alertContainer = document.querySelector("#alert-container");
+    if (!alertContainer) {
+        alertContainer = document.createElement("div");
+        alertContainer.id = "alert-container";
+        alertContainer.className = "my-3";
+        document.querySelector("body").prepend(alertContainer);
+    }
 
-      fetch(action, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Compra cancelada exitosamente');
-          location.reload(); // Recargar para reflejar los cambios
+    const alertDiv = document.createElement("div");
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+    alertDiv.setAttribute("role", "alert");
+    alertDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+    alertContainer.appendChild(alertDiv);
+    setTimeout(() => alertDiv.remove(), 5000); // Eliminar después de 5 segundos
+}
+
+// Función para actualizar la interfaz dinámicamente
+function actualizarInterfaz(compraId, nuevoEstadoId, descripcionEstado) {
+    const card = document.querySelector(`.card[data-id="${compraId}"]`);
+    if (!card) return;
+
+    // Actualizar el texto del estado
+    const estadoText = card.querySelector(".card-text strong + span");
+    if (estadoText) {
+        estadoText.textContent = ` ${descripcionEstado}`;
+    }
+
+    // Deshabilitar el botón de cancelar si corresponde
+    const botonCancelar = card.querySelector(".form-cancelar-compra button");
+    if (botonCancelar) {
+        if (nuevoEstadoId == 4) { // 4 = Estado final (cancelado)
+            botonCancelar.disabled = true;
         } else {
-          alert('Error al cancelar la compra: ' + data.message);
+            botonCancelar.disabled = false;
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Ocurrió un error. Inténtalo nuevamente.');
-      });
+    }
+}
+
+// Asociar eventos a los formularios de cambiar estado
+document.querySelectorAll(".form-cambiar-estado").forEach((form) => {
+    form.addEventListener("submit", function (event) {
+        enviarFormulario(
+            event,
+            this,
+            "Estado cambiado exitosamente.",
+            "No se pudo cambiar el estado.",
+            (data) => {
+                const compraId = this.dataset.id;
+                const nuevoEstadoId = this.querySelector("[name='nuevoestado']").value;
+                const descripcionEstado = this.querySelector(`[name='nuevoestado'] option[value="${nuevoEstadoId}"]`).textContent;
+                actualizarInterfaz(compraId, nuevoEstadoId, descripcionEstado);
+            }
+        );
     });
-  });
-</script>
+});
+
+// Asociar eventos a los formularios de cancelar compra
+document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
+    form.addEventListener("submit", function (event) {
+        enviarFormulario(
+            event,
+            this,
+            "Compra cancelada exitosamente.",
+            "No se pudo cancelar la compra.",
+            (data) => {
+                const compraId = this.dataset.id;
+                actualizarInterfaz(compraId, 4, "Cancelada"); // 4 = Estado cancelado
+            }
+        );
+    });
+});
+
+
+</script>!-->
 
 <?php include_once "../Estructura/footer.php"; ?>
