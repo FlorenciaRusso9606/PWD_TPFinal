@@ -3,29 +3,28 @@ include_once "../Estructura/header.php";
 $data = data_submitted();
 var_dump($data);
 
-
-/* $data['cantidad'] cantidad del libro que se compro */
 $carritoObj = new Carrito();
-/* var_dump($carritoObj); */
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Procesar los datos POST
+  if (isset($data['idproducto']) && isset($data['cantidad'])) {
+    $carritoObj->agregarProducto($data);
+  }
 
-
-/* var_dump($carritoObj); */
-if (isset($data['idproducto']) && isset($data['cantidad'])) {
-  $carritoObj->agregarProducto($data);
+  // Redirigir a la misma página utilizando GET para evitar reenvío de datos al recargar
+  header("Location: carritoCompra.php");
+  exit();
 }
-/* var_dump($carritoObj); */
+
 // Obtener el contenido del carrito
 $carrito = $carritoObj->obtenerCarrito();
 
-//Si el carrito esta vacio redirigir al index o si entra por la url
+// Si el carrito está vacío, redirigir al index o si entra por la URL
 if (empty($carrito)) {
   header("Location: ../Vista/index.php");
+  exit();
 }
-
-
 ?>
-
 
 
 <div class="container mt-5">
