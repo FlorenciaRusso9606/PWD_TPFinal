@@ -65,7 +65,7 @@ if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
 
 ?>
   <div class="d-flex flex-column justify-content-center align-items-center w-25">
-    <form class="d-flex flex-column justify-content-center align-items-center " action="accion/cambiarEstado.php" method="POST">
+    <form class="d-flex flex-column justify-content-center align-items-center form-cambiar-estado" data-id="<?= $compra->getIdCompra();?>" action="accion/cambiarEstado.php" method="POST">
       <select class="form-select" name="nuevoestado">
         <option selected>Cambiar estado</option>
         <option value="1">Iniciada</option>
@@ -78,11 +78,67 @@ if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
   </div>
   <?php } ?>
 <div class="ms-5 d-flex justify-content-center align-items-center">
-  <form method="POST" action="accion/cancelarCompra.php">
+  <form method="POST" action="accion/cancelarCompra.php" class="form-cancelar-compra" data-id="<?= $compra->getIdCompra(); ?>" >
     <input class="" style="display: none;" type="number" name="idcompracancelar" for="idcompracancelar" value='<?= $compra->getIdCompra() ?>'>
     <button class="btn btn-danger" type="submit" <?php if ($idTipoEstado["idcompraestadotipo"] == 4) { ?> disabled <?php } ?>>Cancelar Compra</button>
   </form>
 </div>
 </div>
-<?php }
-include_once "../Estructura/footer.php"; ?>
+<?php }?>
+<script type="text/javascript">
+  // Cambiar estado
+  document.querySelectorAll('.btn-cambiar-estado').forEach(button => {
+    button.addEventListener('click', function () {
+      const form = this.closest('.form-cambiar-estado');
+      const formData = new FormData(form);
+      const action = form.getAttribute('action');
+
+      fetch(action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Estado cambiado exitosamente');
+          location.reload(); // Recargar para ver el nuevo estado
+        } else {
+          alert('Error al cambiar el estado: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error. Inténtalo nuevamente.');
+      });
+    });
+  });
+
+  // Cancelar compra
+  document.querySelectorAll('.btn-cancelar-compra').forEach(button => {
+    button.addEventListener('click', function () {
+      const form = this.closest('.form-cancelar-compra');
+      const formData = new FormData(form);
+      const action = form.getAttribute('action');
+
+      fetch(action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Compra cancelada exitosamente');
+          location.reload(); // Recargar para reflejar los cambios
+        } else {
+          alert('Error al cancelar la compra: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error. Inténtalo nuevamente.');
+      });
+    });
+  });
+</script>
+
+<?php include_once "../Estructura/footer.php"; ?>

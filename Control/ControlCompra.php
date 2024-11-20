@@ -105,11 +105,42 @@ class ControlCompra {
     // Devolver Compras ?
 
     // Cancelar
-    public function cancelarCompra($objIdProducto) {
+    public function cancelarCompra($param) {
         $respuesta = false;
+        $param['idcompra']=$param['idcancelarcompra'];
+            $abmCompra = new abmCompra;
+            $abmEstado = new AbmCompraEstado;
+            $abmCompraItem = new ABMCompraItem;
+            $compra = $abmCompra->buscar($param);
+            $idCompra = $compra[0]->getidcompra();
+            $compraEstado = $abmEstado->buscar($idCompra);
+            $arrCompraItem = $abmCompraItem->buscar($idCompra);
+            $datos = [
+                "idcompraestado" => $compraEstado[0]->getIdCompraEstado(),
+                "idcompra" => $param["idcompracancelar"],
+                "idcompraestadotipo" => 4,
+                "cefechaini" => $compraEstado[0]->getCeFechaIni(),
+                "cefechafin" =>  date("Y-m-d H:i:s"),
+              ];
+            foreach($arrCompraItem as $compraItem){
+                $param['idproducto']= $compraItem->getobjProducto()->getIdProducto();
+                $abmProducto = new AbmProducto;
+                $objProducto = $abmProducto->buscar($param);
+        
+            $nuevaCant = $objProducto[0]->getProCantStock() + $compraItem->getCiCantidad();
+            $objProducto[0]->setProCantStock($nuevaCant);
 
+            $datosMod = $this->modDatosProducto($objProducto[0]);
+            $respStock =$abmProducto->modificacion($datosMod);
+        }
+        if($respStock){
+            $respuesta = $abmEstado->modificacion($datos);
+        }
         return $respuesta;
     }
+        
+        
+    
 
     /**
      * Verifica la cantidad de productos en el carrito con su
@@ -158,7 +189,20 @@ class ControlCompra {
         }
         return $arrCompras;
       }
-
+public function cambiarEstado($param){
+    $respuesta = null;
+    $abmCompraEstado = new AbmCompraEstado;
+    $compraEstado = $abmCompraEstado->buscar($param);
+    $datoEstado=[
+        'idcompraestado' => $compraEstado[0]->getidcompraestado(),
+        'idcompra' => $param['idcompra'],
+        'idcompraestadotipo' => $param['nuevoestado'],
+        'cefechaini'=> $compraEstado[0]->getcefechaini(),
+        'cefechafin' => $compraEstado[0]->getcefechafin()
+    ];
+    $respuesta = $abmCompraEstado->modificacion($datosEstado);
+    return $respuesta;
+}
     // public function mensajesCompraControl($num) {
     //     $mensajes = [
     //       /* Cambiar estado de compra*/
