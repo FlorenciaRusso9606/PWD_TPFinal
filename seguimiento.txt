@@ -11,7 +11,7 @@ Tareas Pendientes
 Cliente
 - [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
 - [ ] Realizar Compra - Elenzo
-- [ ] Ver el estado de su compra
+- [] Ver el estado de su compra
 
 Deposito
 - [ ] abmProductos - Rocio

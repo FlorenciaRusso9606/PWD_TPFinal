@@ -15,19 +15,6 @@ $session = new Session;
 
 <div class="container">
 <?php
-$message = '';
-
-
-if (isset($data["resp"])) {
-    if (isset($data['message']) && $data['message'] === 'cancelarcompra') {
-        $message = $data["resp"] === "success" ? "Compra cancelada exitosamente" : "No se pudo cancelar su compra";
-    }
-    else if (isset($data['message']) && $data['message'] === 'cambiarestado') {
-        $message = $data["resp"] === "success" ? "Estado de compra cambiado exitosamente" : "No se pudo cambiar el estado de su compra";
-    }
-  }
-    $alertClass = $data["resp"] === "success" ? "alert-success" : "alert-danger";
-    echo "<div class='alert $alertClass text-center'>$message</div>";
 
 $abmEstadoTipo = new ABMcompraEstadoTipo;
 $abmCompraItem = new AbmCompraItem();
@@ -36,6 +23,7 @@ $compras = $controlCompra->buscarCompras($session);
 $abmEstadoTipo = new ABMcompraEstadoTipo();
 $abmCompraItem = new AbmCompraItem();
 $ambCompraEstado = new AbmCompraEstado();
+
 
 foreach ($compras as $compra) {
     $idCompra = $compra->getIdCompra();
@@ -51,7 +39,7 @@ foreach ($compras as $compra) {
     $arrItems = $abmCompraItem->buscar($paramIdCompra);
 
     // Mostrar información de la compra
-    echo "<div class='card my-4 shadow-sm'>";
+    echo "<div class='card my-4 shadow-sm' data-id='{$idCompra}'>"; // Asegúrate de que `data-id` tenga el valor correcto
     echo "<div class='card-body'>";
     echo "<h5 class='card-title'>Compra ID: $idCompra</h5>";
     $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
@@ -67,8 +55,8 @@ foreach ($compras as $compra) {
     echo "</ul>";
     echo "<p class='card-text'><strong>Total:</strong> $$precioTotal</p>";
 
+    // Formulario para cambiar estado (si aplica)
     if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
-      
         echo "
         <form class='form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
             <div class='mb-3'>
@@ -92,13 +80,14 @@ foreach ($compras as $compra) {
         <button class='btn btn-danger w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ? "disabled" : "") . ">Cancelar Compra</button>
     </form>";
 
-    echo "</div></div>";}
+    echo "</div></div>";
+}
 ?>
-</div>
 
 
 
-<!--<script type="text/javascript">
+
+<script type="text/javascript">
   /// Función para manejar el envío de formularios de forma asíncrona
 async function enviarFormulario(event, form, mensajeExito, mensajeError, callback) {
     event.preventDefault(); // Prevenir el envío por defecto
@@ -205,6 +194,6 @@ document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
 });
 
 
-</script>!-->
+</script>
 
 <?php include_once "../Estructura/footer.php"; ?>
