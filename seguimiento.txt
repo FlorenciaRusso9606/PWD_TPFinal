@@ -23,7 +23,7 @@ Administrador
 - [X] abmMenu - Rocio
 - [ ] abmProductos -Rocio
 
-
+- [ ] agregar verificacion de idUsuario para Administrador y Deposito
 
 
 Controladores
