@@ -18,6 +18,10 @@ $menus = $nav->getSubMenus($rol);
                         <?= $menuActual->getMedescripcion() ?>
                     </a>
                 <?php } ?>
+                <a href="cerrarSesion.php" class="item">
+                    <i class="sign out alternate icon"></i>
+                    cerrarSesion
+                </a>
             </div>
         </div>
 

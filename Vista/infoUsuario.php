@@ -1,13 +1,10 @@
 <?php
 include_once "../Estructura/header.php";
-
+include_once "../Control/pagPublica.php";  
 $session = new Session();
 $idUsuario = $session->getUsuario();
 
 // Por si se ingresa a través de la URL
-if ($idUsuario == null) {
-    header("Location: " . $PRINCIPAL);
-}
 
 $res = false;
 if ($idUsuario) {

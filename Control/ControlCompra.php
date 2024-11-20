@@ -97,49 +97,50 @@ class ControlCompra {
         return $compraExitosa;
     }
 
-    // Cambiar estado
+    
     // Eliminar compra
 
-    // Modificar stock
 
-    // Devolver Compras ?
 
-    // Cancelar
     public function cancelarCompra($param) {
-        $respuesta = false;
-        $param['idcompra']=$param['idcompracancelar'];
-            $abmCompra = new abmCompra;
-            $abmEstado = new AbmCompraEstado;
-            $abmCompraItem = new ABMCompraItem;
-            $compra = $abmCompra->buscar($param);
-            $idCompra = $compra[0]->getidcompra();
-            $compraEstado = $abmEstado->buscar($idCompra);
-            $arrCompraItem = $abmCompraItem->buscar($idCompra);
-            $datos = [
-                "idcompraestado" => $compraEstado[0]->getIdCompraEstado(),
-                "idcompra" => $param["idcompracancelar"],
-                "idcompraestadotipo" => 4,
-                "cefechaini" => $compraEstado[0]->getCeFechaIni(),
-                "cefechafin" =>  date("Y-m-d H:i:s"),
-              ];
-            foreach($arrCompraItem as $compraItem){
-                $param['idproducto']= $compraItem->getobjProducto()->getIdProducto();
-                $abmProducto = new AbmProducto;
-                $objProducto = $abmProducto->buscar($param);
-        
-            $nuevaCant = $objProducto[0]->getProCantStock() + $compraItem->getCiCantidad();
-            $objProducto[0]->setProCantStock($nuevaCant);
-
-            $datosMod = $this->modDatosProducto($objProducto[0]);
-            $respStock =$abmProducto->modificacion($datosMod);
+        $resp = false;
+        if (isset($param["idcompracancelar"])) {
+          $abmCompraEstado = new AbmCompraEstado();
+          $abmCompraItem = new AbmCompraItem();
+          $abmProducto = new AbmProducto();
+    
+          $paramIdCompra["idcompra"] = $param["idcompracancelar"];
+    
+          $compraEstado = $abmCompraEstado->buscar($paramIdCompra);
+          $arrCompraItem = $abmCompraItem->buscar($paramIdCompra);
+    
+    
+          $datos = [
+            "idcompraestado" => $compraEstado[0]->getIdCompraEstado(),
+            "idcompra" => $_POST["idcompracancelar"],
+            "idcompraestadotipo" => 4,
+            "cefechaini" => $compraEstado[0]->getCeFechaIni(),
+            "cefechafin" =>  date("Y-m-d H:i:s"),
+          ];
+    
+          foreach ($arrCompraItem as $compraItem) {
+            $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
+            $objProducto = $abmProducto->buscar($idProd)[0];
+            $datosProducto = [
+              'idproducto' => $objProducto->getIdProducto(),
+              'pronombre' => $objProducto->getProNombre(),
+              'prodetalle' => $objProducto->getProDetalle(),
+              'procantstock' => $objProducto->getProCantStock() + $compraItem->getCiCantidad(),
+              'proprecio' => $objProducto->getProPrecio(),
+            ];
+             $abmProducto->modificacion($datosProducto);
+          }
+    
+    
+          $resp = $abmCompraEstado->modificacion($datos);
         }
-        if($respStock){
-            $respuesta = $abmEstado->modificacion($datos);
-        }
-        return $respuesta;
+        return $resp;
     }
-        
-        
     
 
     /**
