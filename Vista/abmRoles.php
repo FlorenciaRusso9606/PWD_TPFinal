@@ -1,5 +1,6 @@
 <?php
 include_once "../configuracion.php";
+                                    include_once "../Control/pagPublica.php";  
 $objControl = new AbmRol();
 $List_Rol = $objControl->buscar(null);
 $combo = '<select class="easyui-combobox" id="idrol" name="idrol" label="Rol:" labelPosition="top" style="width:90%;" required>

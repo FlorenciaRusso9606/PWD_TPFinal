@@ -107,7 +107,7 @@ class ControlCompra {
     // Cancelar
     public function cancelarCompra($param) {
         $respuesta = false;
-        $param['idcompra']=$param['idcancelarcompra'];
+        $param['idcompra']=$param['idcompracancelar'];
             $abmCompra = new abmCompra;
             $abmEstado = new AbmCompraEstado;
             $abmCompraItem = new ABMCompraItem;
@@ -182,6 +182,7 @@ class ControlCompra {
     public function buscarCompras($sesion) {
         $abmCompra = new AbmCompra();
         if ($sesion->getRol() == 2) {
+            echo "entro";
           $arrCompras = $abmCompra->buscar("");
         } else {
           $datos["idusuario"] = $sesion->getUsuario();
@@ -193,14 +194,14 @@ public function cambiarEstado($param){
     $respuesta = null;
     $abmCompraEstado = new AbmCompraEstado;
     $compraEstado = $abmCompraEstado->buscar($param);
-    $datoEstado=[
+    $datosEstado=[
         'idcompraestado' => $compraEstado[0]->getidcompraestado(),
         'idcompra' => $param['idcompra'],
         'idcompraestadotipo' => $param['nuevoestado'],
         'cefechaini'=> $compraEstado[0]->getcefechaini(),
         'cefechafin' => $compraEstado[0]->getcefechafin()
     ];
-    $respuesta = $abmCompraEstado->modificacion($datoEstado);
+    $respuesta = $abmCompraEstado->modificacion($datosEstado);
     return $respuesta;
 }
     // public function mensajesCompraControl($num) {

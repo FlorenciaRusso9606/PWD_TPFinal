@@ -1,6 +1,7 @@
 <?php
 
 include_once "../../configuracion.php";
+include_once "../../Control/pagPublica.php";  
 $data = data_submitted();
 $respuesta = false;
 $mensaje = "";
@@ -15,6 +16,7 @@ if (isset($data['accion'])) {
             if (isset($data['usnombre']) && isset($data['usmail']) && isset($data['uspass']) && isset($data['idrol'])) {
                 // Hashea la contraseña con md5
                 $data['uspass'] = md5($data['uspass']);
+                error_log(print_r($data, true)); // Verifica los datos enviados
                 $respuestaUsuario = $abmUsuario->alta($data);
                 if ($respuestaUsuario) {
                     $data['idusuario'] = $abmUsuario->buscar(['usnombre' => $data['usnombre'], 'usmail' => $data['usmail']])[0]->getUsuarioId();
@@ -23,7 +25,7 @@ if (isset($data['accion'])) {
                         $mensaje = "No se pudo asignar el rol al usuario";
                     }
                 } else {
-                    $mensaje = "No se pudo dar de alta el usuario";
+                    $mensaje = "No se pudo dar de alta el usuario: ";
                 }
             } else {
                 $mensaje = "Datos incompletos para dar de alta el usuario";
@@ -35,6 +37,7 @@ if (isset($data['accion'])) {
                 // Hashea la contraseña con md5
                 $data['uspass'] = md5($data['uspass']);
                 // Verificar si se debe habilitar o deshabilitar el usuario
+
                 if (isset($data['usdeshabilitado']) && $data['usdeshabilitado'] == 'true') {
                     $data['usdeshabilitado'] = date("Y-m-d H:i:s");
                 } else {
@@ -58,7 +61,11 @@ if (isset($data['accion'])) {
                             $mensaje = "No se pudo eliminar el rol actual del usuario";
                         }
                     } else {
-                        $mensaje = "No se encontró un rol actual para el usuario";
+                        // Si no hay un rol actual, simplemente asignar el nuevo rol
+                        $respuesta = $abmUsuarioRol->alta($data);
+                        if (!$respuesta) {
+                            $mensaje = "No se pudo asignar el nuevo rol al usuario";
+                        }
                     }
                 } else {
                     $mensaje = "La acción MODIFICACIÓN no pudo concretarse";
