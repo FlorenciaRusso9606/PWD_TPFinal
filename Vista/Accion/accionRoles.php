@@ -53,7 +53,6 @@ if (isset($data['accion'])) {
             }
             echo json_encode($arreglo_salida, null, 2);
             exit; // Salir para no ejecutar el resto del script
-            break;
 
         default:
             $mensaje = "Acción no válida";
