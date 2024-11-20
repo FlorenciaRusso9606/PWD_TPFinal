@@ -9,19 +9,22 @@ La aplicación debe ser desarrollada sobre una arquitectura MVC (Vista-Control-D
 Tareas Pendientes
 
 Cliente
-- [ ] Gestionar sus datos (modificar e-mail, contraseña. etc).
-- [ ] Realizar Compra
+- [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
+- [ ] Realizar Compra 
 - [ ] Ver el estado de su compra
 
 Deposito
-- [ ] abmProductos
+- [ ] abmProductos - Rocio
 - [ ] Ver todos los estados de compra
 
 Administrador
-- [X] abmUsuarios
-- [X] abmRoles
-- [X] abmMenu
-- [ ] abmProductos
+- [X] abmUsuarios - Rocio
+- [X] abmRoles - Rocio
+- [X] abmMenu - Rocio
+- [ ] abmProductos -Rocio
+
+
+
 
 Controladores
 - [ ] Implementar el envío de un correo electrónico al cliente cada vez que la compra tenga un cambio de estado.
