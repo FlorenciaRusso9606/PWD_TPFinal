@@ -25,7 +25,9 @@ class ControlNav
         $abmMenu = new AbmMenu();
         $menus = $abmMenu->buscar(["idpadre" => $id, "medeshabilitado" => null]);
         foreach ($menus as $menu) {
-            $subMenus[] = $menu;
+            if ($menu->getMedeshabilitado() === null) {
+                $subMenus[] = $menu;
+            }
         }
         return $subMenus;
     }

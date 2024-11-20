@@ -81,19 +81,20 @@ class AbmMenu
     {
         $where = " true ";
         if ($param != NULL) {
-            if (isset($param['idmenu'])) {
+            if (isset($param['idmenu']))
                 $where .= " and idmenu =" . $param['idmenu'];
-            }
-            if (isset($param['menombre'])) {
+            if (isset($param['menombre']))
                 $where .= " and menombre ='" . $param['menombre'] . "'";
-            }
-            if (isset($param['idpadre'])) {
+            if (isset($param['medescripcion']))
+                $where .= " and medescripcion ='" . $param['medescripcion'] . "'";
+            if (isset($param['idpadre']))
                 $where .= " and idpadre =" . $param['idpadre'];
-            }
-            if (isset($param['medeshabilitado'])) {
+            if (isset($param['medeshabilitado']) && $param['medeshabilitado'] !== null)
+                $where .= " and medeshabilitado ='" . $param['medeshabilitado'] . "'";
+            if (isset($param['medeshabilitado']) && $param['medeshabilitado'] === null)
                 $where .= " and medeshabilitado is null";
-            }
         }
+
         $arreglo = Menu::listar($where);
         return $arreglo;
     }
