@@ -16,7 +16,7 @@ class ControlTablaMenu
 
         if (is_array($result) && count($result) > 0) {
             $idMenu = $result[0]->getIdmenu();
-            $idRol = $result[0]->getObjMenuPadre()->getIdmenu();
+            $idRol = $result[0]->getObjMenuPadre() ? $result[0]->getObjMenuPadre()->getIdmenu() : null;
 
             if ($idRol !== null) {
                 $paramMenuRol = [
@@ -30,6 +30,7 @@ class ControlTablaMenu
 
         return $respuesta;
     }
+
 
     /**
      * Elimina un menu y su relación en menuRol
@@ -87,5 +88,26 @@ class ControlTablaMenu
         }
 
         return $respuesta;
+    }
+
+
+    public function listarMenu($data)
+    {
+        $arreglo = [];
+        $abmMenu = new AbmMenu();
+        $list = $abmMenu->buscar($data);
+        $arreglo = array();
+        foreach ($list as $elem) {
+            $nuevoElem['idmenu'] = $elem->getIdMenu();
+            $nuevoElem["menombre"] = $elem->getMenombre();
+            $nuevoElem["medescripcion"] = $elem->getMedescripcion();
+            $nuevoElem["idpadre"] = $elem->getObjMenuPadre();
+            if ($elem->getObjMenuPadre() != null) {
+                $nuevoElem["idpadre"] = $elem->getObjMenuPadre()->getMeNombre();
+            }
+            $nuevoElem["medeshabilitado"] = $elem->getMedeshabilitado();
+            array_push($arreglo, $nuevoElem);
+        }
+        return $arreglo;
     }
 }

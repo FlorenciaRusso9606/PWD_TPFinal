@@ -10,19 +10,21 @@ Tareas Pendientes
 
 Cliente
 - [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
-- [x] Realizar Compra - Elenzo
-- [x] Ver el estado de su compra
-
+- [x] Realizar Compra - Flor
+- [x] Ver el estado de su compra Flor
+- [ ] Registrarse
+ 
 Deposito
 - [ ] abmProductos - Rocio
-- [ ] Ver todos los estados de compra
+- [X] Ver todos los estados de compra
+- [ ] Cargar un nuevo Producto
 
 Administrador
 - [X] abmUsuarios - Rocio
 - [X] abmRoles - Rocio
 - [X] abmMenu - Rocio
-- [ ] abmProductos -Rocio
-
+- [X] abmProductos -Rocio
+- [X] Crear archivo control tabla -Rocio
 - [ ] agregar verificacion de idUsuario para Administrador y Deposito
 
 
@@ -33,13 +35,12 @@ Modelos
 - [x] Registrar todos los cambios de estados de una compra.
 
 Vistas
-- [ ] Mejorar la interfaz de usuario.
 - [ ] Implementar todas las interfaces con AJAX.
 - [ ] Asegurar que las páginas seguras controlen que el usuario está logueado y tiene permiso de acceso.
 
 Requisitos Adicionales
 - [ ] La implementación de los script PHP correspondientes a las acciones de las interfaces NO deben implementar funcionalidad vinculada al proceso. Recuerde que los script tienen la responsabilidad de obtener los datos de la interfaz, crear el/los objetos del control y retornar la respuesta a la interfaz.
-- [-] El menú debe generarse automáticamente según los permisos configurados al rol del usuario.
+- [X] El menú debe generarse automáticamente según los permisos configurados al rol del usuario.
 - [x] La gestión del stock debe implementarse correctamente, quitando o devolviendo según corresponda.
 
 ---
