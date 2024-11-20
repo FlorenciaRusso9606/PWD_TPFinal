@@ -200,7 +200,7 @@ public function cambiarEstado($param){
         'cefechaini'=> $compraEstado[0]->getcefechaini(),
         'cefechafin' => $compraEstado[0]->getcefechafin()
     ];
-    $respuesta = $abmCompraEstado->modificacion($datosEstado);
+    $respuesta = $abmCompraEstado->modificacion($datoEstado);
     return $respuesta;
 }
     // public function mensajesCompraControl($num) {

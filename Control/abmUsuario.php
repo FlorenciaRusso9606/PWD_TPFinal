@@ -119,7 +119,7 @@ class ABMUsuario
     {
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
-
+            $param['usdeshabilitado'] = null;
             $obj = $this->cargarObjeto($param);
             /* var_dump($obj); */
             if ($obj != null && $obj->modificar()) {

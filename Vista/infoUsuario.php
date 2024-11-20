@@ -71,13 +71,21 @@ if ($idUsuario) {
                         <label for="password">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="uspass" required>
                     </div>
-                    <button type="submit" class="btn btn-success" style="margin-top: 20px;">Guardar</button>
+                    <button type="submit" class="btn btn-success" style="margin-top: 20px;" onclick="hashPassword()">Guardar</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script>
+    function hashPassword() {
+        var pass = document.getElementById('password').value;
+        /* console.log(pass); */
+        pass = CryptoJS.MD5(pass).toString();
+        /* console.log(pass); */
+        document.getElementById('password').value = pass;
+    }
+
     function abrirFormularioEdicion(idUsuario) {
         // Rellenar los datos actuales del usuario
         $('#idUsuarioInput').val(idUsuario);
@@ -99,7 +107,7 @@ if ($idUsuario) {
         const datosFormulario = $(this).serialize();
 
         $.ajax({
-            url: './Accion/accionEditarUsuario.php', 
+            url: './Accion/accionEditarUsuario.php',
             type: 'POST',
             data: datosFormulario,
             success: function(respuesta) {

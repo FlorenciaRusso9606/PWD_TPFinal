@@ -34,7 +34,7 @@ header('Content-Type: text/html; charset=utf-8');
 header("Cache-Control: no-cache, must-revalidate");
 
 // Configuración de la aplicación
-$PROYECTO = 'Proyectos/PWD_TPFinal';
+$PROYECTO = 'TpFinalPwdFlor2/PWD_TPFinal-master';
 $ROOT = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
 
 $GLOBALS['ROOT'] = $ROOT;

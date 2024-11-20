@@ -1,11 +1,11 @@
 <?php
-include_once "../configuracion.php";
+include_once "../Estructura/header.php";
 $data = data_submitted();
 $session = new Session;
 if (isset($data["compraexitosa"]) && $data["compraexitosa"]) {
 ?>
       <div class="bg-success text-white">Compra realizada exitosamente</div>
-    <?php}else{?>
+    <?php }else{?>
         <div class="bg-danger text-white">No se pudo realizar su compra</div>
 
 
