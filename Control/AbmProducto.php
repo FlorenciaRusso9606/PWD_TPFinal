@@ -70,6 +70,7 @@ class AbmProducto {
         $resp = false;
         $param['idproducto'] = null;
         $elObjtTabla = $this->cargarObjeto($param);
+        var_dump($elObjtTabla);
         if ($elObjtTabla != null and $elObjtTabla->insertar()){
             $resp = true;
         }

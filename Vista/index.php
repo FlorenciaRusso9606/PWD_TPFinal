@@ -22,10 +22,8 @@ $arrayProductos = $objProducto->buscar(NULL);
 
   <?php if ($rolActual == 2) { ?>
     <div class="sombra-caja border item-box m-5 d-flex flex-column align-items-center justify-content-center" style="min-width: 282px; min-height: 580px">
-      <h5 class="mb-5">Agregar Libro</h5>
-      <a href="nuevoLibro.php">
-        <i class="bi bi-plus-circle" style="font-size: 8rem;"></i>
-      </a>
+      <h5 class="mb-5"><a href="nuevoLibro.php"><i class="bi bi-plus-circle" style="font-size: 8rem;"></i>Agregar Libro</a></h5>   
+      
     </div>
   <?php } ?>
 
@@ -54,7 +52,7 @@ $arrayProductos = $objProducto->buscar(NULL);
 
           <?php if ($rolActual == 2) { ?>
             <div class="d-flex">
-              <a href="./nuevoProducto.php?id=<?= $producto->getIdProducto() ?>" class="btn btn-primary mx-1 mb-2">Editar</a>
+              <a href="./nuevoProducto.php?idproducto=<?= $producto->getIdProducto() ?>" class="btn btn-primary mx-1 mb-2">Editar</a>
             </div>
           <?php } ?>
         </div>
