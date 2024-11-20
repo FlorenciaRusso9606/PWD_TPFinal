@@ -8,10 +8,12 @@ include_once "../configuracion.php";
 <body>
     <div class="container mt-5">
         <?php
+        $data = data_submitted();
         $sesion = new Session;
         $controlProducto = new ControlProducto;
         if (isset($data['idproducto'])) {
-            $producto = $control->productoActual($data);
+            $producto = $controlProducto->productoActual($data);
+            echo "Entró acá";
         }
         if ($sesion->getRol() == 2) { ?>
             <div class="card shadow-lg">
