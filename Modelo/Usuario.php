@@ -138,7 +138,6 @@ class Usuario
         if ($this->getUsuarioDeshabilitado() != NULL) {
 
             $sql = "UPDATE usuario SET usnombre='" . $this->getUsuarioNombre() . "', uspass='" . $this->getUsuarioPassword() . "', usmail= '" . $this->getUsuarioEmail() . "' , usdeshabilitado = '" . $this->getUsuarioDeshabilitado() . "'  WHERE idusuario = " . $this->getUsuarioId();
-
         } else {
 
             $sql = "UPDATE usuario SET usnombre = '" . $this->getUsuarioNombre() . "', uspass = '" . $this->getUsuarioPassword() . "', usmail = '" . $this->getUsuarioEmail() . "', usdeshabilitado = NULL WHERE idusuario = " . $this->getUsuarioId();
@@ -161,7 +160,7 @@ class Usuario
     {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "DELETE FROM usuario WHERE idusuario='" . $this->getUsuarioId() . "'";
+        $sql = "DELETE FROM usuario WHERE idusuario=" . $this->getUsuarioId() . "";
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
