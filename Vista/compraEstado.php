@@ -20,7 +20,6 @@ $abmCompraItem = new AbmCompraItem();
 <?php
 $controlCompra= new ControlCompra;
 $compras = $controlCompra->buscarCompras($session);
-var_dump($compras);
 foreach($compras as $compra){
   $precioTotal=0;
     $idCompra = $compra->getidcompra();

@@ -121,9 +121,8 @@ class CompraEstado
         $this->cefechafin = "";
         $this->mensajeoperacion = "";
     }
-    public function setear($idcompraestado, $objCompra, $objCompraEstadoTipo, $cefechaini, $cefechafin)
 
-    public function setear($idcompraestado, $objCompraEstadoTipo, $objCompra, $cefechaini, $cefechafin)
+    public function setear($idcompraestado, $objCompra, $objCompraEstadoTipo, $cefechaini, $cefechafin)
 
     {
         $this->setidcompraestado($idcompraestado);
@@ -174,8 +173,6 @@ class CompraEstado
         $sql .= "VALUES (" . $this->getobjCompra()->getidcompra() . ", "
 
             . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() . ", '"
-
-            . $this->getobjCompraEstadoTipo()->getidcompraestadotipo() .  ", '"
 
             . $this->getcefechaini() . "', '"
             . $this->getcefechafin() . "')";
@@ -255,7 +252,6 @@ class CompraEstado
 
                     $obj->setear($row['idcompraestado'], $objCompra, $objCompraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
 
-                    $obj->setear($row['idcompraestado'], $$objCompraEstadoTipo, $row['medescripcion'], $objCompra, $row['medeshabilitado']);
 
                     array_push($arreglo, $obj);
                 }

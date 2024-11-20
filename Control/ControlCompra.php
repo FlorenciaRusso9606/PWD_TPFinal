@@ -148,6 +148,16 @@ class ControlCompra {
 
         return $compraExitosa;
     }
+    public function buscarCompras($sesion) {
+        $abmCompra = new AbmCompra();
+        if ($sesion->getRol() == 2) {
+          $arrCompras = $abmCompra->buscar("");
+        } else {
+          $datos["idusuario"] = $sesion->getUsuario();
+          $arrCompras = $abmCompra->buscar($datos);
+        }
+        return $arrCompras;
+      }
 
     // public function mensajesCompraControl($num) {
     //     $mensajes = [
