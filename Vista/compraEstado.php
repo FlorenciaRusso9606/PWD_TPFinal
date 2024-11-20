@@ -3,6 +3,7 @@ include_once "../configuracion.php";
 
 $data = data_submitted();
 $session = new Session;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +44,7 @@ foreach ($compras as $compra) {
     echo "<div class='card-body'>";
     echo "<h5 class='card-title'>Compra ID: $idCompra</h5>";
     $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-    echo "<p class='card-text'><strong>Estado:</strong> {$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</p>";
+    echo "<p class='card-text'><strong>Estado: {$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</strong></p>";
     
     $precioTotal = 0;
     echo "<ul class='list-group list-group-flush mb-3'>";

@@ -10,8 +10,8 @@ Tareas Pendientes
 
 Cliente
 - [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
-- [ ] Realizar Compra - Elenzo
-- [] Ver el estado de su compra
+- [x] Realizar Compra - Elenzo
+- [x] Ver el estado de su compra
 
 Deposito
 - [ ] abmProductos - Rocio
@@ -30,7 +30,7 @@ Controladores
 - [ ] Implementar el envío de un correo electrónico al cliente cada vez que la compra tenga un cambio de estado.
 
 Modelos
-- [ ] Registrar todos los cambios de estados de una compra.
+- [x] Registrar todos los cambios de estados de una compra.
 
 Vistas
 - [ ] Mejorar la interfaz de usuario.
@@ -40,7 +40,7 @@ Vistas
 Requisitos Adicionales
 - [ ] La implementación de los script PHP correspondientes a las acciones de las interfaces NO deben implementar funcionalidad vinculada al proceso. Recuerde que los script tienen la responsabilidad de obtener los datos de la interfaz, crear el/los objetos del control y retornar la respuesta a la interfaz.
 - [-] El menú debe generarse automáticamente según los permisos configurados al rol del usuario.
-- [ ] La gestión del stock debe implementarse correctamente, quitando o devolviendo según corresponda.
+- [x] La gestión del stock debe implementarse correctamente, quitando o devolviendo según corresponda.
 
 ---
 
