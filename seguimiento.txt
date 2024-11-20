@@ -10,7 +10,7 @@ Tareas Pendientes
 
 Cliente
 - [X] Gestionar sus datos (modificar e-mail, contraseña. etc). - Enzo
-- [ ] Realizar Compra 
+- [ ] Realizar Compra - Elenzo
 - [ ] Ver el estado de su compra
 
 Deposito
