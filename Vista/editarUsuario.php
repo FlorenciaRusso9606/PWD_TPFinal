@@ -1,6 +1,5 @@
 <?php
-$Titulo = " Especie ";
-include_once("../estructura/cabeceraBT.php");
+include_once "Estructura/header.php";
 $datos = data_submitted();
 
 $abmUsuario = new ABMUsuario();
@@ -88,5 +87,5 @@ function formSubmit()
 
 
 <?php
-include_once("../estructura/pieBT.php");
+ include_once "Estructura/footer.php";
 ?>

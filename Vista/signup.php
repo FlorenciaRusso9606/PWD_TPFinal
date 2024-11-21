@@ -15,7 +15,7 @@ $sesion = new Session();
 		background-color: azure;
 	}
 </style>
-<?php include_once "../Estructura/header.php"; ?>
+<?php include_once "Estructura/header.php"; ?>
 <div class="ui center aligned fluid container grid">
 
 	<div class="ui hidden divider sixteen wide column"></div>
@@ -74,4 +74,4 @@ $sesion = new Session();
 		});
 	});
 </script>
-<?php include_once "../Estructura/footer.php"; ?>
+<?php include_once "Estructura/footer.php"; ?>

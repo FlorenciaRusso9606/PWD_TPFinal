@@ -5,7 +5,7 @@ $objControl = new AbmRol();
 $List_Rol = $objControl->buscar(null);
 ?>
 
-<?php include_once "../Estructura/header.php";
+<?php include_once "Estructura/header.php";
 if ($rol !== 1) {
     header("Location: index.php");
     exit();

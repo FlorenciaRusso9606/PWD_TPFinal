@@ -5,7 +5,7 @@ $objControl = new AbmProducto();
 $List_Producto = $objControl->buscar(null);
 ?>
 
-<?php include_once "../Estructura/header.php"; 
+<?php include_once "Estructura/header.php"; 
 if ($rol !== 1) {
     header("Location: index.php");
     exit();
@@ -246,3 +246,4 @@ if ($rol !== 1) {
     </div>
 
 </div>
+<?php include_once "Estructura/footer.php";

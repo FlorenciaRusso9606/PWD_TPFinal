@@ -3,7 +3,7 @@
 
 <?php
 include_once "../Control/pagPublica.php";
-include_once "../Estructura/header.php";
+include_once "Estructura/header.php";
 include_once "../configuracion.php";
 
 
@@ -200,4 +200,4 @@ include_once "../configuracion.php";
     });
 </script>
 
-<?php include_once "../Estructura/footer.php"; ?>
+<?php include_once "Estructura/footer.php"; ?>
