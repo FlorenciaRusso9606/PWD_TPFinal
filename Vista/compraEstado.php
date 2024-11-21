@@ -1,20 +1,10 @@
-<?php
-include_once "../configuracion.php";
-
-$data = data_submitted();
-$session = new Session;
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once "../Estructura/header.php"; ?>
 
-<h2 class="container my-5 text-center">Estado de Compra</h2>
-<div class="card my-4 shadow-sm" data-id="<?= $idCompra ?>">
-    <!-- Contenido de la tarjeta -->
-</div>
+<h2 class="ui container center aligned header my-5">Estado de Compra</h2>
 
-<div class="container">
+<div class="ui container">
 <?php
 
 $abmEstadoTipo = new ABMcompraEstadoTipo;
@@ -24,7 +14,6 @@ $compras = $controlCompra->buscarCompras($session);
 $abmEstadoTipo = new ABMcompraEstadoTipo();
 $abmCompraItem = new AbmCompraItem();
 $ambCompraEstado = new AbmCompraEstado();
-
 
 foreach ($compras as $compra) {
     $idCompra = $compra->getIdCompra();
@@ -40,55 +29,54 @@ foreach ($compras as $compra) {
     $arrItems = $abmCompraItem->buscar($paramIdCompra);
 
     // Mostrar información de la compra
-    echo "<div class='card my-4 shadow-sm' data-id='{$idCompra}'>"; // Asegúrate de que `data-id` tenga el valor correcto
-    echo "<div class='card-body'>";
-    echo "<h5 class='card-title'>Compra ID: $idCompra</h5>";
+    echo "<div class='ui raised segment my-4' data-id='{$idCompra}'>"; // Asegúrate de que `data-id` tenga el valor correcto
+    echo "<div class='content'>";
+    echo "<h3 class='ui header'>Compra ID: $idCompra</h3>";
     $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-    echo "<p class='card-text'><strong>Estado: {$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</strong></p>";
+    echo "<p><strong>Estado:</strong> <span>{$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</span></p>";
     
     $precioTotal = 0;
-    echo "<ul class='list-group list-group-flush mb-3'>";
+    echo "<div class='ui list'>";
     foreach ($arrItems as $item) {
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
-        echo "<span>{$item->getobjProducto()->getProNombre()} <small>(Cantidad: {$item->getCiCantidad()})</small></span>";
+        echo "<div class='item'>";
+        echo "{$item->getobjProducto()->getProNombre()} <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>";
         $precioTotal += $item->getObjProducto()->getProPrecio();
+        echo "</div>";
     }
-    echo "</ul>";
-    echo "<p class='card-text'><strong>Total:</strong> $$precioTotal</p>";
+    echo "</div>";
+    echo "<p><strong>Total:</strong> $$precioTotal</p>";
 
     // Formulario para cambiar estado (si aplica)
-    if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] != 4) {
+    if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4) {
         echo "
-        <form class='form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
-            <div class='mb-3'>
-                <select class='form-select' name='nuevoestado'>
-                    <option selected>Cambiar estado</option>
+        <form class='ui form form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
+            <div class='field'>
+                <label>Cambiar estado</label>
+                <select class='ui dropdown' name='nuevoestado'>
                     <option value='1'>Iniciada</option>
                     <option value='2'>Aceptada</option>
                     <option value='3'>Enviada</option>
                 </select>
             </div>
             <input type='hidden' value='{$idCompra}' name='idcompra'>
-            <button class='btn btn-primary w-100' type='submit'>Confirmar cambio</button>
+            <button class='ui primary button w-100' type='submit'>Confirmar cambio</button>
         </form>
         ";
     }
 
     // Formulario para cancelar compra
     echo "
-    <form method='POST' action='accion/cancelarCompra.php' class='form-cancelar-compra mt-3' data-id='{$idCompra}'>
+    <form method='POST' action='accion/cancelarCompra.php' class='ui form form-cancelar-compra mt-3' data-id='{$idCompra}'>
         <input type='hidden' name='idcompracancelar' value='{$idCompra}'>
-        <button class='btn btn-danger w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ? "disabled" : "") . ">Cancelar Compra</button>
+        <button class='ui red button w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ? "disabled" : "") . ">Cancelar Compra</button>
     </form>";
 
     echo "</div></div>";
 }
 ?>
+</div>
 
-
-
-
-<script type="text/javascript">
+<script>
   /// Función para manejar el envío de formularios de forma asíncrona
 async function enviarFormulario(event, form, mensajeExito, mensajeError, callback) {
     event.preventDefault(); // Prevenir el envío por defecto
@@ -108,45 +96,31 @@ async function enviarFormulario(event, form, mensajeExito, mensajeError, callbac
             mostrarMensaje("success", mensajeExito);
             if (callback) callback(data); // Ejecutar la función callback si existe
         } else {
-            mostrarMensaje("danger", mensajeError);
+            mostrarMensaje("error", mensajeError);
         }
     } catch (error) {
         console.error("Error:", error);
-        mostrarMensaje("danger", "Ocurrió un error. Intenta nuevamente.");
+        mostrarMensaje("error", "Ocurrió un error. Intenta nuevamente.");
     }
 }
 
 // Función para mostrar un mensaje al usuario
 function mostrarMensaje(tipo, mensaje) {
-    let alertContainer = document.querySelector("#alert-container");
-    if (!alertContainer) {
-        alertContainer = document.createElement("div");
-        alertContainer.id = "alert-container";
-        alertContainer.className = "my-3";
-        document.querySelector("body").prepend(alertContainer);
-    }
-
-    const alertDiv = document.createElement("div");
-    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
-    alertDiv.setAttribute("role", "alert");
-    alertDiv.innerHTML = `
-        ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-
-    alertContainer.appendChild(alertDiv);
-    setTimeout(() => alertDiv.remove(), 5000); // Eliminar después de 5 segundos
+    $('body').toast({
+        message: mensaje,
+        class: tipo
+    });
 }
 
 // Función para actualizar la interfaz dinámicamente
 function actualizarInterfaz(compraId, nuevoEstadoId, descripcionEstado) {
-    const card = document.querySelector(`.card[data-id="${compraId}"]`);
+    const card = document.querySelector(`.ui.raised.segment[data-id="${compraId}"]`);
     if (!card) return;
 
     // Actualizar el texto del estado
-    const estadoText = card.querySelector(".card-text strong + span");
+    const estadoText = card.querySelector("span");
     if (estadoText) {
-        estadoText.textContent = ` ${descripcionEstado}`;
+        estadoText.textContent = descripcionEstado;
     }
 
     // Deshabilitar el botón de cancelar si corresponde
@@ -193,8 +167,6 @@ document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
         );
     });
 });
-
-
 </script>
 
 <?php include_once "../Estructura/footer.php"; ?>
