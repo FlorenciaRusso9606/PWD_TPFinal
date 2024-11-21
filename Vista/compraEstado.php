@@ -62,7 +62,7 @@ include_once "../configuracion.php";
         foreach ($arrItems as $item) {
             echo "<div class='item'>";
             echo "{$item->getobjProducto()->getProNombre()} <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>";
-            $precioTotal += $precioTotal + $item->getObjProducto()->getProPrecio()*$item->getCiCantidad();
+            $precioTotal = $precioTotal + $item->getObjProducto()->getProPrecio()*$item->getCiCantidad();
             echo "</div>";
         }
         echo "</div>";
