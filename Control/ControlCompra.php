@@ -235,21 +235,19 @@ class ControlCompra
         $respuesta = null;
         $abmCompraEstado = new AbmCompraEstado;
         $compraEstado = $abmCompraEstado->buscar($param);
-        $estadoActual = $compraEstado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-        if ($estadoActual == 1 && $param['nuevoestado'] ==2 ||
-        $estadoActual == 2 && $param['nuevoestado'] ==3){
-            $datosEstado = [
-                'idcompraestado' => $compraEstado[0]->getidcompraestado(),
-                'idcompra' => $param['idcompra'],
-                'idcompraestadotipo' => $param['nuevoestado'],
-                'cefechaini' => $compraEstado[0]->getcefechaini(),
-                'cefechafin' => $compraEstado[0]->getcefechafin()
-            ];
-            $respuesta = $abmCompraEstado->modificacion($datosEstado);
-        }
-        $paramIdCompra= $param['idcompra'];
-        $abmCompraItem = new ABMCompraItem;
-          $arrCompraItem = $abmCompraItem->buscar(["idcompra" => $paramIdCompra]);
+        $datosEstado = [
+            'idcompraestado' => $compraEstado[0]->getidcompraestado(),
+            'idcompra' => $param['idcompra'],
+            'idcompraestadotipo' => $param['nuevoestado'],
+            'cefechaini' => $compraEstado[0]->getcefechaini(),
+            'cefechafin' => $compraEstado[0]->getcefechafin()
+        ];
+        $respuesta = $abmCompraEstado->modificacion($datosEstado);
+        $abmCompraItem = new AbmCompraItem();
+        $paramIdCompra = $param['idcompra'];
+
+
+        $arrCompraItem = $abmCompraItem->buscar(["idcompra" => $paramIdCompra]);
 
         foreach ($arrCompraItem as $compraItem) {
             $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
@@ -293,6 +291,20 @@ class ControlCompra
         }
 
 
+        // public function mensajesCompraControl($num) {
+        //     $mensajes = [
+        //       /* Cambiar estado de compra*/
+        //       0 => 'No se pudo cambiar el estado de compra',
+        //       1 => 'El estado de la compra se cambio correctamente.',
+        //       /* Cancelar compra */
+        //       2 => 'Hubo un error al cancelar su compra.',
+        //       3 => 'Compra cancelada correctamente.',
+        //       /* Confirmar compra */
+        //       4 => "Hubo un error al confirmar su compra",
+        //       5 => "Compra confirmada correctamente.",
+        //     ];
+        //     return $mensajes[$num];
+        //   }
 
     }
 }
