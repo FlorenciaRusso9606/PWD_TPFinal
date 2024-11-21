@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 include_once "../../configuracion.php";
+include_once "../../Control/ControlPaginaAccion.php";
 $session = new Session();
 $datos = data_submitted();
 $objValidar = new verificarSignup();

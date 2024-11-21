@@ -1,6 +1,7 @@
 <?php
 include_once "../../configuracion.php";
 include_once "../../Control/pagPublica.php";  
+include_once "../../Control/ControlPaginaAccion.php";
 $data = data_submitted();
 $objControl = new AbmMenu();
 $list = $objControl->buscar($data);
