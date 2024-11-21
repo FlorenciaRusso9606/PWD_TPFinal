@@ -85,7 +85,7 @@ class ControladorMail
      * @param mixed $resumendecompra
      * @return void
      */
-    public function crearMail($estadoCompra, $idCompra)
+    public function crearMail($estadoCompra, $idCompra, $pdfFilePath, $email, $nombreUsuario, $mensaje)
     {
         $datos = $this->obtenerDatosCompra($idCompra);
         $nombreUsuario = $datos['nombreUsuario'];
@@ -93,7 +93,7 @@ class ControladorMail
         $estadoCompra = $this->obtenerEstadoCompra($estadoCompra);
         $mensaje = $this->crearMensaje($nombreUsuario, $estadoCompra);
 
-        $mailEnviado = $this->enviarMail($email, $nombreUsuario, $estadoCompra, $mensaje);
+        $mailEnviado = $this->enviarMail($email, $nombreUsuario, $estadoCompra, $mensaje, $pdfFilePath);
         return $mailEnviado;
     }
     /**
@@ -115,8 +115,8 @@ class ControladorMail
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'florencia.russo@est.fi.uncom.edu.ar';                     //SMTP username
-            $mail->Password   = '39869124';                               //SMTP password
+            $mail->Username   = 'phpmailermatiasgabriel@gmail.com';                     //SMTP username
+            $mail->Password   = 'xyir aghy hmrp vqys';                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 

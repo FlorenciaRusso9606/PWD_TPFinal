@@ -113,7 +113,7 @@ class ControlCompra
             $abmCompraEstado = new AbmCompraEstado();
             $abmCompraItem = new AbmCompraItem();
             $abmProducto = new AbmProducto();
-
+            $idcompra = $param["idcompracancelar"];
             $paramIdCompra["idcompra"] = $param["idcompracancelar"];
 
             $compraEstado = $abmCompraEstado->buscar($paramIdCompra);
@@ -127,35 +127,6 @@ class ControlCompra
                 "cefechaini" => $compraEstado[0]->getCeFechaIni(),
                 "cefechafin" =>  date("Y-m-d H:i:s"),
             ];
-<<<<<<< HEAD
-             $abmProducto->modificacion($datosProducto);
-             $datos['productos'] = $datosProducto;
-          }
-    
-    
-          $resp = $abmCompraEstado->modificacion($datos);
-          if ($resp) {
-            $controlMail = new ControladorMail;
-            $controlPdf= new PDF();
-            $session = new Session;
-            $abmUsuario = new ABMUsuario;
-            $idusuario = $session->getUsuario();
-            $param['idusuario'] = $idusuario;
-            $usuario = $abmUsuario->buscar($param)[0];
-            
-            $datos['usnombre'] = $usuario->getUsuarioNombre();
-            $datos['usmail'] = $usuario->getUsuarioEmail();
-
-            $pdfFilePath = $controlPdf->generarPdfCompra($datos);
-            $mailUsuario = $usuario->getUsuarioEmail();
-            $nombreUsuario = $usuario->getUsuarioNombre();
-            $asunto = "Su compra ha sido cancelada.";
-            $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
-            // Enviar el correo
-            $controlMail->enviarMail($mailUsuario, $nombreUsuario, $asunto, $mensaje, $pdfFilePath);
-        }
-=======
-
             foreach ($arrCompraItem as $compraItem) {
                 $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
                 $objProducto = $abmProducto->buscar($idProd)[0];
@@ -167,11 +138,32 @@ class ControlCompra
                     'proprecio' => $objProducto->getProPrecio(),
                 ];
                 $abmProducto->modificacion($datosProducto);
+                $datos['productos'] = $datosProducto;
             }
 
 
             $resp = $abmCompraEstado->modificacion($datos);
->>>>>>> 9276cc5358349dd23a579e3d4a68e345e195be1d
+
+            if ($resp) {
+                $controlMail = new ControladorMail;
+                $controlPdf = new PDF();
+                $session = new Session;
+                $abmUsuario = new ABMUsuario;
+                $idusuario = $session->getUsuario();
+                $param['idusuario'] = $idusuario;
+                $usuario = $abmUsuario->buscar($param)[0];
+
+                $datos['usnombre'] = $usuario->getUsuarioNombre();
+                $datos['usmail'] = $usuario->getUsuarioEmail();
+
+                $pdfFilePath = $controlPdf->generarPdfCompra($datos);
+                $mailUsuario = $usuario->getUsuarioEmail();
+                $nombreUsuario = $usuario->getUsuarioNombre();
+                $asunto = $compraEstado[0]->getIdCompraEstado();
+                $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
+                // Enviar el correo
+                $controlMail->crearMail($mailUsuario, $idcompra, $nombreUsuario, $asunto, $mensaje, $pdfFilePath);
+            }
         }
         return $resp;
     }
