@@ -122,26 +122,32 @@ class BaseDatos extends PDO
 
     public function Ejecutar($sql)
     {
+        /* var_dump($sql); */
         $this->setError(null);
         // echo "Hola ".$sql;
         $this->setSQL($sql);
         if (stristr($sql, "insert")) { // se desea NSERT ? 
             $resp =  $this->EjecutarInsert($sql);
+            
         }
         // se desea UPDATE o DELETE ? 
         if (stristr($sql, "update") or stristr($sql, "delete")) {
             $resp =  $this->EjecutarDeleteUpdate($sql);
+            
         }
 
         // se desea ejecutar un select
         if (stristr($sql, "select")) {
             $resp =  $this->EjecutarSelect($sql);
+            
         }
 
         if ($this->getError() != null) {
             $resp = false;
         }
+        
         return $resp;
+        
     }
 
     /**

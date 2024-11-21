@@ -44,7 +44,7 @@ $menus = $nav->getSubMenus($rol);
                     <i class="user icon"></i>
                     Iniciar Sesión
                 </a>
-                <a href="cerrarSesion.php" class="item">
+                <a href="../Vista/signup.php" class="item">
                     <i class="sign out alternate icon"></i>
                     registrarse
                 </a>

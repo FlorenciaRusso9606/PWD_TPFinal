@@ -1,5 +1,6 @@
 <?php
 include_once "../Estructura/header.php";
+include_once "../Control/pagPublica.php";  
 $data = data_submitted();
 var_dump($data);
 
