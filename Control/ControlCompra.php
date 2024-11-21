@@ -119,7 +119,6 @@ class ControlCompra
             $compraEstado = $abmCompraEstado->buscar($paramIdCompra);
             $arrCompraItem = $abmCompraItem->buscar($paramIdCompra);
 
-
             $datos = [
                 "idcompraestado" => $compraEstado[0]->getIdCompraEstado(),
                 "idcompra" => $_POST["idcompracancelar"],
@@ -127,6 +126,9 @@ class ControlCompra
                 "cefechaini" => $compraEstado[0]->getCeFechaIni(),
                 "cefechafin" =>  date("Y-m-d H:i:s"),
             ];
+
+            $datosPDF['productos'] = []; // Inicializar como un array vacío
+
             foreach ($arrCompraItem as $compraItem) {
                 $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
                 $objProducto = $abmProducto->buscar($idProd)[0];
@@ -138,9 +140,13 @@ class ControlCompra
                     'proprecio' => $objProducto->getProPrecio(),
                 ];
                 $abmProducto->modificacion($datosProducto);
-                $datos['productos'] = $datosProducto;
-            }
 
+                // Agregar el producto al array de productos
+                $datosPDF['productos'][] = [
+                    'pronombre' => $objProducto->getProNombre(),
+                    'proprecio' => $objProducto->getProPrecio()
+                ];
+            }
 
             $resp = $abmCompraEstado->modificacion($datos);
 
@@ -150,24 +156,28 @@ class ControlCompra
                 $session = new Session;
                 $abmUsuario = new ABMUsuario;
                 $idusuario = $session->getUsuario();
-                $param['idusuario'] = $idusuario;
+                $datosPDF['idusuario'] = $idusuario;
                 $usuario = $abmUsuario->buscar($param)[0];
 
-                $datos['usnombre'] = $usuario->getUsuarioNombre();
-                $datos['usmail'] = $usuario->getUsuarioEmail();
+                $datosPDF['usnombre'] = $usuario->getUsuarioNombre();
+                $datosPDF['usmail'] = $usuario->getUsuarioEmail();
 
-                $pdfFilePath = $controlPdf->generarPdfCompra($datos);
-                $mailUsuario = $usuario->getUsuarioEmail();
-                $nombreUsuario = $usuario->getUsuarioNombre();
-                $asunto = $compraEstado[0]->getIdCompraEstado();
-                $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
-                // Enviar el correo
-                $controlMail->crearMail($mailUsuario, $idcompra, $nombreUsuario, $asunto, $mensaje, $pdfFilePath);
+                // Generar el PDF y obtener la ruta del archivo
+                $pdfFilePath = $controlPdf->generarPdfCompra($datosPDF);
+                if (file_exists($pdfFilePath)) {
+                    $mailUsuario = $usuario->getUsuarioEmail();
+                    $nombreUsuario = $usuario->getUsuarioNombre();
+                    $asunto = $compraEstado[0]->getIdCompraEstado();
+                    $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
+                    // Enviar el correo
+                    $controlMail->crearMail($asunto, $pdfFilePath, $mailUsuario, $nombreUsuario, $mensaje);
+                } else {
+                    echo "No se pudo encontrar el archivo PDF: $pdfFilePath";
+                }
             }
         }
         return $resp;
     }
-
 
     /**
      * Verifica la cantidad de productos en el carrito con su

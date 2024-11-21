@@ -3,8 +3,13 @@
 
 <?php
 include_once "../Control/pagPublica.php";
-include_once "../Estructura/header.php"; 
-include_once '../fpdf/fpdf.php';
+include_once "../Estructura/header.php";
+include_once "../configuracion.php";
+
+
+
+// include_once "../vendor/autoload.php";
+// include_once '../fpdf/fpdf.php';
 ?>
 
 

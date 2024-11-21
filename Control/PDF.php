@@ -41,10 +41,10 @@ class PDF extends FPDF
             $this->Ln(5);
             $this->Cell(100, 10, 'Precio: $' . $producto['proprecio'], 0, 0, 'L');
             $this->Ln(5);
-            $precioTotal += $producto['precio'];
+            $precioTotal += $producto['proprecio'];
         }
         $this->Ln(10);
-        $this->Cell(100, 10, 'Total:' . $precioTotal, 0, 0, 'L');
+        $this->Cell(100, 10, 'Total: $' . $precioTotal, 0, 0, 'L');
     }
 
     public function agregarDatosEmpresa()
@@ -62,6 +62,8 @@ class PDF extends FPDF
     }
     public function mostrarPdf()
     {
-        return $this->Output('F', 'ResumenCompra.pdf');
+        $filePath = __DIR__ . '/../../ResumenCompra.pdf';
+        $this->Output('F', $filePath);
+        return $filePath;
     }
 }

@@ -1,5 +1,6 @@
 <?php
-function data_submitted() {
+function data_submitted()
+{
     $_AAux = array();
     if (!empty($_REQUEST))
         $_AAux = $_REQUEST;
@@ -12,7 +13,8 @@ function data_submitted() {
     return $_AAux;
 }
 
-function verEstructura($e) {
+function verEstructura($e)
+{
     echo "<pre>";
     print_r($e);
     echo "</pre>";
@@ -23,7 +25,9 @@ spl_autoload_register(function ($class_name) {
         isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Modelo/' : '',
         isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Modelo/conector/' : '',
         isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'Control/' : '',
-        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'util/' : ''
+        isset($GLOBALS['ROOT']) ? $GLOBALS['ROOT'] . 'util/' : '',
+        isset($GLOBALS["ROOT"]) ? $GLOBALS["ROOT"] . "fpdf/" : '',
+        isset($GLOBALS["ROOT"]) ? $GLOBALS["ROOT"] . "vendor/autoload.php" : '',
     );
     foreach ($directories as $directory) {
         if ($directory && file_exists($directory . $class_name . '.php')) {
@@ -31,5 +35,4 @@ spl_autoload_register(function ($class_name) {
             return;
         }
     };
-    
 });

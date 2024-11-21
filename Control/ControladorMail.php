@@ -1,53 +1,12 @@
 <?php
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
+require __DIR__ . '/../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class ControladorMail
 {
-    /**
-     * obtiene id usuario
-     */
-    public function obtenerIdUsuario($idCompra)
-    {
-        $abmCompra = new abmCompra();
-        $param = ['idcompra' => $idCompra];
-        $resultado = $abmCompra->buscar($param);
-        if (!empty($resultado) && isset($resultado[0]['idusuario'])) {
-            $idUsuario = $resultado[0]['idusuario'];
-        } else {
-            $idUsuario = null;
-        }
-        return $idUsuario;
-    }
-    /**
-     * Obtiene los datos de la compra
-     * @param mixed $idUsuario
-     * @return array
-     */
-    public function obtenerDatosCompra($idCompra)
-    {
-        $idUsuario = $this->obtenerIdUsuario($idCompra);
-        $abmUsuario = new abmUsuario();
-        $param = ['idusuario' => $idUsuario];
-        $resultado = $abmUsuario->buscar($param);
-        if (!empty($resultado) && isset($resultado[0]['usnombre']) && isset($resultado[0]['usmail'])) {
-            $nombreUsuario = $resultado[0]['usnombre'];
-            $email = $resultado[0]['usmail'];
-        } else {
-            $nombreUsuario = null;
-            $email = null;
-        }
-        return ['nombreUsuario' => $nombreUsuario, 'email' => $email];
-    }
-
-    /**
-     * Obtiene el estado de la compra
-     * @param mixed $idCompra
-     * @return mixed
-     */
     public function obtenerEstadoCompra($estadoCompra)
     {
         $msjCompra = "";
@@ -62,12 +21,7 @@ class ControladorMail
         }
         return $msjCompra;
     }
-    /**
-     * Crea el mensaje del mail
-     * @param mixed $nombreUsuario
-     * @param mixed $email
-     * @return string
-     */
+
     public function crearMensaje($nombreUsuario, $estadoCompra)
     {
         $mensaje = "<h1>¡Hola, $nombreUsuario!</h1>";
@@ -79,39 +33,21 @@ class ControladorMail
         return $mensaje;
     }
 
-    /**
-     * Crea el mail
-     * @param mixed $idUsuario
-     * @param mixed $resumendecompra
-     * @return void
-     */
-    public function crearMail($estadoCompra, $idCompra, $pdfFilePath, $email, $nombreUsuario, $mensaje)
+    public function crearMail($estadoCompra, $pdfFilePath, $email, $nombreUsuario, $mensaje)
     {
-        $datos = $this->obtenerDatosCompra($idCompra);
-        $nombreUsuario = $datos['nombreUsuario'];
-        $email = $datos['email'];
         $estadoCompra = $this->obtenerEstadoCompra($estadoCompra);
         $mensaje = $this->crearMensaje($nombreUsuario, $estadoCompra);
 
-        $mailEnviado = $this->enviarMail($email, $nombreUsuario, $estadoCompra, $mensaje, $pdfFilePath);
-        return $mailEnviado;
+        $this->enviarMail($email, $nombreUsuario, $estadoCompra, $mensaje, $pdfFilePath);
     }
-    /**
-     * Envia el mail
-     * @param mixed $email
-     * @param mixed $nombreUsuario
-     * @param mixed $asunto 
-     * @param mixed $mensaje
-     * @param mixed $resumendecompra
-     * @return void
-     */
+
     public function enviarMail($email, $nombreUsuario, $asunto, $mensaje, $pdfFilePath)
     {
         $mail = new PHPMailer(true);
 
         try {
             //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->SMTPDebug = SMTP::DEBUG_OFF;                      // Disable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
@@ -123,9 +59,7 @@ class ControladorMail
             //Recipients
             $mail->setFrom('tiendaLenny@pwd.com', 'Tienda Lenny');
             $mail->addAddress($email, $nombreUsuario);     //Add a recipient
-            $mail->addAttachment($pdfFilePath);
-            //Attachments
-            // $mail->addAttachment($resumendecompra);         //Add attachments
+            $mail->addAttachment($pdfFilePath); // Adjuntar el archivo PDF
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
@@ -133,11 +67,9 @@ class ControladorMail
             $mail->Body    = $mensaje;
 
             $mail->send();
-            echo 'El mensaje fue enviado';
+            // echo 'El mensaje fue enviado';
         } catch (Exception $e) {
             echo "No se pudo enviar el correo: {$mail->ErrorInfo}";
         }
-        
-    
     }
 }
