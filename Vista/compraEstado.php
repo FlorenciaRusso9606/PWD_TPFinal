@@ -37,7 +37,7 @@ include_once "../configuracion.php";
     $abmEstadoTipo = new ABMcompraEstadoTipo();
     $abmCompraItem = new AbmCompraItem();
     $ambCompraEstado = new AbmCompraEstado();
-
+    $precioTotal = 0;
     foreach ($compras as $compra) {
         $idCompra = $compra->getIdCompra();
         $paramIdCompra = ["idcompra" => $idCompra];
@@ -58,41 +58,49 @@ include_once "../configuracion.php";
         $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
         echo "<p><strong>Estado:</strong> <span>{$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</span></p>";
 
-        $precioTotal = 0;
+
         echo "<div class='ui list'>";
         foreach ($arrItems as $item) {
             echo "<div class='item'>";
             echo "{$item->getobjProducto()->getProNombre()} <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>";
-            $precioTotal += $item->getObjProducto()->getProPrecio();
+            $precioTotal = $precioTotal + $item->getObjProducto()->getProPrecio();
             echo "</div>";
         }
         echo "</div>";
         echo "<p><strong>Total:</strong> $$precioTotal</p>";
 
         // Formulario para cambiar estado (si aplica)
+        // Formulario para cambiar estado (si aplica)
         if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4) {
+            $estadoActual = $idTipoEstado["idcompraestadotipo"];
             echo "
-        <form class='ui form form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
+         <form class='ui form form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
             <div class='field'>
-                <label>Cambiar estado</label>
-                <select class='ui dropdown' name='nuevoestado'>
-                    <option value='1'>Iniciada</option>
-                    <option value='2'>Aceptada</option>
-                    <option value='3'>Enviada</option>
-                </select>
-            </div>
-            <input type='hidden' value='{$idCompra}' name='idcompra'>
-            <button class='ui primary button w-100' type='submit'>Confirmar cambio</button>
-        </form>
-        ";
+            <label>Cambiar estado</label>
+            <select class='ui dropdown' name='nuevoestado'>";
+
+            // Mostrar solo la opción siguiente
+            if ($estadoActual == 1) {
+                echo "<option value='2'>Aceptada</option>";
+            } elseif ($estadoActual == 2) {
+                echo "<option value='3'>Enviada</option>";
+            }
+            echo "
+            </select>
+        </div>
+        <input type='hidden' value='{$idCompra}' name='idcompra'>
+        <button class='ui primary button w-100' type='submit'>Confirmar cambio</button>
+    </form>
+    ";
         }
+
 
         echo "<div class='ui hidden divider'></div>";
         // Formulario para cancelar compra
         echo "
     <form method='POST' action='accion/cancelarCompra.php' class='ui form form-cancelar-compra mt-3' data-id='{$idCompra}'>
         <input type='hidden' name='idcompracancelar' value='{$idCompra}'>
-        <button class='ui red button w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ? "disabled" : "") . ">Cancelar Compra</button>
+        <button class='ui red button w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ||  $idTipoEstado["idcompraestadotipo"] == 3 ? "disabled" : "") . ">Cancelar Compra</button>
     </form>";
 
         echo "</div></div>";

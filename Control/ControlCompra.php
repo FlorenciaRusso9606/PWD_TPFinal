@@ -233,14 +233,19 @@ class ControlCompra
         $respuesta = null;
         $abmCompraEstado = new AbmCompraEstado;
         $compraEstado = $abmCompraEstado->buscar($param);
-        $datosEstado = [
-            'idcompraestado' => $compraEstado[0]->getidcompraestado(),
-            'idcompra' => $param['idcompra'],
-            'idcompraestadotipo' => $param['nuevoestado'],
-            'cefechaini' => $compraEstado[0]->getcefechaini(),
-            'cefechafin' => $compraEstado[0]->getcefechafin()
-        ];
-        $respuesta = $abmCompraEstado->modificacion($datosEstado);
+        $estadoActual = $compraEstado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
+        if ($estadoActual == 1 && $param['nuevoestado'] ==2 ||
+        $estadoActual == 2 && $param['nuevoestado'] ==3){
+            $datosEstado = [
+                'idcompraestado' => $compraEstado[0]->getidcompraestado(),
+                'idcompra' => $param['idcompra'],
+                'idcompraestadotipo' => $param['nuevoestado'],
+                'cefechaini' => $compraEstado[0]->getcefechaini(),
+                'cefechafin' => $compraEstado[0]->getcefechafin()
+            ];
+            $respuesta = $abmCompraEstado->modificacion($datosEstado);
+        }
+       
         return $respuesta;
     }
     // public function mensajesCompraControl($num) {
