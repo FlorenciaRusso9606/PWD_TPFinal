@@ -1,6 +1,6 @@
 <?php
 include_once "../../configuracion.php";
-
+include_once "../../Control/ControlPaginaAccion.php";
 $controlProducto = new ControlProducto();
 $data = data_submitted();
 

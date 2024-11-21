@@ -1,6 +1,6 @@
 <?php
 include_once "../../configuracion.php";
- 
+include_once "../../Control/ControlPaginaAccion.php";
 $data = data_submitted();
 $response = array('respuesta' => false);
 
