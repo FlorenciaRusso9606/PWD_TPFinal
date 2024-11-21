@@ -12,7 +12,7 @@ $rol = $session->getRol();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Link Jquery -->
+    <!-- Incluir jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Link Semantic UI -->
@@ -30,6 +30,7 @@ $rol = $session->getRol();
 
     <!-- Link CSS -->
     <!-- <link rel="stylesheet" href="<?= $RUTAVISTA ?>Assets/css/style.css"> -->
+
 
     <link rel="icon" href="../Vista/Assets/img/favicon.webp">
     <title><?= $page_title ?></title>

@@ -1,5 +1,5 @@
 <?php
-// include_once "../configuracion.php";
+include_once __DIR__ . "/../configuracion.php";
 $session = new Session();
 $idUsuario = $session->getUsuario();
 /* basename — Devuelve el último componente de nombre de una ruta */

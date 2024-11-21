@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <?php
-include_once "../Control/pagPublica.php";  
-include_once "../Estructura/header.php"; ?>
+include_once "../Control/pagPublica.php";
+include_once "../Estructura/header.php"; 
+include_once '../fpdf/fpdf.php';
+?>
+
+
+
+<div class="ui modal" id="mensajeModal">
+    <div class="header" id="mensajeModalHeader"></div>
+    <div class="content">
+        <p id="mensajeModalContent"></p>
+    </div>
+    <div class="actions">
+        <div class="ui approve button">OK</div>
+    </div>
+</div>
 
 <div class="ui horizontal divider"></div>
 <h2 class="ui container center aligned header my-5">Estado de Compra</h2>
@@ -111,10 +125,10 @@ include_once "../Estructura/header.php"; ?>
 
     // Función para mostrar un mensaje al usuario
     function mostrarMensaje(tipo, mensaje) {
-        $('body').toast({
-            message: mensaje,
-            class: tipo
-        });
+        const header = tipo === "success" ? "Éxito" : "Error";
+        $('#mensajeModalHeader').text(header);
+        $('#mensajeModalContent').text(mensaje);
+        $('#mensajeModal').modal('show');
     }
 
     // Función para actualizar la interfaz dinámicamente
