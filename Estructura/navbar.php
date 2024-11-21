@@ -34,20 +34,11 @@ $menus = $nav->getSubMenus($rol);
                 <a href="index.php" class="item">
                     Inicio
                 </a>
-                <a href="libros.php" class="item">
-                    Libros
-                </a>
-                <a href="cuentos.php" class="item">
-                    Cuentos
-                </a>
-                <a href="historietas.php" class="item">
-                    Historietas
-                </a>
                 <a href="../Vista/login.php" class="item">
                     <i class="user icon"></i>
                     Iniciar Sesión
                 </a>
-                <a href="cerrarSesion.php" class="item">
+                <a href="signup.php" class="item">
                     <i class="sign out alternate icon"></i>
                     registrarse
                 </a>
