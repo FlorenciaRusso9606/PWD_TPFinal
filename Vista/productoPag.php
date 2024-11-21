@@ -24,7 +24,7 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
 ?>
     <!DOCTYPE html>
     <html lang="en">
-    <?php include_once "Estructura/header.php"; ?>
+    <?php include_once "../Estructura/header.php"; ?>
 
     <div class="ui horizontal divider"></div>
     <div id="contenido-principal" class="ui container grid segment">
@@ -76,4 +76,4 @@ if (array_key_exists("id", $data) && $data["id"] != null) {
     <p class='container fs-3 mt-5'>No se encontro el libro buscado.</p>
 <?php } ?>
 
-<?php include_once "Estructura/footer.php"; ?>
+<?php include_once "../Estructura/footer.php"; ?>

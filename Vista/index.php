@@ -9,7 +9,7 @@ $arrayProductos = $objProducto->buscar(NULL);
 
 ?>
 <!DOCTYPE html>
-<?php include_once "Estructura/header.php"; ?>
+<?php include_once "../Estructura/header.php"; ?>
 <link rel="stylesheet" href="Assets/css/style.css">
 
 <div class="ui hidden divider"></div>
@@ -76,4 +76,4 @@ $arrayProductos = $objProducto->buscar(NULL);
   </div>
 </div>
 
-<?php include_once "Estructura/footer.php"; ?>
+<?php include_once "../Estructura/footer.php"; ?>

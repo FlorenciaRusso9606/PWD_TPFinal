@@ -16,7 +16,7 @@ $combo .= '</select>';
 
 
 
-<?php include_once "Estructura/header.php";
+<?php include_once "../Estructura/header.php";
 
 if ($rol !== 1) {
     header("Location: index.php");
@@ -256,4 +256,4 @@ if ($rol !== 1) {
         </script>
     </div>
 </div>
-<?php include_once "Estructura/footer.php";
+<?include_once "../Estructura/footer.php"

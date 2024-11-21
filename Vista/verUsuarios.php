@@ -11,7 +11,7 @@ $lista = $obj->buscar(null);
 <html lang="en">
 <?php
 
-include_once("Estructura/header.php");
+include_once("../Estructura/header.php");
 ?>
 
 
@@ -69,5 +69,5 @@ include_once("Estructura/header.php");
 
 <?php
 
-include_once("Estructura/footer.php");
+include_once("../Estructura/footer.php");
 ?>

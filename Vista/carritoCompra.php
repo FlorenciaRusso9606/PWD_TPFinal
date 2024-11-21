@@ -1,5 +1,5 @@
 <?php
-include_once "Estructura/header.php";
+include_once "../Estructura/header.php";
 include_once "../Control/pagPublica.php";  
 $data = data_submitted();
 
@@ -92,4 +92,4 @@ if (empty($carrito)) {
   }
 </script>
 
-<?php include_once "Estructura/footer.php";
+<?php include_once "../Estructura/footer.php";

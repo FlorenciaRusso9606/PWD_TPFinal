@@ -1,5 +1,5 @@
 <?php
-include_once "Estructura/header.php";
+include_once "../Estructura/header.php";
 $datos = data_submitted();
 
 $abmUsuario = new ABMUsuario();
@@ -87,5 +87,5 @@ function formSubmit()
 
 
 <?php
- include_once "Estructura/footer.php";
+ include_once "../Estructura/footer.php";
 ?>
