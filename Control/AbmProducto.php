@@ -1,21 +1,23 @@
 <?php
-class AbmProducto {
+class AbmProducto
+{
 
-    public function abm($datos){
+    public function abm($datos)
+    {
         $resp = false;
-        if($datos['accion']=='editar'){
-            if($this->modificacion($datos)){
+        if ($datos['accion'] == 'editar') {
+            if ($this->modificacion($datos)) {
                 $resp = true;
             }
         }
-        if($datos['accion']=='borrar'){
-            if($this->baja($datos)){
-                $resp =true;
+        if ($datos['accion'] == 'borrar') {
+            if ($this->baja($datos)) {
+                $resp = true;
             }
         }
-        if($datos['accion']=='nuevo'){
-            if($this->alta($datos)){
-                $resp =true;
+        if ($datos['accion'] == 'nuevo') {
+            if ($this->alta($datos)) {
+                $resp = true;
             }
         }
         return $resp;
@@ -26,9 +28,10 @@ class AbmProducto {
      * @param array $param
      * @return Producto
      */
-    private function cargarObjeto($param){
+    private function cargarObjeto($param)
+    {
         $obj = null;
-        if( array_key_exists('idproducto',$param) && array_key_exists('pronombre',$param) && array_key_exists('prodetalle',$param) && array_key_exists('procantstock',$param) && array_key_exists('proprecio',$param)){
+        if (array_key_exists('idproducto', $param) && array_key_exists('pronombre', $param) && array_key_exists('prodetalle', $param) && array_key_exists('procantstock', $param) && array_key_exists('proprecio', $param)) {
             $obj = new Producto();
             $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['procantstock'], $param['proprecio']);
         }
@@ -40,9 +43,10 @@ class AbmProducto {
      * @param array $param
      * @return Producto
      */
-    private function cargarObjetoConClave($param){
+    private function cargarObjetoConClave($param)
+    {
         $obj = null;
-        if( isset($param['idproducto']) ){
+        if (isset($param['idproducto'])) {
             $obj = new Producto();
             $obj->setIdProducto($param['idproducto']);
             $obj->cargar();
@@ -55,7 +59,8 @@ class AbmProducto {
      * @param array $param
      * @return boolean
      */
-    private function seteadosCamposClaves($param){
+    private function seteadosCamposClaves($param)
+    {
         $resp = false;
         if (isset($param['idproducto']))
             $resp = true;
@@ -66,11 +71,12 @@ class AbmProducto {
      * 
      * @param array $param
      */
-    public function alta($param){
+    public function alta($param)
+    {
         $resp = false;
         $param['idproducto'] = null;
         $elObjtTabla = $this->cargarObjeto($param);
-        if ($elObjtTabla != null and $elObjtTabla->insertar()){
+        if ($elObjtTabla != null and $elObjtTabla->insertar()) {
             $resp = true;
         }
         return $resp;
@@ -81,11 +87,12 @@ class AbmProducto {
      * @param array $param
      * @return boolean
      */
-    public function baja($param){
+    public function baja($param)
+    {
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
+        if ($this->seteadosCamposClaves($param)) {
             $elObjtTabla = $this->cargarObjetoConClave($param);
-            if ($elObjtTabla != null and $elObjtTabla->eliminar()){
+            if ($elObjtTabla != null and $elObjtTabla->eliminar()) {
                 $resp = true;
             }
         }
@@ -97,11 +104,12 @@ class AbmProducto {
      * @param array $param
      * @return boolean
      */
-    public function modificacion($param){
+    public function modificacion($param)
+    {
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
+        if ($this->seteadosCamposClaves($param)) {
             $elObjtTabla = $this->cargarObjeto($param);
-            if($elObjtTabla != null and $elObjtTabla->modificar()){
+            if ($elObjtTabla != null and $elObjtTabla->modificar()) {
                 $resp = true;
             }
         }
@@ -113,19 +121,20 @@ class AbmProducto {
      * @param array $param
      * @return array
      */
-    public function buscar($param){
+    public function buscar($param)
+    {
         $where = " true ";
-        if ($param<>NULL){
-            if  (isset($param['idproducto']))
-                $where.=" and idproducto =".$param['idproducto'];
-            if  (isset($param['pronombre']))
-                 $where.=" and pronombre ='".$param['pronombre']."'";
-            if  (isset($param['prodetalle']))
-                 $where.=" and prodetalle ='".$param['prodetalle']."'";
-            if  (isset($param['procantstock']))
-                 $where.=" and procantstock ='".$param['procantstock']."'";
-            if  (isset($param['proprecio']))
-                 $where.=" and proprecio ='".$param['proprecio']."'";    
+        if ($param <> NULL) {
+            if (isset($param['idproducto']))
+                $where .= " and idproducto =" . $param['idproducto'];
+            if (isset($param['pronombre']))
+                $where .= " and pronombre ='" . $param['pronombre'] . "'";
+            if (isset($param['prodetalle']))
+                $where .= " and prodetalle ='" . $param['prodetalle'] . "'";
+            if (isset($param['procantstock']))
+                $where .= " and procantstock ='" . $param['procantstock'] . "'";
+            if (isset($param['proprecio']))
+                $where .= " and proprecio ='" . $param['proprecio'] . "'";
         }
         $obj = new Producto();
         $arreglo = $obj->listar($where);
@@ -135,13 +144,13 @@ class AbmProducto {
     /**
      * Verifica si la cantidad enviada es mayor o igual a la cantidad de stock del producto
      */
-    public function verificarStock($data){
+    public function verificarStock($data)
+    {
         $objProducto = new abmProducto();
         $producto = $objProducto->buscar($data);
-        if(isset($producto[0])){
+        if (isset($producto[0])) {
             $cantidad = $producto[0]->getProCantStock();
         }
         return $cantidad;
     }
 }
-?>

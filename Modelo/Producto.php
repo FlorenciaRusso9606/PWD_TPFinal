@@ -89,7 +89,7 @@ class Producto {
     public function insertar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO producto (pronombre, prodetalle, procantstock, proprecio) VALUES ('" . $this->getProNombre() . "', '" . $this->getProDetalle() . "', '" . $this->getProCantStock() . "', " . $this->getProPrecio() . ")";
+        $sql = "INSERT INTO producto (pronombre, prodetalle, procantstock, proprecio) VALUES ('" . $this->getProNombre() . "', '" . $this->getProDetalle() . "', " . $this->getProCantStock() . ", " . $this->getProPrecio() . ")";
         try {
             if ($base->Iniciar() && $base->Ejecutar($sql)) {
                 $this->setIdProducto($base->lastInsertId());

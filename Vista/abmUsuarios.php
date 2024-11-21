@@ -17,10 +17,6 @@ $List_Usuario = $objControlUsuario->buscar(null);
 
 <?php include_once "../Estructura/header.php"; ?>
 
-<!-- Link Semantic UI -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 
 <div class="ui hidden divider"></div>
 <div class="ui container grid center aligned">
@@ -29,6 +25,8 @@ $List_Usuario = $objControlUsuario->buscar(null);
 
         <h2>ABM - Usuarios y Roles</h2>
         <p>Seleccione la acci&oacute;n que desea realizar.</p>
+
+        <div id="messageContainer" class="ui hidden message"></div> <!-- Contenedor para los mensajes -->
 
         <table class="ui celled table">
             <thead>
@@ -48,7 +46,7 @@ $List_Usuario = $objControlUsuario->buscar(null);
                     $roles = $abmUsuarioRol->buscar(['idusuario' => $usuario->getUsuarioId()]);
                     $rol = count($roles) > 0 ? $roles[0]->getObjRol() : null;
                     ?>
-                    <tr data-id="<?php echo $usuario->getUsuarioId(); ?>">
+                    <tr data-id="<?php echo $usuario->getUsuarioId(); ?>" data-idrol="<?php echo $rol ? $rol->getidrol() : ''; ?>">
                         <td data-field="idusuario"><?php echo $usuario->getUsuarioId(); ?></td>
                         <td data-field="usnombre"><?php echo $usuario->getUsuarioNombre(); ?></td>
                         <td data-field="usmail"><?php echo $usuario->getUsuarioEmail(); ?></td>
@@ -57,7 +55,7 @@ $List_Usuario = $objControlUsuario->buscar(null);
                         <td data-field="usdeshabilitado"><?php echo $usuario->getUsuarioDeshabilitado(); ?></td>
                         <td>
                             <button class="ui button" onclick="editUsuarioRol(<?php echo $usuario->getUsuarioId(); ?>)">Editar</button>
-                            <button class="ui button" onclick="destroyUsuarioRol(<?php echo $usuario->getUsuarioId(); ?>)">Eliminar</button>
+                            <button class="ui button" onclick="confirmDestroyUsuarioRol(<?php echo $usuario->getUsuarioId(); ?>, <?php echo $rol ? $rol->getidrol() : 'null'; ?>)">Eliminar</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -70,21 +68,24 @@ $List_Usuario = $objControlUsuario->buscar(null);
         <div id="dlgUsuarios" class="ui modal">
             <div class="header">Usuario y Rol Información</div>
             <div class="content">
+                <div id="modalMessageContainer" class="ui hidden message">
+                    <!-- Contenedor para los mensajes dentro del modal -->
+                </div>
                 <form id="fmUsuarios" class="ui form">
                     <input name="idusuario" id="idusuario" type="hidden">
-                    <div class="field">
+                    <div class="required field">
                         <label for="usnombre">Nombre:</label>
                         <input name="usnombre" id="usnombre" required>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label for="usmail">Email:</label>
                         <input name="usmail" id="usmail" required>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label for="uspass">Password:</label>
                         <input name="uspass" id="uspass" required>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <?php echo $combo; ?>
                     </div>
                     <div class="field">
@@ -99,16 +100,39 @@ $List_Usuario = $objControlUsuario->buscar(null);
             </div>
         </div>
 
+        <div id="dlgConfirmDelete" class="ui modal">
+            <div class="header">Confirmar Eliminación</div>
+            <div class="content">
+                <p>¿Seguro que desea eliminar el usuario?</p>
+                <div id="deleteMessageContainer" class="ui hidden message"></div> <!-- Contenedor para los mensajes dentro del modal de eliminación -->
+            </div>
+            <div class="actions">
+                <button class="ui button" onclick="destroyUsuarioRol()">Eliminar</button>
+                <button class="ui button" onclick="closeConfirmDialog()">Cancelar</button>
+            </div>
+        </div>
+
         <script>
             var url;
+            var idUsuarioEliminar;
+            var idRolEliminar;
 
             $(document).ready(function() {
                 $('.ui.dropdown').dropdown();
+                $('#fmUsuarios').form({
+                    fields: {
+                        usnombre: 'empty',
+                        usmail: 'empty',
+                        uspass: 'empty',
+                        idrol: 'empty'
+                    }
+                });
             });
 
             function newUsuarioRol() {
                 $('#dlgUsuarios').modal('show');
                 $('#fmUsuarios')[0].reset();
+                $('#modalMessageContainer').addClass('hidden'); // Ocultar mensajes anteriores
                 url = 'Accion/accionUsuarioTabla.php?accion=alta';
             }
 
@@ -116,6 +140,8 @@ $List_Usuario = $objControlUsuario->buscar(null);
                 var row = $('tr[data-id="' + idusuario + '"]');
                 if (row) {
                     $('#dlgUsuarios').modal('show');
+                    $('#fmUsuarios')[0].reset();
+                    $('#modalMessageContainer').addClass('hidden'); // Ocultar mensajes anteriores
                     $('#idusuario').val(idusuario);
                     $('#usnombre').val(row.find('td[data-field="usnombre"]').text());
                     $('#usmail').val(row.find('td[data-field="usmail"]').text());
@@ -127,49 +153,64 @@ $List_Usuario = $objControlUsuario->buscar(null);
             }
 
             function saveUsuarioRol() {
-                var formData = $('#fmUsuarios').serializeArray();
-                formData.push({
-                    name: 'usdeshabilitado',
-                    value: $('#usdeshabilitado').is(':checked') ? 'true' : 'false'
-                });
-                $.post(url, formData, function(result) {
-                    try {
-                        var result = JSON.parse(result);
-                        if (!result.respuesta) {
-                            alert('Error: ' + result.errorMsg);
-                        } else {
-                            $('#dlgUsuarios').modal('hide');
-                            loadUsuarios(); // Reload the table data
-                        }
-                    } catch (e) {
-                        console.error('Error parsing JSON:', e);
-                        console.error('Response:', result);
-                        alert('Error: No se pudo procesar la respuesta del servidor.');
-                    }
-                });
-            }
-
-            function destroyUsuarioRol(idusuario) {
-                if (confirm('Seguro que desea eliminar el usuario/rol?')) {
-                    $.post('Accion/accionUsuarioTabla.php?accion=baja&idusuario=' + idusuario, function(result) {
+                if ($('#fmUsuarios').form('is valid')) {
+                    var formData = $('#fmUsuarios').serializeArray();
+                    formData.push({
+                        name: 'usdeshabilitado',
+                        value: $('#usdeshabilitado').is(':checked') ? 'true' : 'false'
+                    });
+                    $.post(url, formData, function(result) {
                         try {
                             var result = JSON.parse(result);
-                            if (result.respuesta) {
-                                loadUsuarios(); // Reload the table data
+                            if (!result.respuesta) {
+                                showModalMessage('error', 'Error: ' + result.errorMsg);
                             } else {
-                                alert('Error: ' + result.errorMsg);
+                                $('#dlgUsuarios').modal('hide');
+                                loadUsuarios(); // Reload the table data
+                                showMessage('success', 'Usuario guardado exitosamente.');
                             }
                         } catch (e) {
                             console.error('Error parsing JSON:', e);
                             console.error('Response:', result);
-                            alert('Error: No se pudo procesar la respuesta del servidor.');
+                            showModalMessage('error', 'Error: No se pudo procesar la respuesta del servidor.');
                         }
                     });
+                } else {
+                    showModalMessage('error', 'Por favor, complete todos los campos requeridos.');
                 }
+            }
+
+            function confirmDestroyUsuarioRol(idusuario, idrol) {
+                idUsuarioEliminar = idusuario;
+                idRolEliminar = idrol;
+                $('#dlgConfirmDelete').modal('show');
+            }
+
+            function destroyUsuarioRol() {
+                $.post('Accion/accionUsuarioTabla.php?accion=baja&idusuario=' + idUsuarioEliminar + '&idrol=' + idRolEliminar, function(result) {
+                    try {
+                        var result = JSON.parse(result);
+                        if (result.respuesta) {
+                            loadUsuarios(); // Reload the table data
+                            showMessage('success', 'Usuario eliminado exitosamente.');
+                        } else {
+                            showDeleteMessage('error', 'Error: ' + result.errorMsg);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e);
+                        console.error('Response:', result);
+                        showDeleteMessage('error', 'Error: No se pudo procesar la respuesta del servidor.');
+                    }
+                    $('#dlgConfirmDelete').modal('hide');
+                });
             }
 
             function closeDialog() {
                 $('#dlgUsuarios').modal('hide');
+            }
+
+            function closeConfirmDialog() {
+                $('#dlgConfirmDelete').modal('hide');
             }
 
             function loadUsuarios() {
@@ -178,7 +219,7 @@ $List_Usuario = $objControlUsuario->buscar(null);
                     var tableBody = $('#usuariosTableBody');
                     tableBody.empty();
                     usuarios.forEach(function(usuario) {
-                        var row = '<tr data-id="' + usuario.idusuario + '">' +
+                        var row = '<tr data-id="' + usuario.idusuario + '" data-idrol="' + usuario.idrol + '">' +
                             '<td data-field="idusuario">' + usuario.idusuario + '</td>' +
                             '<td data-field="usnombre">' + usuario.usnombre + '</td>' +
                             '<td data-field="usmail">' + usuario.usmail + '</td>' +
@@ -187,12 +228,36 @@ $List_Usuario = $objControlUsuario->buscar(null);
                             '<td data-field="usdeshabilitado">' + usuario.usdeshabilitado + '</td>' +
                             '<td>' +
                             '<button class="ui button" onclick="editUsuarioRol(' + usuario.idusuario + ')">Editar</button>' +
-                            '<button class="ui button" onclick="destroyUsuarioRol(' + usuario.idusuario + ')">Eliminar</button>' +
+                            '<button class="ui button" onclick="confirmDestroyUsuarioRol(' + usuario.idusuario + ', ' + usuario.idrol + ')">Eliminar</button>' +
                             '</td>' +
                             '</tr>';
                         tableBody.append(row);
                     });
                 });
+            }
+
+            function showMessage(type, message) {
+                var messageContainer = $('#messageContainer');
+                messageContainer.removeClass('hidden');
+                messageContainer.removeClass('success error');
+                messageContainer.addClass(type);
+                messageContainer.html(message);
+            }
+
+            function showModalMessage(type, message) {
+                var messageContainer = $('#modalMessageContainer');
+                messageContainer.removeClass('hidden');
+                messageContainer.removeClass('success error');
+                messageContainer.addClass(type);
+                messageContainer.html(message);
+            }
+
+            function showDeleteMessage(type, message) {
+                var messageContainer = $('#deleteMessageContainer');
+                messageContainer.removeClass('hidden');
+                messageContainer.removeClass('success error');
+                messageContainer.addClass(type);
+                messageContainer.html(message);
             }
 
             // Load the initial data
