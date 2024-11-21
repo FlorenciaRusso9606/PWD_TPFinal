@@ -149,8 +149,10 @@ class ABMUsuario
                 $where .= " and usmail ='" . $param['usmail'] . "'";
             if (isset($param['uspass']))
                 $where .= " and uspass ='" . $param['uspass'] . "'";
-            if (isset($param['usdeshabilitado']))
+            if (isset($param['usdeshabilitado']) && $param['usdeshabilitado'] = null)
                 $where .= " and usdeshabilitado is null";
+            if(isset($param['usdeshabilitado']) && $param['usdeshabilitado'] != null)
+                $where .= " and usdeshabilitado ='" . $param['usdeshabilitado'] . "'";
         }
         $obj = new Usuario();
         $arreglo = $obj->listar($where);

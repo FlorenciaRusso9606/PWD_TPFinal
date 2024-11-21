@@ -1,6 +1,6 @@
 <?php
 include_once "../Estructura/header.php";
-include_once "../Control/pagPublica.php";  
+include_once "../Control/pagPublica.php";
 $session = new Session();
 $idUsuario = $session->getUsuario();
 
@@ -17,8 +17,8 @@ if ($idUsuario) {
     }
 }
 ?>
-
-<div class="w-50 mx-auto pb-3 mt-4">
+<div class="ui hidden divider"></div>
+<div class="ui center aligned fluid container grid">
     <div class="sixteen wide column">
         <div class="ui center aligned padded segment container grid">
             <div class="ui four wide column">
@@ -35,7 +35,7 @@ if ($idUsuario) {
                     echo "<p><strong>Contraseña:</strong> <span id='passUsuario'> " . str_repeat('*', strlen($usuario->getUsuarioPassword())) . "</p>";
 
                     // Botón Editar
-                    echo '<button class="btn btn-primary mt-3" onclick="abrirFormularioEdicion(' . $usuario->getUsuarioId() . ')">Editar</button>';
+                    echo '<button class="ui button primary" onclick="abrirFormularioEdicion(' . $usuario->getUsuarioId() . ')">Editar</button>';
                 } else {
                     echo "<h1>No se encontró el usuario</h1>";
                 }
@@ -46,29 +46,28 @@ if ($idUsuario) {
 </div>
 
 <!-- Formulario de edición -->
-<div id="formularioEdicionUsuario" class="modal" tabindex="-1" role="dialog" display:none; style="margin-top: 300px;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content mt-5">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar Usuario</h5>
-                <button type="button" class="close" style="margin-left: 330px" onclick="cerrarFormularioEdicion()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="formEditarUsuario">
+<div id="formularioEdicionUsuario" class="ui modal">
+    <div class="modal" role="document">
+        <div class="ui padded segment">
+
+            <h5 class="header">Editar Usuario</h5>
+            <div class="ui basic segment">
+                <form id="formEditarUsuario" class="ui form">
                     <input type="hidden" name="idusuario" id="idUsuarioInput">
-                    <div class="form-group">
+                    <div class="field">
                         <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="usnombre" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="usmail" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="password">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="uspass" required>
                     </div>
-                    <button type="submit" class="btn btn-success" style="margin-top: 20px;" onclick="hashPassword()">Guardar</button>
+                    <button type="submit" class="ui button primary" style="margin-top: 20px;" onclick="hashPassword()">Guardar</button>
+                    <button type="button" class="ui button secondary" onclick="cerrarFormularioEdicion()">Cerrar</button>
                 </form>
             </div>
         </div>
@@ -90,11 +89,11 @@ if ($idUsuario) {
         $('#email').val($('#emailUsuario').text());
 
         // Mostrar el formulario modal
-        $('#formularioEdicionUsuario').show();
+        $('#formularioEdicionUsuario').modal("show");
     }
 
     function cerrarFormularioEdicion() {
-        $('#formularioEdicionUsuario').hide();
+        $('#formularioEdicionUsuario').modal("hide");
     }
 
     // Configuración del envío del formulario con AJAX

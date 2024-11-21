@@ -9,14 +9,15 @@ class ControladorMail
 {
     public function obtenerEstadoCompra($estadoCompra)
     {
+
         $msjCompra = "";
-        if ($estadoCompra === '1') {
+        if ($estadoCompra == 1) {
             $msjCompra = "Usted ha iniciado un proceso de compra en Tienda Lenny";
-        } elseif ($estadoCompra === '2') {
+        } elseif ($estadoCompra == 2) {
             $msjCompra = "Su compra en Tienda Lenny ha sido aceptada";
-        } elseif ($estadoCompra === '3') {
+        } elseif ($estadoCompra == 3) {
             $msjCompra = "Su compra en Tienda Lenny fue enviada";
-        } elseif ($estadoCompra === '4') {
+        } elseif ($estadoCompra == 4) {
             $msjCompra = "Su compra en Tienda Lenny ha sido cancelada";
         }
         return $msjCompra;
@@ -58,7 +59,7 @@ class ControladorMail
 
             //Recipients
             $mail->setFrom('tiendaLenny@pwd.com', 'Tienda Lenny');
-            $mail->addAddress($email, $nombreUsuario);     //Add a recipient
+            $mail->addAddress("rayelen.fernandez@est.fi.uncoma.edu.ar", $nombreUsuario);     //Add a recipient
             $mail->addAttachment($pdfFilePath); // Adjuntar el archivo PDF
 
             //Content

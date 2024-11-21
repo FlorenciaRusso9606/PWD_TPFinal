@@ -15,7 +15,12 @@ $abmUsuarioRol = new abmUsuarioRol(); // Definir la variable $abmUsuarioRol
 $List_Usuario = $objControlUsuario->buscar(null);
 ?>
 
-<?php include_once "../Estructura/header.php"; ?>
+<?php include_once "../Estructura/header.php";
+if ($rol !== 1) {
+    header("Location: index.php");
+    exit();
+}
+?>
 
 
 <div class="ui hidden divider"></div>
