@@ -1,5 +1,5 @@
 <?php
-include_once "../configuracion.php";
+// include_once "../configuracion.php";
 $session = new Session();
 $idUsuario = $session->getUsuario();
 /* basename — Devuelve el último componente de nombre de una ruta */
@@ -10,4 +10,3 @@ if ($idUsuario == null && !in_array($pagActual, $pagPermitidas)) {
 	header("Location: " . $PRINCIPAL);
 }
 /* var_dump($PRINCIPAL); */
-?>
