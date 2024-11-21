@@ -15,9 +15,9 @@ Cliente
 - [ ] Registrarse
  
 Deposito
-- [ ] abmProductos - Rocio
+- [X] abmProductos - Rocio
 - [X] Ver todos los estados de compra
-- [ ] Cargar un nuevo Producto
+- [X] Cargar un nuevo Producto
 
 Administrador
 - [X] abmUsuarios - Rocio
@@ -35,11 +35,11 @@ Modelos
 - [x] Registrar todos los cambios de estados de una compra.
 
 Vistas
-- [ ] Implementar todas las interfaces con AJAX.
+- [X] Implementar todas las interfaces con AJAX.
 - [ ] Asegurar que las páginas seguras controlen que el usuario está logueado y tiene permiso de acceso.
 
 Requisitos Adicionales
-- [ ] La implementación de los script PHP correspondientes a las acciones de las interfaces NO deben implementar funcionalidad vinculada al proceso. Recuerde que los script tienen la responsabilidad de obtener los datos de la interfaz, crear el/los objetos del control y retornar la respuesta a la interfaz.
+- [X] La implementación de los script PHP correspondientes a las acciones de las interfaces NO deben implementar funcionalidad vinculada al proceso. Recuerde que los script tienen la responsabilidad de obtener los datos de la interfaz, crear el/los objetos del control y retornar la respuesta a la interfaz.
 - [X] El menú debe generarse automáticamente según los permisos configurados al rol del usuario.
 - [x] La gestión del stock debe implementarse correctamente, quitando o devolviendo según corresponda.
 

@@ -25,7 +25,7 @@ include_once "../configuracion.php";
             </div>
             <div class="basic segment grid">
                 <form id="productoForm" method="post" class="ui form" novalidate>
-                    <div id="mensaje" class="alert alert-danger d-none"></div>
+                    <div id="mensaje" class="ui red message hidden"></div>
                     <input name="idproducto" id="idproducto" class="required field" type="hidden"
                         value="<?php echo isset($producto) ? $producto->getIdProducto() : null; ?>">
 
@@ -105,7 +105,7 @@ include_once "../configuracion.php";
                     mensajeErrores += `<li>${error}</li>`;
                 });
                 mensajeErrores += '</ul>';
-                $('#mensaje').removeClass('d-none').html(mensajeErrores);
+                $('#mensaje').removeClass('hidden').addClass('red').html(mensajeErrores);
                 return; // Detener el envío
             }
 
@@ -119,15 +119,15 @@ include_once "../configuracion.php";
                     console.log('Response:', response); // Depuración: imprime la respuesta en la consola
 
                     if (response.success) {
-                        $('#mensaje').removeClass('alert-danger').addClass('alert-success').removeClass('d-none').html('<p>' + response.message + '</p>');
+                        $('#mensaje').removeClass('red').addClass('green').removeClass('hidden').html('<p>' + response.message + '</p>');
                     } else {
-                        $('#mensaje').removeClass('d-none').html('<p>' + response.message + '</p>'); // Muestra mensaje de error
+                        $('#mensaje').removeClass('hidden').addClass('red').html('<p>' + response.message + '</p>'); // Muestra mensaje de error
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
                     console.error('Response:', xhr.responseText);
-                    $('#mensaje').removeClass('d-none').html('<p>Hubo un error al procesar la solicitud.</p>');
+                    $('#mensaje').removeClass('hidden').addClass('red').html('<p>Hubo un error al procesar la solicitud.</p>');
                 }
             });
 
