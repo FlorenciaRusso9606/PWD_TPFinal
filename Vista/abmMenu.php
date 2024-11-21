@@ -1,5 +1,6 @@
 <?php
 include_once "../configuracion.php";
+include_once "../Control/pagPublica.php";
 $objControl = new AbmMenu();
 $List_Menu = $objControl->buscar(null);
 $combo = '<select class="ui dropdown" id="idpadre" name="idpadre" required>

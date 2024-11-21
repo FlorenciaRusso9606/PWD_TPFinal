@@ -1,5 +1,6 @@
 <?php
 include_once "../../configuracion.php";
+include_once "../../Control/pagPublica.php";    
 $data = data_submitted();
 $respuesta = false;
 if (isset($data['menombre'])) {

@@ -23,6 +23,7 @@ class ControlTablaUsuario
     public function modificarUsuario($data)
     {
 
+
         $abmUsuario = new ABMUsuario();
         $abmUsuarioRol = new abmUsuarioRol();
         // Hashea la contraseña con md5
@@ -30,6 +31,7 @@ class ControlTablaUsuario
         // Verificar si se debe habilitar o deshabilitar el usuario
 
         if (isset($data['usdeshabilitado']) && $data['usdeshabilitado'] == 'true') {
+
             $data['usdeshabilitado'] = date("Y-m-d H:i:s");
         } else {
             $data['usdeshabilitado'] = null;

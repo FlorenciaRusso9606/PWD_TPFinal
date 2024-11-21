@@ -1,6 +1,7 @@
 <?php
 
 include_once '../../configuracion.php';
+include_once "../../Control/pagPublica.php";  
 $datos = data_submitted();
 
 $retorno = [];

@@ -122,6 +122,7 @@ class BaseDatos extends PDO
 
     public function Ejecutar($sql)
     {
+        /* var_dump($sql); */
         $this->setError(null);
         // echo "Hola ".$sql;
         $this->setSQL($sql);
@@ -141,6 +142,7 @@ class BaseDatos extends PDO
         if ($this->getError() != null) {
             $resp = false;
         }
+
         return $resp;
     }
 

@@ -1,5 +1,6 @@
 <?php
 include_once "../configuracion.php";
+include_once "../Control/pagPublica.php";
 $objControl = new AbmProducto();
 $List_Producto = $objControl->buscar(null);
 ?>

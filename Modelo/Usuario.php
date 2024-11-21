@@ -110,8 +110,10 @@ class Usuario
         $sql = "INSERT INTO usuario (usmail, uspass, usnombre, usdeshabilitado) VALUES ('" . $this->getUsuarioEmail() . "', '" . $this->getUsuarioPassword() . "', '" . $this->getUsuarioNombre() . "', '" . $this->getUsuarioDeshabilitado() . "')";
         try {
             if ($base->Iniciar()) {
+                /* echo "11"; */
                 // Cambia la ejecución de la consulta a Ejecutar() como lo tenías.
                 if ($base->Ejecutar($sql)) {
+                    /* echo "22"; */
                     // Obtener el ID de la última inserción
                     $idUsuario = $base->lastInsertId();
                     if ($idUsuario) {
@@ -119,13 +121,13 @@ class Usuario
                         $resp = true;
                     }
                 } else {
-                    $this->setMensajeOperacion("usuario->insertar: " . $base->getError());
+                    $this->setMensajeOperacion("usuario->insertar1: " . $base->getError());
                 }
             } else {
-                $this->setMensajeOperacion("usuario->insertar: " . $base->getError());
+                $this->setMensajeOperacion("usuario->insertar2: " . $base->getError());
             }
         } catch (PDOException $e) {
-            $this->setMensajeOperacion("usuario->insertar: " . $e->getMessage());
+            $this->setMensajeOperacion("usuario->insertar3: " . $e->getMessage());
         }
         return $resp;
     }

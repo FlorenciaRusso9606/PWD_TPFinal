@@ -1,5 +1,6 @@
 <?php
 include_once "../../configuracion.php";
+ 
 $data = data_submitted();
 $response = array('respuesta' => false);
 
@@ -8,6 +9,7 @@ if (isset($data['id'])) {
     if ($controlCompra->confirmarCompra()) {
         $response['respuesta'] = true;
         $response['mensaje'] = 'Compra confirmada';
+        /* $response['idcompra'] = */
     } else {
         $response['mensaje'] = 'Error al confirmar la compra';
     }

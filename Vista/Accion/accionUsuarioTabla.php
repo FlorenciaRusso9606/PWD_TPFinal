@@ -1,6 +1,7 @@
 <?php
 
 include_once "../../configuracion.php";
+include_once "../../Control/pagPublica.php";
 $data = data_submitted();
 $respuesta = false;
 $mensaje = "";
@@ -25,6 +26,8 @@ if (isset($data['accion'])) {
 
         case 'mod':
             if (isset($data['idusuario']) && isset($data['usnombre']) && isset($data['usmail']) && isset($data['uspass']) && isset($data['idrol'])) {
+
+
                 $respuesta = $controlUsuario->modificarUsuario($data);
                 if (!$respuesta) {
                     $mensaje = "Error al modificar el usuario";
