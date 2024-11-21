@@ -134,10 +134,31 @@ class ControlCompra {
               'proprecio' => $objProducto->getProPrecio(),
             ];
              $abmProducto->modificacion($datosProducto);
+             $datos['productos'] = $datosProducto;
           }
     
     
           $resp = $abmCompraEstado->modificacion($datos);
+          if ($resp) {
+            $controlMail = new ControladorMail;
+            $controlPdf= new PDF();
+            $session = new Session;
+            $abmUsuario = new ABMUsuario;
+            $idusuario = $session->getUsuario();
+            $param['idusuario'] = $idusuario;
+            $usuario = $abmUsuario->buscar($param)[0];
+            
+            $datos['usnombre'] = $usuario->getUsuarioNombre();
+            $datos['usmail'] = $usuario->getUsuarioEmail();
+
+            $pdfFilePath = $controlPdf->generarPdfCompra($datos);
+            $mailUsuario = $usuario->getUsuarioEmail();
+            $nombreUsuario = $usuario->getUsuarioNombre();
+            $asunto = "Su compra ha sido cancelada.";
+            $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
+            // Enviar el correo
+            $controlMail->enviarMail($mailUsuario, $nombreUsuario, $asunto, $mensaje, $pdfFilePath);
+        }
         }
         return $resp;
     }
