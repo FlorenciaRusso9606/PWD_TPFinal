@@ -37,11 +37,15 @@ include_once "../configuracion.php";
     $abmEstadoTipo = new ABMcompraEstadoTipo();
     $abmCompraItem = new AbmCompraItem();
     $ambCompraEstado = new AbmCompraEstado();
+<<<<<<< HEAD
     $precioTotal = 0;
+=======
+    
+>>>>>>> 5300e30610a490c8a13e4edc5367cc8a1982ff4c
     foreach ($compras as $compra) {
         $idCompra = $compra->getIdCompra();
         $paramIdCompra = ["idcompra" => $idCompra];
-
+        $precioTotal = 0;
         // Obtener estado
         $estado = $ambCompraEstado->buscar($paramIdCompra);
         if (!$estado) {
@@ -58,12 +62,20 @@ include_once "../configuracion.php";
         $idTipoEstado["idcompraestadotipo"] = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
         echo "<p><strong>Estado:</strong> <span>{$estado[0]->getobjCompraEstadoTipo()->getCetDescripcion()}</span></p>";
 
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 5300e30610a490c8a13e4edc5367cc8a1982ff4c
         echo "<div class='ui list'>";
         foreach ($arrItems as $item) {
             echo "<div class='item'>";
             echo "{$item->getobjProducto()->getProNombre()} <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>";
+<<<<<<< HEAD
             $precioTotal = $precioTotal + $item->getObjProducto()->getProPrecio();
+=======
+            $precioTotal += $item->getObjProducto()->getProPrecio() * $item->getCiCantidad();
+>>>>>>> 5300e30610a490c8a13e4edc5367cc8a1982ff4c
             echo "</div>";
         }
         echo "</div>";

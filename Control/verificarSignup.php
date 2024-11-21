@@ -20,21 +20,37 @@ class VerificarSignup
 			}
 		}
 		if (!$seEncontro) {
-			if (count($arregloObjUsers) == 0 || $arregloObjUsers == null) {
-				$idNuevoUser = 1;
-			}
-			$idNuevoUser = count($arregloObjUsers) + 1;
+
+
 			/* var_dump($idNuevoUser); */ //4
-			$nuevoUsuario = new Usuario();
-			$nuevoUsuario->setear($idNuevoUser, $datos['usnombre'], $datos['uspass'], $datos['usmail'], date('Y-m-d H:i:s'));
-			$nuevoUsuario->insertar();
-			/* $nuevoUsuario->setUsuarioDeshabilitado(NULL); */ //no lo setea, sigue con la fecha
-			/* var_dump($nuevoUsuario); */
-			$objUserRol = new AbmUsuarioRol();
-			$param = ['idusuario' => $idNuevoUser, 'idrol' => 3];
-			$objUserRol->alta($param);
-			/* var_dump($objUserRol); */
-			$resp = true;
+			$nuevoUsuario = new ABMUsuario();
+
+			$paramUsuario = ['usnombre' => $datos['usnombre'], 'uspass' => $datos['uspass'], 'usmail' => $datos['usmail'], "usdeshabilitado" => "0000-00-00 00:00:00"];
+
+
+			if ($nuevoUsuario->alta($paramUsuario)) {
+				$nuevoUser = $nuevoUsuario->buscar($paramUsuario);
+				if (isset($nuevoUser[0])) {
+					$idNuevoUser = $nuevoUser[0]->getUsuarioId();
+
+					/* $nuevoUsuario->setUsuarioDeshabilitado(NULL); */ //no lo setea, sigue con la fecha
+					/* var_dump($nuevoUsuario); */
+					$objUserRol = new AbmUsuarioRol();
+
+					$param = ['idusuario' => $idNuevoUser, 'idrol' => 3];
+
+					$objUserRol->alta($param);
+
+					/* var_dump($objUserRol); */
+					$session = new Session();
+					$session->iniciar($nuevoUser[0]->getUsuarioNombre(), $nuevoUser[0]->getUsuarioPassword());
+					$resp = true;
+				} else {
+					$resp = false;
+				}
+			} else {
+				$resp = false;
+			}
 		}
 		return $resp;
 	}

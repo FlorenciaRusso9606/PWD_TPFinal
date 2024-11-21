@@ -1,10 +1,15 @@
 <?php
-    include_once "../Control/pagPublica.php";  
+include_once "../Control/pagPublica.php";
 include_once "../configuracion.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include_once "../Estructura/header.php"; ?>
+<?php include_once "../Estructura/header.php";
+if ($rol !== 2) {
+    header("Location: index.php");
+    exit();
+}
+?>
 
 
 <div class="ui hidden divider"></div>

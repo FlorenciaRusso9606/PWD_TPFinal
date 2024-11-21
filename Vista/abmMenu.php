@@ -1,6 +1,9 @@
 <?php
 include_once "../configuracion.php";
 include_once "../Control/pagPublica.php";
+
+
+
 $objControl = new AbmMenu();
 $List_Menu = $objControl->buscar(null);
 $combo = '<select class="ui dropdown" id="idpadre" name="idpadre" required>
@@ -11,7 +14,17 @@ foreach ($List_Menu as $objMenu) {
 $combo .= '</select>';
 ?>
 
-<?php include_once "../Estructura/header.php"; ?>
+
+
+<?php include_once "../Estructura/header.php";
+
+if ($rol !== 1) {
+    header("Location: index.php");
+    exit();
+}
+
+
+?>
 
 <div class="ui hidden divider"></div>
 <div class="ui container grid center aligned">

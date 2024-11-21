@@ -36,7 +36,7 @@ if (isset($data["error"])) {
             }
 
             ?>
-           <div id="mensaje" class="ui red message"></div>
+            <div id="mensaje" class="ui red message hidden"></div>
 
 
 
@@ -61,34 +61,33 @@ if (isset($data["error"])) {
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('#loginForm').on('submit', function (e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $('#loginForm').on('submit', function(e) {
+            e.preventDefault();
 
-        const password = $('#password').val();
-        const hashedPassword = CryptoJS.MD5(password).toString();
+            const password = $('#password').val();
+            const hashedPassword = CryptoJS.MD5(password).toString();
 
-        $('#hashedPassword').val(hashedPassword);
-        $('#password').val('');
+            $('#hashedPassword').val(hashedPassword);
+            $('#password').val('');
 
-        $.ajax({
-            url: 'Accion/verificarLogin.php',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                const result = JSON.parse(response);
-                if (result.success) {
-                    window.location.href = "index.php";
-                } else {
-                    $('#mensaje').html('<p>' + result.message + '</p>');
+            $.ajax({
+                url: 'Accion/verificarLogin.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        window.location.href = "index.php";
+                    } else {
+                        $('#mensaje').html('<p>' + result.message + '</p>');
+                    }
+                },
+                error: function() {
+                    $('#mensaje').html('<p>Error al procesar el login.</p>');
                 }
-            },
-            error: function () {
-                $('#mensaje').html('<p>Error al procesar el login.</p>');
-            }
+            });
         });
     });
-});
-
 </script>
 <?php include_once "../Estructura/footer.php"; ?>
