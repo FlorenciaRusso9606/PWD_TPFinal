@@ -17,7 +17,7 @@ class BaseDatos extends PDO
     {
         $this->engine = 'mysql';
         $this->host = 'localhost';
-        $this->database = 'bd_tpfinal2';
+        $this->database = 'bd_tpfinal';
         $this->user = 'root';
         $this->pass = '';
         $this->debug = false;
@@ -128,26 +128,22 @@ class BaseDatos extends PDO
         $this->setSQL($sql);
         if (stristr($sql, "insert")) { // se desea NSERT ? 
             $resp =  $this->EjecutarInsert($sql);
-            
         }
         // se desea UPDATE o DELETE ? 
         if (stristr($sql, "update") or stristr($sql, "delete")) {
             $resp =  $this->EjecutarDeleteUpdate($sql);
-            
         }
 
         // se desea ejecutar un select
         if (stristr($sql, "select")) {
             $resp =  $this->EjecutarSelect($sql);
-            
         }
 
         if ($this->getError() != null) {
             $resp = false;
         }
-        
+
         return $resp;
-        
     }
 
     /**
