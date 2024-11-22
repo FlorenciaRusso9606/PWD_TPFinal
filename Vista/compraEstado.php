@@ -62,7 +62,7 @@ include_once "../configuracion.php";
         echo "<p><strong>Total:</strong> $$precioTotal</p>";
 
         // Formulario para cambiar estado (si aplica)
-        if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4) {
+        if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4 && $idTipoEstado["idcompraestadotipo"] !== 3) {
             $estadoActual = $idTipoEstado["idcompraestadotipo"];
             echo "
          <form class='ui form form-cambiar-estado' data-id='{$idCompra}' method='POST'>
