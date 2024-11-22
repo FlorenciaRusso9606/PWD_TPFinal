@@ -168,7 +168,7 @@ class ControlCompra
                 if (file_exists($pdfFilePath)) {
                     $mailUsuario = $usuario->getUsuarioEmail();
                     $nombreUsuario = $usuario->getUsuarioNombre();
-                    $asunto = $compraEstado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
+                    $asunto = 4;
                     
                     $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
                     // Enviar el correo

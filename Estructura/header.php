@@ -24,13 +24,6 @@ $rol = $session->getRol();
     <!-- Hash MD5 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-    <!-- Links Bootstrap MD5 -->
-    <!-- <link rel="stylesheet" href="<?= $RUTAVISTA ?>Assets/bootstrap-5.3.3-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="<?= $RUTAVISTA ?>Assets/bootstrap-5.3.3-dist/js/bootstrap.js"> -->
-
-    <!-- Link CSS -->
-    <!-- <link rel="stylesheet" href="<?= $RUTAVISTA ?>Assets/css/style.css"> -->
-
 
     <link rel="icon" href="../Vista/Assets/img/favicon.webp">
     <title><?= $page_title ?></title>

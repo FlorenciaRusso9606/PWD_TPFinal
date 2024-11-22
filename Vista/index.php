@@ -55,7 +55,7 @@ $arrayProductos = $objProducto->buscar(NULL);
               </a>
 
               <?php if ($producto->getProCantStock() == 0) { ?>
-                <p class='red'>Producto sin stock</p>
+                <p class='ui red label'>Producto sin stock</p>
                 <p class="gray">$<?= $producto->getProPrecio() ?></p>
               <?php } else { ?>
                 <p class=''>$<?= $producto->getProPrecio() ?></p>

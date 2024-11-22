@@ -1,7 +1,7 @@
 <?php
 
 include_once '../../configuracion.php';
-include_once "../../Control/pagPublica.php";  
+include_once "../../Control/pagPublica.php";
 include_once "../../Control/ControlPaginaAccion.php";
 $datos = data_submitted();
 

@@ -40,7 +40,7 @@ if (isset($data["error"])) {
 
 
 
-            <form class="ui form" id="loginForm" action="Accion/verificarLogin.php" method="post">
+            <form class="ui form" id="loginForm" method="post">
                 <div class="field">
                     <label for="username">Usuario:</label>
                     <input type="text" id="username" name="usnombre" required>

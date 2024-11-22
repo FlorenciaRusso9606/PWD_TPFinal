@@ -73,12 +73,23 @@ if ($idUsuario) {
         </div>
     </div>
 </div>
+
+<!-- Modal para mensajes -->
+<div id="mensajeModal" class="ui modal">
+    <div class="header" id="mensajeModalHeader"></div>
+    <div class="content">
+        <p id="mensajeModalContent"></p>
+    </div>
+    <div class="actions">
+        <div class="ui approve button">OK</div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
 <script>
     function hashPassword() {
         var pass = document.getElementById('password').value;
-        /* console.log(pass); */
         pass = CryptoJS.MD5(pass).toString();
-        /* console.log(pass); */
         document.getElementById('password').value = pass;
     }
 
@@ -96,6 +107,13 @@ if ($idUsuario) {
         $('#formularioEdicionUsuario').modal("hide");
     }
 
+    function mostrarMensaje(tipo, mensaje) {
+        const header = tipo === "success" ? "Éxito" : "Error";
+        $('#mensajeModalHeader').text(header);
+        $('#mensajeModalContent').text(mensaje);
+        $('#mensajeModal').modal('show');
+    }
+
     // Configuración del envío del formulario con AJAX
     $('#formEditarUsuario').on('submit', function(e) {
         e.preventDefault();
@@ -109,15 +127,19 @@ if ($idUsuario) {
             success: function(respuesta) {
                 cerrarFormularioEdicion();
                 // Parsear respuesta del servidor
-                const respuestaJSON = JSON.parse(respuesta);
-                alert("Se modifico con exito");
-                if (!result.respuesta) {
-                    $.messager.show({
-                        title: 'Error',
-                        msg: result.errorMsg
-                    });
+                let respuestaJSON;
+                try {
+                    respuestaJSON = JSON.parse(respuesta);
+                } catch (e) {
+                    console.error('Error al parsear la respuesta JSON:', e);
+                    mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
+                    return;
                 }
-                if (respuestaJSON.success) {
+
+                mostrarMensaje("success", "Se modificó con éxito");
+                if (!respuestaJSON.success) {
+                    mostrarMensaje("error", respuestaJSON.errorMsg);
+                } else {
                     // Actualizar la información mostrada
                     $('#nombreUsuario').text(respuestaJSON.data.nombre);
                     $('#emailUsuario').text(respuestaJSON.data.email);
@@ -125,52 +147,54 @@ if ($idUsuario) {
                     // Cerrar el formulario
                     cerrarFormularioEdicion();
 
-                    alert('Usuario actualizado correctamente.');
-                } else {
-                    alert('Error al actualizar el usuario: ' + respuestaJSON.error);
+                    mostrarMensaje("success", "Usuario actualizado correctamente.");
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Error en la solicitud AJAX:', error);
-                alert('Ocurrió un error al intentar actualizar el usuario.');
+                mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
             }
         });
     });
 
-    // Función para guardar los cambios del usuario
-    function guardarUsuario() {
-        var formData = $('#formEditarUsuario').serialize();
-        $.ajax({
-            url: 'Accion/accionEditarUsuario.php',
-            type: 'POST',
-            data: formData,
-            success: function(data) {
-                var result = JSON.parse(data);
-                if (result.respuesta) {
-                    // Actualizar los elementos del DOM con los nuevos datos
-                    $('#nombreUsuario').text(result.usnombre);
-                    $('#emailUsuario').text(result.usmail);
-                    $('#passUsuario').text('*'.repeat(result.uspassLength));
-
-                    // Cerrar el modal
-                    /* var myModalEl = document.getElementById('formularioEdicionUsuario');
-                    var modal = bootstrap.Modal.getInstance(myModalEl);
-                    modal.hide(); */
-                } else {
-                    // Mostrar el mensaje de error
-                    alert(result.errorMsg);
-                }
-            },
-            error: function() {
-                alert('Error al guardar los datos del usuario.');
-            }
-        });
-    }
-
     $(document).ready(function() {
         $('#formEditarUsuario').on('submit', function(event) {
             event.preventDefault(); // Evita el envío tradicional del formulario
-            guardarUsuario(); // Llama a la función AJAX para guardar los cambios
+            hashPassword(); // Llama a la función para hashear la contraseña
+            const datosFormulario = $(this).serialize();
+
+            $.ajax({
+                url: './Accion/accionEditarUsuario.php',
+                type: 'POST',
+                data: datosFormulario,
+                success: function(data) {
+                    let result;
+                    try {
+                        result = JSON.parse(data);
+                    } catch (e) {
+                        console.error('Error al parsear la respuesta JSON:', e);
+                        mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
+                        return;
+                    }
+
+                    if (result.respuesta) {
+                        // Actualizar los elementos del DOM con los nuevos datos
+                        $('#nombreUsuario').text(result.usnombre);
+                        $('#emailUsuario').text(result.usmail);
+                        $('#passUsuario').text('*'.repeat(result.uspassLength));
+
+                        // Cerrar el modal
+                        cerrarFormularioEdicion();
+                        mostrarMensaje("success", "Usuario actualizado correctamente.");
+                    } else {
+                        // Mostrar el mensaje de error
+                        mostrarMensaje("error", result.errorMsg);
+                    }
+                },
+                error: function() {
+                    mostrarMensaje("error", "Error al guardar los datos del usuario.");
+                }
+            });
         });
     });
 </script>
