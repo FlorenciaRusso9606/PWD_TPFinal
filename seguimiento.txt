@@ -29,7 +29,7 @@ Administrador
 
 
 Controladores
-- [ ] Implementar el envío de un correo electrónico al cliente cada vez que la compra tenga un cambio de estado.
+- [X] Implementar el envío de un correo electrónico al cliente cada vez que la compra tenga un cambio de estado.
 
 Modelos
 - [x] Registrar todos los cambios de estados de una compra.
