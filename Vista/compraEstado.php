@@ -70,11 +70,12 @@ include_once "../configuracion.php";
 
         // Formulario para cambiar estado (si aplica)
         // Formulario para cambiar estado (si aplica)
-        if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4) {
+        if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4 && $idTipoEstado["idcompraestadotipo"] !== 3)  {
             $estadoActual = $idTipoEstado["idcompraestadotipo"];
             echo "
          <form class='ui form form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
             <div class='field'>
+
             <label>Cambiar estado</label>
             <select class='ui dropdown' name='nuevoestado'>";
 
