@@ -10,5 +10,5 @@ $objValidar = new verificarSignup();
 $resp = $objValidar->verificarSignup($datos);
 echo json_encode([
 	'success' => $resp,
-	'message' => $resp ? 'Registro exitoso.' : 'Ya existe el mail.'
+	'message' => $resp ? 'Registro exitoso.' : 'Ya existe el mail o NO ingreso los datos correctamente'
 ]);

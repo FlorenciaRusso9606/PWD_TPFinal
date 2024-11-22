@@ -97,6 +97,7 @@ class ControlCompra
             }
         }
 
+        $msj = ($compraExitosa) ? 5 : 4;
         return $compraExitosa;
     }
 
@@ -108,29 +109,43 @@ class ControlCompra
     public function cancelarCompra($param)
     {
         $resp = false;
+
         if (isset($param["idcompracancelar"])) {
             $abmCompraEstado = new AbmCompraEstado();
             $abmCompraItem = new AbmCompraItem();
             $abmProducto = new AbmProducto();
-            $idcompra = $param["idcompracancelar"];
-            $paramIdCompra["idcompra"] = $param["idcompracancelar"];
+            $abmCompra = new AbmCompra();
+            $abmUsuario = new ABMUsuario();
+            $controlMail = new ControladorMail();
+            $controlPdf = new PDF();
 
+            $idcompra = $param["idcompracancelar"];
+            $paramIdCompra["idcompra"] = $idcompra;
+
+            // Obtener la compra
+            $compra = $abmCompra->buscar($paramIdCompra)[0];
+            $idusuario = $compra->getIdUsuario(); // Obtener el ID del usuario que hizo la compra
+
+            // Obtener el estado de la compra y los ítems
             $compraEstado = $abmCompraEstado->buscar($paramIdCompra);
             $arrCompraItem = $abmCompraItem->buscar($paramIdCompra);
 
+            // Preparar los datos para actualizar el estado de la compra
             $datos = [
                 "idcompraestado" => $compraEstado[0]->getIdCompraEstado(),
-                "idcompra" => $_POST["idcompracancelar"],
-                "idcompraestadotipo" => 4,
+                "idcompra" => $idcompra,
+                "idcompraestadotipo" => 4, // Estado cancelado
                 "cefechaini" => $compraEstado[0]->getCeFechaIni(),
                 "cefechafin" => date("Y-m-d H:i:s"),
             ];
 
-            $datosPDF['productos'] = []; // Inicializar como un array vacío
+            $datosPDF['productos'] = []; // Inicializar array de productos
 
+            // Actualizar stock de productos y preparar datos para el PDF
             foreach ($arrCompraItem as $compraItem) {
                 $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
                 $objProducto = $abmProducto->buscar($idProd)[0];
+
                 $datosProducto = [
                     'idproducto' => $objProducto->getIdProducto(),
                     'pronombre' => $objProducto->getProNombre(),
@@ -140,7 +155,7 @@ class ControlCompra
                 ];
                 $abmProducto->modificacion($datosProducto);
 
-                // Agregar el producto al array de productos
+                // Agregar al PDF los detalles del producto
                 $datosPDF['productos'][] = [
                     'pronombre' => $objProducto->getProNombre(),
                     'proprecio' => $objProducto->getProPrecio(),
@@ -148,17 +163,13 @@ class ControlCompra
                 ];
             }
 
+            // Actualizar el estado de la compra
             $resp = $abmCompraEstado->modificacion($datos);
 
             if ($resp) {
-                $controlMail = new ControladorMail;
-                $controlPdf = new PDF();
-                $session = new Session;
-                $abmUsuario = new ABMUsuario;
-                $idusuario = $session->getUsuario();
+                // Obtener los datos del usuario
+                $usuario = $abmUsuario->buscar(['idusuario' => $idusuario])[0];
                 $datosPDF['idusuario'] = $idusuario;
-                $usuario = $abmUsuario->buscar($param)[0];
-
                 $datosPDF['usnombre'] = $usuario->getUsuarioNombre();
                 $datosPDF['usmail'] = $usuario->getUsuarioEmail();
 
@@ -168,8 +179,8 @@ class ControlCompra
                     $mailUsuario = $usuario->getUsuarioEmail();
                     $nombreUsuario = $usuario->getUsuarioNombre();
                     $asunto = 4;
-                    
-                    $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
+
+                    $mensaje = "Nos dirigimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos PDF con el comprobante.";
                     // Enviar el correo
                     $controlMail->crearMail($asunto, $pdfFilePath, $mailUsuario, $nombreUsuario, $mensaje);
                 } else {
@@ -177,8 +188,10 @@ class ControlCompra
                 }
             }
         }
+
         return $resp;
     }
+
 
     /**
      * Verifica la cantidad de productos en el carrito con su
@@ -233,77 +246,88 @@ class ControlCompra
     {
         $respuesta = null;
         $abmCompraEstado = new AbmCompraEstado;
+        $abmCompraItem = new AbmCompraItem;
+        $abmProducto = new AbmProducto;
+        $abmUsuario = new ABMUsuario;
+        $controlMail = new ControladorMail;
+        $controlPdf = new PDF();
+
+        // Obtener el estado actual de la compra
         $compraEstado = $abmCompraEstado->buscar($param);
+        if (empty($compraEstado)) {
+            return false; // La compra no existe o no tiene estado
+        }
+
+        // Preparar datos para actualizar el estado
         $datosEstado = [
             'idcompraestado' => $compraEstado[0]->getidcompraestado(),
             'idcompra' => $param['idcompra'],
             'idcompraestadotipo' => $param['nuevoestado'],
             'cefechaini' => $compraEstado[0]->getcefechaini(),
-            'cefechafin' => $compraEstado[0]->getcefechafin()
+            'cefechafin' => date("Y-m-d H:i:s"),
         ];
+
+        // Actualizar el estado de la compra
         $respuesta = $abmCompraEstado->modificacion($datosEstado);
-        $abmCompraItem = new AbmCompraItem();
-        $paramIdCompra = $param['idcompra'];
 
+        if ($respuesta) {
+            // Obtener los ítems de la compra
+            $arrCompraItem = $abmCompraItem->buscar(['idcompra' => $param['idcompra']]);
+            $datosPDF['productos'] = [];
 
-        $arrCompraItem = $abmCompraItem->buscar(["idcompra" => $paramIdCompra]);
+            foreach ($arrCompraItem as $compraItem) {
+                $idProd = ['idproducto' => $compraItem->getObjProducto()->getIdProducto()];
+                $objProducto = $abmProducto->buscar($idProd)[0];
 
-        foreach ($arrCompraItem as $compraItem) {
-            $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
-
-            $abmProducto = new AbmProducto;
-            $objProducto = $abmProducto->buscar($idProd)[0];
-            $datosPDF['productos'][] = [
-                'pronombre' => $objProducto->getProNombre(),
-                'proprecio' => $objProducto->getProPrecio(),
-                "cantidad" => $compraItem->getCiCantidad()
-            ];
-
-
-
-            if ($respuesta) {
-                $controlMail = new ControladorMail;
-                $controlPdf = new PDF();
-                $session = new Session;
-                $abmUsuario = new ABMUsuario;
-                $idusuario = $session->getUsuario();
-                $datosPDF['idusuario'] = $idusuario;
-                $usuario = $abmUsuario->buscar($param)[0];
-
-                $datosPDF['usnombre'] = $usuario->getUsuarioNombre();
-                $datosPDF['usmail'] = $usuario->getUsuarioEmail();
-
-                // Generar el PDF y obtener la ruta del archivo
-                $pdfFilePath = $controlPdf->generarPdfCompra($datosPDF);
-                if (file_exists($pdfFilePath)) {
-                    $mailUsuario = $usuario->getUsuarioEmail();
-                    $nombreUsuario = $usuario->getUsuarioNombre();
-                    $asunto = $param['nuevoestado'];
-                    $mensaje = "Nos dirijimos a usted con la intención de comunicarle que su compra ha sido cancelada. Adjuntamos pdf con el comprobante";
-                    // Enviar el correo
-                    $controlMail->crearMail($asunto, $pdfFilePath, $mailUsuario, $nombreUsuario, $mensaje);
-                } else {
-                    echo "No se pudo encontrar el archivo PDF: $pdfFilePath";
-                }
+                // Preparar datos del producto para el PDF
+                $datosPDF['productos'][] = [
+                    'pronombre' => $objProducto->getProNombre(),
+                    'proprecio' => $objProducto->getProPrecio(),
+                    'cantidad' => $compraItem->getCiCantidad(),
+                ];
             }
-            return $respuesta;
+
+            // Obtener el usuario relacionado con la compra
+            $compra = $compraEstado[0]->getObjCompra();
+            $idusuario = $compra->getobjUsuario()->getUsuarioId();
+            $usuario = $abmUsuario->buscar(['idusuario' => $idusuario])[0];
+
+            $datosPDF['idusuario'] = $idusuario;
+            $datosPDF['usnombre'] = $usuario->getUsuarioNombre();
+            $datosPDF['usmail'] = $usuario->getUsuarioEmail();
+
+            // Generar el PDF
+            $pdfFilePath = $controlPdf->generarPdfCompra($datosPDF);
+
+            if (file_exists($pdfFilePath)) {
+                // Enviar correo al usuario
+                $asunto = $param['nuevoestado'];
+                $mensaje = "Nos dirigimos a usted con la intención de comunicarle que el estado de su compra ha cambiado. Adjuntamos el comprobante en PDF.";
+                $controlMail->crearMail($asunto, $pdfFilePath, $usuario->getUsuarioEmail(), $usuario->getUsuarioNombre(), $mensaje);
+            } else {
+                echo "No se pudo encontrar el archivo PDF: $pdfFilePath";
+            }
         }
 
-
-        // public function mensajesCompraControl($num) {
-        //     $mensajes = [
-        //       /* Cambiar estado de compra*/
-        //       0 => 'No se pudo cambiar el estado de compra',
-        //       1 => 'El estado de la compra se cambio correctamente.',
-        //       /* Cancelar compra */
-        //       2 => 'Hubo un error al cancelar su compra.',
-        //       3 => 'Compra cancelada correctamente.',
-        //       /* Confirmar compra */
-        //       4 => "Hubo un error al confirmar su compra",
-        //       5 => "Compra confirmada correctamente.",
-        //     ];
-        //     return $mensajes[$num];
-        //   }
-
+        return $respuesta;
     }
+
+
+
+    // public function mensajesCompraControl($num) {
+    //     $mensajes = [
+    //       /* Cambiar estado de compra*/
+    //       0 => 'No se pudo cambiar el estado de compra',
+    //       1 => 'El estado de la compra se cambio correctamente.',
+    //       /* Cancelar compra */
+    //       2 => 'Hubo un error al cancelar su compra.',
+    //       3 => 'Compra cancelada correctamente.',
+    //       /* Confirmar compra */
+    //       4 => "Hubo un error al confirmar su compra",
+    //       5 => "Compra confirmada correctamente.",
+    //     ];
+    //     return $mensajes[$num];
+    //   }
+
+
 }

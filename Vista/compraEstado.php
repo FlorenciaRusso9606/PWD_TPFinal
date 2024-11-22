@@ -22,13 +22,13 @@ include_once "../configuracion.php";
 
 <div class="ui container" id="comprasContainer">
     <?php
-    $sesion =new Session;
+    $sesion = new Session;
     $abmEstadoTipo = new ABMcompraEstadoTipo;
     $abmCompraItem = new AbmCompraItem();
     $controlCompra = new ControlCompra;
 
     $compras = $controlCompra->buscarCompras($sesion);
-    
+
     $ambCompraEstado = new AbmCompraEstado();
 
     foreach ($compras as $compra) {
@@ -172,4 +172,6 @@ include_once "../configuracion.php";
     });
 </script>
 
-<?php include_once "../Estructura/footer.php"; ?>
+<?php
+include_once "../Estructura/footer.php";
+?>

@@ -5,12 +5,10 @@ $session = new Session();
 $idUsuario = $session->getUsuario();
 
 // Por si se ingresa a través de la URL
-
 $res = false;
 if ($idUsuario) {
     $abmUsuario = new AbmUsuario();
     $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario]);
-    /* var_dump($usuario); */
     if (count($usuario) > 0) {
         $usuario = $usuario[0];
         $res = true;
@@ -28,7 +26,7 @@ if ($idUsuario) {
             </div>
             <div class="ui ten wide column">
                 <?php
-                if ($res == true) {
+                if ($res) {
                     echo "<h1>Información del Usuario</h1>";
                     echo "<p><strong>Nombre de usuario:</strong> <span id='nombreUsuario'>" . $usuario->getUsuarioNombre() . "</span></p>";
                     echo "<p><strong>Email:</strong> <span id='emailUsuario'>" . $usuario->getUsuarioEmail() . "</span></p>";
@@ -47,30 +45,25 @@ if ($idUsuario) {
 
 <!-- Formulario de edición -->
 <div id="formularioEdicionUsuario" class="ui modal">
-    <div class="modal" role="document">
-        <div class="ui padded segment">
-
-            <h5 class="header">Editar Usuario</h5>
-            <div class="ui basic segment">
-                <form id="formEditarUsuario" class="ui form">
-                    <input type="hidden" name="idusuario" id="idUsuarioInput">
-                    <div class="field">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="usnombre" required>
-                    </div>
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="usmail" required>
-                    </div>
-                    <div class="field">
-                        <label for="password">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="uspass" required>
-                    </div>
-                    <button type="submit" class="ui button primary" style="margin-top: 20px;" onclick="hashPassword()">Guardar</button>
-                    <button type="button" class="ui button secondary" onclick="cerrarFormularioEdicion()">Cerrar</button>
-                </form>
+    <div class="ui padded segment">
+        <h5 class="header">Editar Usuario</h5>
+        <form id="formEditarUsuario" class="ui form">
+            <input type="hidden" name="idusuario" id="idUsuarioInput">
+            <div class="field">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="usnombre">
             </div>
-        </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="usmail">
+            </div>
+            <div class="field">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="uspass">
+            </div>
+            <button type="submit" class="ui button primary" style="margin-top: 20px;">Guardar</button>
+            <button type="button" class="ui button secondary" onclick="cerrarFormularioEdicion()">Cerrar</button>
+        </form>
     </div>
 </div>
 
@@ -94,12 +87,9 @@ if ($idUsuario) {
     }
 
     function abrirFormularioEdicion(idUsuario) {
-        // Rellenar los datos actuales del usuario
         $('#idUsuarioInput').val(idUsuario);
         $('#nombre').val($('#nombreUsuario').text());
         $('#email').val($('#emailUsuario').text());
-
-        // Mostrar el formulario modal
         $('#formularioEdicionUsuario').modal("show");
     }
 
@@ -110,57 +100,40 @@ if ($idUsuario) {
     function mostrarMensaje(tipo, mensaje) {
         const header = tipo === "success" ? "Éxito" : "Error";
         $('#mensajeModalHeader').text(header);
-        $('#mensajeModalContent').text(mensaje);
+        $('#mensajeModalContent').html(mensaje); // Se usa .html() para procesar etiquetas como <br>
         $('#mensajeModal').modal('show');
     }
 
-    // Configuración del envío del formulario con AJAX
-    $('#formEditarUsuario').on('submit', function(e) {
-        e.preventDefault();
+    function validarFormulario() {
+        const nombre = $('#nombre').val().trim();
+        const email = $('#email').val().trim();
+        const password = $('#password').val().trim();
 
-        const datosFormulario = $(this).serialize();
+        let mensajeError = '';
+        if (!nombre) mensajeError += 'El nombre no puede estar vacío.<br>';
+        if (!validarEmail(email)) mensajeError += 'El email no es válido.<br>';
+        if (!password) mensajeError += 'La contraseña no puede estar vacía.<br>';
 
-        $.ajax({
-            url: './Accion/accionEditarUsuario.php',
-            type: 'POST',
-            data: datosFormulario,
-            success: function(respuesta) {
-                cerrarFormularioEdicion();
-                // Parsear respuesta del servidor
-                let respuestaJSON;
-                try {
-                    respuestaJSON = JSON.parse(respuesta);
-                } catch (e) {
-                    console.error('Error al parsear la respuesta JSON:', e);
-                    mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
-                    return;
-                }
+        if (mensajeError) {
+            mostrarMensaje("error", mensajeError);
+            return false;
+        }
+        return true;
+    }
 
-                mostrarMensaje("success", "Se modificó con éxito");
-                if (!respuestaJSON.success) {
-                    mostrarMensaje("error", respuestaJSON.errorMsg);
-                } else {
-                    // Actualizar la información mostrada
-                    $('#nombreUsuario').text(respuestaJSON.data.nombre);
-                    $('#emailUsuario').text(respuestaJSON.data.email);
-
-                    // Cerrar el formulario
-                    cerrarFormularioEdicion();
-
-                    mostrarMensaje("success", "Usuario actualizado correctamente.");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error en la solicitud AJAX:', error);
-                mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
-            }
-        });
-    });
+    function validarEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
 
     $(document).ready(function() {
         $('#formEditarUsuario').on('submit', function(event) {
-            event.preventDefault(); // Evita el envío tradicional del formulario
-            hashPassword(); // Llama a la función para hashear la contraseña
+            event.preventDefault();
+
+            if (!validarFormulario()) return;
+
+            hashPassword();
+
             const datosFormulario = $(this).serialize();
 
             $.ajax({
@@ -172,22 +145,18 @@ if ($idUsuario) {
                     try {
                         result = JSON.parse(data);
                     } catch (e) {
-                        console.error('Error al parsear la respuesta JSON:', e);
                         mostrarMensaje("error", "Ocurrió un error al intentar actualizar el usuario.");
                         return;
                     }
 
                     if (result.respuesta) {
-                        // Actualizar los elementos del DOM con los nuevos datos
                         $('#nombreUsuario').text(result.usnombre);
                         $('#emailUsuario').text(result.usmail);
                         $('#passUsuario').text('*'.repeat(result.uspassLength));
 
-                        // Cerrar el modal
                         cerrarFormularioEdicion();
                         mostrarMensaje("success", "Usuario actualizado correctamente.");
                     } else {
-                        // Mostrar el mensaje de error
                         mostrarMensaje("error", result.errorMsg);
                     }
                 },
