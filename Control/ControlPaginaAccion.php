@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . "/../configuracion.php";
+
 // Verificar si la solicitud es AJAX
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 

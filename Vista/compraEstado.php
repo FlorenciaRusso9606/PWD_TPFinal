@@ -5,14 +5,7 @@
 include_once "../Control/pagPublica.php";
 include_once "../Estructura/header.php";
 include_once "../configuracion.php";
-
-
-
-// include_once "../vendor/autoload.php";
-// include_once '../fpdf/fpdf.php';
 ?>
-
-
 
 <div class="ui modal" id="mensajeModal">
     <div class="header" id="mensajeModalHeader"></div>
@@ -62,18 +55,17 @@ include_once "../configuracion.php";
         foreach ($arrItems as $item) {
             echo "<div class='item'>";
             echo "{$item->getobjProducto()->getProNombre()} <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>";
-            $precioTotal = $precioTotal + $item->getObjProducto()->getProPrecio()*$item->getCiCantidad();
+            $precioTotal = $precioTotal + $item->getObjProducto()->getProPrecio() * $item->getCiCantidad();
             echo "</div>";
         }
         echo "</div>";
         echo "<p><strong>Total:</strong> $$precioTotal</p>";
 
         // Formulario para cambiar estado (si aplica)
-        // Formulario para cambiar estado (si aplica)
         if ($session->getRol() == 2 && $idTipoEstado["idcompraestadotipo"] !== 4) {
             $estadoActual = $idTipoEstado["idcompraestadotipo"];
             echo "
-         <form class='ui form form-cambiar-estado' data-id='{$idCompra}' action='accion/cambiarEstado.php' method='POST'>
+         <form class='ui form form-cambiar-estado' data-id='{$idCompra}' method='POST'>
             <div class='field'>
             <label>Cambiar estado</label>
             <select class='ui dropdown' name='nuevoestado'>";
@@ -93,11 +85,10 @@ include_once "../configuracion.php";
     ";
         }
 
-
         echo "<div class='ui hidden divider'></div>";
         // Formulario para cancelar compra
         echo "
-    <form method='POST' action='accion/cancelarCompra.php' class='ui form form-cancelar-compra mt-3' data-id='{$idCompra}'>
+    <form method='POST' class='ui form form-cancelar-compra mt-3' data-id='{$idCompra}'>
         <input type='hidden' name='idcompracancelar' value='{$idCompra}'>
         <button class='ui red button w-100' type='submit' " . ($idTipoEstado["idcompraestadotipo"] == 4 ||  $idTipoEstado["idcompraestadotipo"] == 3 ? "disabled" : "") . ">Cancelar Compra</button>
     </form>";
@@ -109,14 +100,13 @@ include_once "../configuracion.php";
 
 <script>
     /// Función para manejar el envío de formularios de forma asíncrona
-    async function enviarFormulario(event, form, mensajeExito, mensajeError, callback) {
+    async function enviarFormulario(event, form, url, mensajeExito, mensajeError, callback) {
         event.preventDefault(); // Prevenir el envío por defecto
 
         const formData = new FormData(form); // Crear un objeto FormData
-        const action = form.getAttribute("action"); // Obtener la acción del formulario
 
         try {
-            const response = await fetch(action, {
+            const response = await fetch(url, {
                 method: "POST",
                 body: formData,
             });
@@ -171,6 +161,7 @@ include_once "../configuracion.php";
             enviarFormulario(
                 event,
                 this,
+                'Accion/cambiarEstado.php', // URL para cambiar estado
                 "Estado cambiado exitosamente.",
                 "No se pudo cambiar el estado.",
                 (data) => {
@@ -189,6 +180,7 @@ include_once "../configuracion.php";
             enviarFormulario(
                 event,
                 this,
+                'Accion/cancelarCompra.php', // URL para cancelar compra
                 "Compra cancelada exitosamente.",
                 "No se pudo cancelar la compra.",
                 (data) => {
