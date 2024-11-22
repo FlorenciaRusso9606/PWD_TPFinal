@@ -256,4 +256,4 @@ if ($rol !== 1) {
         </script>
     </div>
 </div>
-<?include_once "../Estructura/footer.php"
+<? include_once "../Estructura/footer.php";

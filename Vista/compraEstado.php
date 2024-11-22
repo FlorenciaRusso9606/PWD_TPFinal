@@ -22,10 +22,13 @@ include_once "../configuracion.php";
 
 <div class="ui container" id="comprasContainer">
     <?php
+    $sesion =new Session;
     $abmEstadoTipo = new ABMcompraEstadoTipo;
     $abmCompraItem = new AbmCompraItem();
     $controlCompra = new ControlCompra;
-    $compras = $controlCompra->buscarCompras($session);
+
+    $compras = $controlCompra->buscarCompras($sesion);
+    
     $ambCompraEstado = new AbmCompraEstado();
 
     foreach ($compras as $compra) {
@@ -51,6 +54,7 @@ include_once "../configuracion.php";
                 <h3 class='ui header'>Compra ID: $idCompra</h3>
                 <p><strong>Estado:</strong> <span class='estado-text'>{$descripcionEstado}</span></p>
                 <div class='ui list'>";
+
         foreach ($arrItems as $item) {
             echo "
                     <div class='item'>
@@ -58,6 +62,7 @@ include_once "../configuracion.php";
                         <span class='ui label'>Cantidad: {$item->getCiCantidad()}</span>
                     </div>";
         }
+
         echo "
                 </div>
                 <p><strong>Total:</strong> $$precioTotal</p>";
@@ -98,8 +103,21 @@ include_once "../configuracion.php";
             $("#mensajeModal").modal("show");
         };
 
+        // Recargar el contenedor de compras
+        const recargarCompras = async () => {
+            try {
+                const response = await fetch("compraEstado.php");
+                const html = await response.text();
+                document.querySelector("#comprasContainer").innerHTML = html;
+                // Reasignar eventos después de recargar el contenedor
+                asociarEventos();
+            } catch (error) {
+                console.error("Error al recargar compras:", error);
+            }
+        };
+
         // Enviar formulario con fetch
-        const enviarFormulario = async (event, form, url, mensajeExito, mensajeError, callback) => {
+        const enviarFormulario = async (event, form, url, mensajeExito, mensajeError) => {
             event.preventDefault();
             const formData = new FormData(form);
 
@@ -112,7 +130,7 @@ include_once "../configuracion.php";
 
                 if (data.success) {
                     mostrarMensaje("success", mensajeExito);
-                    if (callback) callback(data);
+                    recargarCompras(); // Recargar el contenido de compras
                 } else {
                     mostrarMensaje("error", mensajeError);
                 }
@@ -122,51 +140,35 @@ include_once "../configuracion.php";
             }
         };
 
-        // Actualizar interfaz después de cambiar el estado
-        const actualizarInterfaz = (compraId, nuevoEstadoId, descripcionEstado) => {
-            const card = document.querySelector(`.ui.raised.segment[data-id="${compraId}"]`);
-            if (card) {
-                card.querySelector(".estado-text").textContent = descripcionEstado;
-                const cancelarButton = card.querySelector(".form-cancelar-compra button");
-                if (cancelarButton) {
-                    cancelarButton.disabled = nuevoEstadoId == 4;
-                }
-            }
+        // Asociar eventos a formularios
+        const asociarEventos = () => {
+            document.querySelectorAll(".form-cambiar-estado").forEach((form) => {
+                form.addEventListener("submit", (event) => {
+                    enviarFormulario(
+                        event,
+                        form,
+                        "Accion/cambiarEstado.php",
+                        "Estado cambiado exitosamente.",
+                        "No se pudo cambiar el estado."
+                    );
+                });
+            });
+
+            document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
+                form.addEventListener("submit", (event) => {
+                    enviarFormulario(
+                        event,
+                        form,
+                        "Accion/cancelarCompra.php",
+                        "Compra cancelada exitosamente.",
+                        "No se pudo cancelar la compra."
+                    );
+                });
+            });
         };
 
-        // Asociar eventos a formularios de cambio de estado
-        document.querySelectorAll(".form-cambiar-estado").forEach((form) => {
-            form.addEventListener("submit", (event) => {
-                enviarFormulario(
-                    event,
-                    form,
-                    "Accion/cambiarEstado.php",
-                    "Estado cambiado exitosamente.",
-                    "No se pudo cambiar el estado.",
-                    (data) => {
-                        const nuevoEstadoId = form.querySelector("[name='nuevoestado']").value;
-                        const descripcionEstado = form.querySelector(`[name='nuevoestado'] option[value="${nuevoEstadoId}"]`).textContent;
-                        actualizarInterfaz(form.dataset.id, nuevoEstadoId, descripcionEstado);
-                    }
-                );
-            });
-        });
-
-        // Asociar eventos a formularios de cancelación
-        document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
-            form.addEventListener("submit", (event) => {
-                enviarFormulario(
-                    event,
-                    form,
-                    "Accion/cancelarCompra.php",
-                    "Compra cancelada exitosamente.",
-                    "No se pudo cancelar la compra.",
-                    (data) => {
-                        actualizarInterfaz(form.dataset.id, 4, "Cancelada");
-                    }
-                );
-            });
-        });
+        // Inicializar eventos al cargar la página
+        asociarEventos();
     });
 </script>
 

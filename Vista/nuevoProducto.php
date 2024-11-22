@@ -96,8 +96,8 @@ if ($rol !== 2) {
                 errores.push('El campo "Detalle" es obligatorio.');
             }
 
-            if (!cantidad || isNaN(cantidad) || parseInt(cantidad) <= 0) {
-                errores.push('El campo "Cantidad" debe ser un número mayor a 0.');
+            if (!cantidad || isNaN(cantidad) || parseInt(cantidad) < 0) {
+                errores.push('El campo "Cantidad" no puede ser negtivo.');
             }
 
             if (!precio || isNaN(precio) || parseFloat(precio) <= 0) {

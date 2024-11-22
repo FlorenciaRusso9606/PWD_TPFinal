@@ -97,7 +97,6 @@ class ControlCompra
             }
         }
 
-        $msj = ($compraExitosa) ? 5 : 4;
         return $compraExitosa;
     }
 
