@@ -1,9 +1,10 @@
+-- SQLBook: Code
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2024 a las 14:23:29
+-- Tiempo de generación: 19-11-2024 a las 15:07:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -51,42 +52,7 @@ INSERT INTO `compra` (`idcompra`, `cofecha`, `idusuario`) VALUES
 (25, '2024-11-17 17:44:53', 1),
 (26, '2024-11-17 17:45:16', 1),
 (27, '2024-11-17 17:49:13', 1),
-(28, '2024-11-19 03:56:32', 3),
-(29, '2024-11-20 22:16:43', 1),
-(30, '2024-11-20 22:20:48', 1),
-(31, '2024-11-20 22:25:57', 1),
-(32, '2024-11-20 22:35:46', 1),
-(33, '2024-11-21 04:22:53', 3),
-(34, '2024-11-21 06:16:04', 2),
-(35, '2024-11-21 18:27:16', 2),
-(36, '2024-11-21 18:40:14', 2),
-(37, '2024-11-21 18:43:02', 2),
-(38, '2024-11-21 18:50:26', 2),
-(39, '2024-11-21 18:54:02', 2),
-(40, '2024-11-21 18:56:44', 2),
-(41, '2024-11-21 18:59:51', 2),
-(42, '2024-11-21 19:16:57', 2),
-(43, '2024-11-21 19:20:04', 2),
-(44, '2024-11-21 19:23:27', 2),
-(45, '2024-11-21 19:26:17', 2),
-(46, '2024-11-21 19:54:10', 2),
-(47, '2024-11-21 19:57:01', 2),
-(48, '2024-11-21 19:59:21', 2),
-(49, '2024-11-21 20:04:04', 2),
-(50, '2024-11-21 20:07:53', 2),
-(51, '2024-11-21 20:13:24', 2),
-(52, '2024-11-21 20:15:35', 2),
-(53, '2024-11-21 20:20:57', 2),
-(54, '2024-11-21 20:35:21', 2),
-(55, '2024-11-21 21:02:15', 2),
-(56, '2024-11-21 22:05:54', 26),
-(57, '2024-11-21 22:06:08', 26),
-(58, '2024-11-22 03:24:09', 3),
-(59, '2024-11-22 04:14:25', 2),
-(60, '2024-11-22 04:19:09', 2),
-(61, '2024-11-22 04:29:29', 2),
-(62, '2024-11-22 04:49:17', 3),
-(63, '2024-11-22 05:40:01', 2);
+(28, '2024-11-19 03:56:32', 3);
 
 -- --------------------------------------------------------
 
@@ -107,54 +73,19 @@ CREATE TABLE `compraestado` (
 --
 
 INSERT INTO `compraestado` (`idcompraestado`, `idcompra`, `idcompraestadotipo`, `cefechaini`, `cefechafin`) VALUES
-(3, 31, 4, '2024-11-17 17:06:03', '2024-11-20 22:26:49'),
-(4, 16, 4, '2024-11-17 17:09:43', '2024-11-20 22:49:17'),
-(5, 17, 4, '2024-11-17 17:13:06', '2024-11-20 23:00:29'),
-(6, 18, 4, '2024-11-17 17:16:38', '2024-11-21 18:02:58'),
-(7, 19, 4, '2024-11-17 17:25:28', '2024-11-21 18:25:15'),
-(8, 21, 4, '2024-11-17 17:31:47', '2024-11-21 18:24:44'),
-(9, 22, 4, '2024-11-17 17:32:30', '2024-11-21 18:23:37'),
-(10, 23, 4, '2024-11-17 17:36:28', '2024-11-21 18:23:11'),
-(11, 24, 4, '2024-11-17 17:42:04', '2024-11-21 18:20:55'),
-(12, 25, 4, '2024-11-17 17:44:53', '2024-11-21 18:16:14'),
-(13, 26, 4, '2024-11-17 17:45:16', '2024-11-21 18:14:35'),
-(14, 27, 4, '2024-11-17 17:49:13', '2024-11-21 18:12:02'),
-(15, 28, 4, '2024-11-19 03:56:32', '2024-11-21 18:10:45'),
-(16, 29, 4, '2024-11-20 22:16:43', '2024-11-21 18:09:29'),
-(17, 30, 4, '2024-11-20 22:20:48', '2024-11-21 18:08:15'),
-(18, 31, 1, '2024-11-20 22:25:57', '1970-01-01 03:00:00'),
-(19, 32, 4, '2024-11-20 22:35:46', '2024-11-20 22:37:13'),
-(20, 33, 4, '2024-11-21 04:22:53', '2024-11-21 18:05:29'),
-(21, 34, 4, '2024-11-21 06:16:04', '2024-11-21 18:03:27'),
-(22, 35, 4, '2024-11-21 18:27:16', '2024-11-21 18:35:47'),
-(23, 36, 4, '2024-11-21 18:40:14', '2024-11-21 18:42:49'),
-(24, 37, 4, '2024-11-21 18:43:02', '2024-11-21 18:43:08'),
-(25, 38, 4, '2024-11-21 18:50:26', '2024-11-21 18:53:41'),
-(26, 39, 4, '2024-11-21 18:54:02', '2024-11-21 18:55:15'),
-(27, 40, 4, '2024-11-21 18:56:44', '2024-11-21 18:58:07'),
-(28, 41, 4, '2024-11-21 18:59:51', '2024-11-21 19:15:07'),
-(29, 42, 4, '2024-11-21 19:16:57', '2024-11-21 19:18:51'),
-(30, 43, 4, '2024-11-21 19:20:04', '2024-11-21 19:20:13'),
-(31, 44, 4, '2024-11-21 19:23:27', '2024-11-21 19:25:55'),
-(32, 45, 4, '2024-11-21 19:26:17', '2024-11-21 19:52:11'),
-(33, 46, 4, '2024-11-21 19:54:10', '2024-11-21 19:54:43'),
-(34, 47, 4, '2024-11-21 19:57:01', '2024-11-21 19:57:06'),
-(35, 48, 4, '2024-11-21 19:59:21', '2024-11-21 20:03:36'),
-(36, 49, 4, '2024-11-21 20:04:04', '2024-11-21 20:06:37'),
-(37, 50, 4, '2024-11-21 20:07:54', '2024-11-21 20:08:20'),
-(38, 51, 4, '2024-11-21 20:13:24', '2024-11-21 20:13:32'),
-(39, 52, 4, '2024-11-21 20:15:35', '2024-11-21 20:16:47'),
-(40, 53, 4, '2024-11-21 20:20:57', '2024-11-21 20:35:59'),
-(41, 54, 4, '2024-11-21 20:35:21', '2024-11-21 21:00:54'),
-(42, 55, 4, '2024-11-21 21:02:16', '2024-11-22 05:56:22'),
-(43, 56, 3, '2024-11-21 22:05:54', '1970-01-01 03:00:00'),
-(44, 57, 4, '2024-11-21 22:06:08', '2024-11-21 22:09:50'),
-(45, 58, 3, '2024-11-22 03:24:09', '1970-01-01 03:00:00'),
-(46, 59, 3, '2024-11-22 04:14:25', '1970-01-01 03:00:00'),
-(47, 60, 3, '2024-11-22 04:19:09', '1970-01-01 03:00:00'),
-(48, 61, 3, '2024-11-22 04:29:29', '1970-01-01 03:00:00'),
-(49, 62, 4, '2024-11-22 04:49:17', '2024-11-22 05:54:25'),
-(50, 63, 4, '2024-11-22 05:40:01', '2024-11-22 05:51:51');
+(3, 15, 1, '2024-11-17 17:06:03', '0000-00-00 00:00:00'),
+(4, 16, 1, '2024-11-17 17:09:43', '0000-00-00 00:00:00'),
+(5, 17, 1, '2024-11-17 17:13:06', '0000-00-00 00:00:00'),
+(6, 18, 1, '2024-11-17 17:16:38', '0000-00-00 00:00:00'),
+(7, 19, 1, '2024-11-17 17:25:28', '0000-00-00 00:00:00'),
+(8, 21, 1, '2024-11-17 17:31:47', '0000-00-00 00:00:00'),
+(9, 22, 1, '2024-11-17 17:32:30', '0000-00-00 00:00:00'),
+(10, 23, 1, '2024-11-17 17:36:28', '0000-00-00 00:00:00'),
+(11, 24, 1, '2024-11-17 17:42:04', '0000-00-00 00:00:00'),
+(12, 25, 1, '2024-11-17 17:44:53', '0000-00-00 00:00:00'),
+(13, 26, 1, '2024-11-17 17:45:16', '0000-00-00 00:00:00'),
+(14, 27, 1, '2024-11-17 17:49:13', '0000-00-00 00:00:00'),
+(15, 28, 1, '2024-11-19 03:56:32', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -212,46 +143,7 @@ INSERT INTO `compraitem` (`idcompraitem`, `idproducto`, `idcompra`, `cicantidad`
 (20, 3, 26, 2),
 (21, 1, 27, 1),
 (22, 2, 27, 1),
-(23, 2, 28, 4),
-(24, 3, 29, 1),
-(25, 2, 29, 2),
-(26, 3, 30, 51),
-(27, 3, 31, 5),
-(28, 2, 31, 1),
-(29, 3, 32, 2),
-(30, 3, 33, 1),
-(31, 2, 34, 2),
-(32, 1, 35, 1),
-(33, 1, 36, 1),
-(34, 1, 37, 1),
-(35, 2, 38, 1),
-(36, 2, 39, 1),
-(37, 2, 40, 1),
-(38, 2, 41, 1),
-(39, 2, 42, 1),
-(40, 2, 43, 1),
-(41, 2, 44, 1),
-(42, 2, 45, 1),
-(43, 1, 46, 1),
-(44, 1, 47, 3),
-(45, 1, 48, 2),
-(46, 1, 49, 3),
-(47, 1, 50, 1),
-(48, 3, 50, 2),
-(49, 3, 51, 2),
-(50, 2, 52, 2),
-(51, 5, 53, 2),
-(52, 4, 54, 2),
-(53, 4, 55, 3),
-(54, 2, 56, 2),
-(55, 3, 57, 3),
-(56, 2, 58, 70),
-(57, 1, 59, 2),
-(58, 1, 60, 1),
-(59, 1, 61, 2),
-(60, 3, 62, 1),
-(61, 1, 63, 1),
-(62, 3, 63, 2);
+(23, 2, 28, 4);
 
 -- --------------------------------------------------------
 
@@ -275,13 +167,13 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 (1, 'MenuAdmin', 'Acceso al menú de administración', NULL, NULL),
 (2, 'MenuDeposito', 'Acceso al menú de depósito', NULL, NULL),
 (3, 'MenuCliente', 'Acceso al menú de cliente', NULL, NULL),
+(12, 'Menutest1', 'testtest', 2, NULL),
+(13, 'Menu test 2 admin', 'test test', 1, '2024-11-19 17:44:15'),
 (15, 'carritoCompra', '<i class=\"shopping cart icon\"></i>Carrito', 3, NULL),
 (18, 'infoUsuario', '<i class=\"user icon\"></i>Mi Cuenta', 3, NULL),
+(19, 'cerrarSesion', '<i class=\"sign out alternate icon\"></i>Cerrar Sesión', 3, NULL),
 (21, 'abmMenu', 'AbmMenu', 1, NULL),
-(22, 'abmRoles', 'AbmRoles', 1, NULL),
-(32, 'abmUsuarios', 'AbmUsuarios', 1, NULL),
-(35, 'Test', 'MenuTest', NULL, NULL),
-(37, 'SubMenu', 'test', 37, NULL);
+(22, 'abmRoles', 'AbmRoles', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -302,9 +194,10 @@ INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
+(13, 1),
 (15, 3),
 (18, 3),
-(32, 1);
+(19, 3);
 
 -- --------------------------------------------------------
 
@@ -325,16 +218,11 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`idproducto`, `pronombre`, `prodetalle`, `procantstock`, `proprecio`) VALUES
-(1, 'Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 65, 10000.00),
-(2, 'Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 0, 12000.00),
-(3, '1984', 'Una novela escrita por el autor británico George Orwell.', 226, 8000.00),
-(4, 'El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 68, 9000.00),
-(5, 'Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20, 8500.00),
-(24, 'Orgullo y Prejuicio', 'Una obra de Jane Austen que mezcla romance e ingenio mientras explora los prejuicios de clase y las relaciones familiares a través de la vida de Elizabeth Bennet y el misterioso Sr. Darcy.', 30, 24000.00),
-(25, 'La Odisea', 'La épica de Homero que relata las aventuras de Odiseo en su arduo viaje de regreso a casa tras la guerra de Troya, enfrentando dioses, monstruos y el destino.', 15, 12000.00),
-(26, 'Crimen y Castigo', 'Una novela de Fiódor Dostoyevski que explora las profundidades de la moralidad y la psicología humana a través de la historia de Raskólnikov, un hombre atormentado por su crimen.', 10, 11000.00),
-(27, 'Los Juegos del Hambre', 'Una trilogía de Suzanne Collins que sigue a Katniss Everdeen en su lucha contra un régimen opresivo en una sociedad distópica dividida en distritos.', 40, 9500.00),
-(28, 'Harry Potter y la Piedra Filosofal', 'El inicio de la famosa saga de J.K. Rowling, donde Harry descubre que es un mago y asiste a Hogwarts, una escuela llena de magia y misterio.', 50, 10500.00);
+(1, 'Cien Años de Soledad', 'Una novela escrita por el autor colombiano Gabriel García Márquez.', 49, 15000.00),
+(2, 'Don Quijote de la Mancha', 'Una novela escrita por el autor español Miguel de Cervantes.', 25, 12000.00),
+(3, '1984', 'Una novela escrita por el autor británico George Orwell.', 33, 8000.00),
+(4, 'El Principito', 'Una novela escrita por el autor francés Antoine de Saint-Exupéry.', 60, 9000.00),
+(5, 'Matar a un Ruiseñor', 'Una novela escrita por la autora estadounidense Harper Lee.', 20, 8500.00);
 
 -- --------------------------------------------------------
 
@@ -354,8 +242,7 @@ CREATE TABLE `rol` (
 INSERT INTO `rol` (`idrol`, `roldescripcion`) VALUES
 (1, 'Administrador'),
 (2, 'Depósito'),
-(3, 'Cliente'),
-(6, 'RolTest2');
+(3, 'Cliente');
 
 -- --------------------------------------------------------
 
@@ -376,24 +263,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`idusuario`, `usnombre`, `uspass`, `usmail`, `usdeshabilitado`) VALUES
-(1, 'admin', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example1.com', NULL),
+(1, 'admin', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example.com', NULL),
 (2, 'deposito', '71a071b0fa4e1a671c5dc9cfbd6e5b27', 'deposito@example.com', NULL),
-(3, 'cliente', '8e1be2d5700ed83423c3ce6532c277a2', 'cliente@example.com', NULL),
-(8, 'test12', '827ccb0eea8a706c4c34a16891f84e7b', 'test123@test.com', NULL),
-(9, 'Test123', '37a6259cc0c1dae299a7866489dff0bd', 'test123@test.com', NULL),
-(10, 'test123', '202cb962ac59075b964b07152d234b70', 'email@email.com', NULL),
-(16, 'Usuario1', '483f721e61eb24da095b733bd904ae6d', 'email123@email.com', '2024-11-21 21:10:53'),
-(17, 'test1', '098f6bcd4621d373cade4e832627b4f6', 'test1_@mail.co', '0000-00-00 00:00:00'),
-(18, 'test2', '098f6bcd4621d373cade4e832627b4f6', 'test1__2@gmail', '0000-00-00 00:00:00'),
-(20, 'admin2', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example2.com', '0000-00-00 00:00:00'),
-(21, 'admin3', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example3.com', '0000-00-00 00:00:00'),
-(22, 'admin4', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example4.com', '0000-00-00 00:00:00'),
-(23, 'admin5', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example5.com', '0000-00-00 00:00:00'),
-(24, 'admin6', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example6.com', '0000-00-00 00:00:00'),
-(25, 'admin7', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example7.com', '0000-00-00 00:00:00'),
-(26, 'admin8', '25e4ee4e9229397b6b17776bfceaf8e7', 'admin@example8.com', NULL),
-(27, 'test123', '4297f44b13955235245b2497399d7a93', '123q123', '0000-00-00 00:00:00'),
-(28, 'cliente1', 'd9b1d7db4cd6e70935368a1efb10e377', 'test@cliente', NULL);
+(3, 'cliente', '8e1be2d5700ed83423c3ce6532c277a2', 'cliente@example.com', NULL);
 
 -- --------------------------------------------------------
 
@@ -413,17 +285,7 @@ CREATE TABLE `usuariorol` (
 INSERT INTO `usuariorol` (`idusuario`, `idrol`) VALUES
 (1, 1),
 (2, 2),
-(3, 3),
-(8, 3),
-(9, 2),
-(9, 3),
-(10, 3),
-(10, 6),
-(24, 3),
-(25, 3),
-(26, 1),
-(27, 6),
-(28, 3);
+(3, 3);
 
 --
 -- Índices para tablas volcadas
@@ -513,43 +375,43 @@ ALTER TABLE `usuariorol`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `idcompra` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `idcompra` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `compraestado`
 --
 ALTER TABLE `compraestado`
-  MODIFY `idcompraestado` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `idcompraestado` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `compraitem`
 --
 ALTER TABLE `compraitem`
-  MODIFY `idcompraitem` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `idcompraitem` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `idmenu` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `idmenu` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `idproducto` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `idproducto` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idrol` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idusuario` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `idusuario` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
