@@ -4,7 +4,7 @@ include_once "../../Control/pagPublica.php";
 // include_once "../../Control/ControlPaginaAccion.php";
 $data = data_submitted();
 $response = ["success" => false, "message" => "Error desconocido."];
-
+var_dump($data);
 if (isset($data['nuevoestado']) && isset($data['idcompra'])) {
     $controlCompra = new ControlCompra();
     if ($controlCompra->cambiarEstado($data)) {

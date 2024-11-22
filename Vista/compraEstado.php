@@ -26,7 +26,6 @@ include_once "../configuracion.php";
     $abmEstadoTipo = new ABMcompraEstadoTipo;
     $abmCompraItem = new AbmCompraItem();
     $controlCompra = new ControlCompra;
-
     $compras = $controlCompra->buscarCompras($sesion);
 
     $ambCompraEstado = new AbmCompraEstado();
@@ -45,8 +44,15 @@ include_once "../configuracion.php";
             return $carry + $item->getObjProducto()->getProPrecio() * $item->getCiCantidad();
         }, 0);
 
-        $idTipoEstado = $estado[0]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-        $descripcionEstado = $estado[0]->getobjCompraEstadoTipo()->getCetDescripcion();
+
+        //Contador de estado actual
+        if (count($estado) >= 1) {
+            $cantidadEstado = count($estado) - 1;
+        }
+
+        $idTipoEstado = $estado[$cantidadEstado]->getobjCompraEstadoTipo()->getidcompraestadotipo();
+        var_dump($idTipoEstado);
+        $descripcionEstado = $estado[$cantidadEstado]->getobjCompraEstadoTipo()->getCetDescripcion();
 
         echo "
         <div class='ui raised segment my-4' data-id='{$idCompra}'>
@@ -84,7 +90,8 @@ include_once "../configuracion.php";
 
         echo "
                 <form class='ui form form-cancelar-compra mt-3' data-id='{$idCompra}' method='POST'>
-                    <input type='hidden' name='idcompracancelar' value='{$idCompra}'>
+                    <input type='hidden' name='idcompra' value='{$idCompra}'>
+                     <input type='hidden' name='nuevoestado' value='4'>
                     <button class='ui red button w-100' type='submit' " . ($idTipoEstado == 4 || $idTipoEstado == 3 ? "disabled" : "") . ">Cancelar Compra</button>
                 </form>
             </div>
@@ -159,7 +166,7 @@ include_once "../configuracion.php";
                     enviarFormulario(
                         event,
                         form,
-                        "Accion/cancelarCompra.php",
+                        "Accion/cambiarEstado.php",
                         "Compra cancelada exitosamente.",
                         "No se pudo cancelar la compra."
                     );

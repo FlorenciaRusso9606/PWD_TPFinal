@@ -103,6 +103,9 @@ if ($rol !== 1) {
             <div class="header">Confirmar Eliminación</div>
             <div class="content">
                 <p>¿Seguro que desea eliminar el menu?</p>
+                <div class="ui red message">
+                    <p>Esta accion es irreversible</p>
+                </div>
                 <div id="deleteMessageContainer" class="ui hidden message"></div> <!-- Contenedor para los mensajes dentro del modal de eliminación -->
             </div>
             <div class="actions">

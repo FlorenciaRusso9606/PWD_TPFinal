@@ -97,7 +97,6 @@ class ControlCompra
             }
         }
 
-        $msj = ($compraExitosa) ? 5 : 4;
         return $compraExitosa;
     }
 
@@ -106,7 +105,7 @@ class ControlCompra
 
 
 
-    public function cancelarCompra($param)
+    /* public function cancelarCompra($param)
     {
         $resp = false;
 
@@ -124,7 +123,7 @@ class ControlCompra
 
             // Obtener la compra
             $compra = $abmCompra->buscar($paramIdCompra)[0];
-            $idusuario = $compra->getIdUsuario(); // Obtener el ID del usuario que hizo la compra
+            $idusuario = $compra->getobjUsuario()->getUsuarioId(); // Obtener el ID del usuario que hizo la compra
 
             // Obtener el estado de la compra y los ítems
             $compraEstado = $abmCompraEstado->buscar($paramIdCompra);
@@ -190,7 +189,7 @@ class ControlCompra
         }
 
         return $resp;
-    }
+    }*/
 
 
     /**
@@ -210,7 +209,7 @@ class ControlCompra
                 "idcompra" => $idcompra,
                 "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
                 "cefechaini" => date('Y-m-d H:i:s'),
-                "cefechafin" => date('1970-01-01 00:00:00') //el valor anterior era null
+                "cefechafin" => date('0000-00-00 00:00:00') //el valor anterior era null
             ];
             $abmCompraEstado = new AbmCompraEstado();
             $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
@@ -234,7 +233,7 @@ class ControlCompra
     public function buscarCompras($sesion)
     {
         $abmCompra = new AbmCompra();
-        if ($sesion->getRol() == 2) {
+        if ($sesion->getRol() == 2 || $sesion->getRol() == 1) {
             $arrCompras = $abmCompra->buscar("");
         } else {
             $datos["idusuario"] = $sesion->getUsuario();
@@ -244,33 +243,72 @@ class ControlCompra
     }
     public function cambiarEstado($param)
     {
-        $respuesta = null;
+        $respuesta = false;
         $abmCompraEstado = new AbmCompraEstado;
         $abmCompraItem = new AbmCompraItem;
         $abmProducto = new AbmProducto;
         $abmUsuario = new ABMUsuario;
         $controlMail = new ControladorMail;
         $controlPdf = new PDF();
-
         // Obtener el estado actual de la compra
         $compraEstado = $abmCompraEstado->buscar($param);
         if (empty($compraEstado)) {
-            return false; // La compra no existe o no tiene estado
+            $ultimoEstado = 0;
+            $respuesta = false; // La compra no existe o no tiene estado
         }
 
+        //Obtiene el ultimo cambio de estado
+        $ultimoEstado = count($compraEstado);
+
+
         // Preparar datos para actualizar el estado
-        $datosEstado = [
-            'idcompraestado' => $compraEstado[0]->getidcompraestado(),
+        //Setear fechafin del estado anterior
+
+        $datosEstadoAnterior = [
+            'idcompraestado' => $compraEstado[$ultimoEstado - 1]->getidcompraestado(),
+            'idcompra' => $param['idcompra'],
+            'idcompraestadotipo' => $compraEstado[$ultimoEstado - 1]->getobjCompraEstadoTipo()->getidcompraestadotipo(),
+            'cefechaini' => $compraEstado[0]->getcefechaini(),
+            'cefechafin' => date('Y-m-d H:i:s')
+        ];
+        $modificacionEstadoAnterior = $abmCompraEstado->modificacion($datosEstadoAnterior);
+        //Crear nuevo estado
+
+        $datosEstadoPosterior = [
             'idcompra' => $param['idcompra'],
             'idcompraestadotipo' => $param['nuevoestado'],
-            'cefechaini' => $compraEstado[0]->getcefechaini(),
-            'cefechafin' => date("Y-m-d H:i:s"),
+            'cefechaini' => date('Y-m-d H:i:s'),
+            'cefechafin' => date('0000-00-00 00:00:00')
         ];
+        $arrCompraItem = $abmCompraItem->buscar(['idcompra' => $param['idcompra']]);
+        if ($param['nuevoestado'] == 4) {
+            foreach ($arrCompraItem as $compraItem) {
+                $idProd["idproducto"] = $compraItem->getObjProducto()->getIdProducto();
+                $objProducto = $abmProducto->buscar($idProd)[0];
+
+                $datosProducto = [
+                    'idproducto' => $objProducto->getIdProducto(),
+                    'pronombre' => $objProducto->getProNombre(),
+                    'prodetalle' => $objProducto->getProDetalle(),
+                    'procantstock' => $objProducto->getProCantStock() + $compraItem->getCiCantidad(),
+                    'proprecio' => $objProducto->getProPrecio(),
+                ];
+                $abmProducto->modificacion($datosProducto);
+            }
+            $datosEstadoPosterior['cefechafin'] = date('Y-m-d H:i:s');
+        }
+        $modificacionEstadoActual = $abmCompraEstado->alta($datosEstadoPosterior);
+
+        // En caso de cancelar compra devolver productos al stock
+        //$abmCompra = new AbmCompra;
+        //$compra = $abmCompra->buscar(['idcompra' => $param['idcompra']] )[0];
+
 
         // Actualizar el estado de la compra
-        $respuesta = $abmCompraEstado->modificacion($datosEstado);
 
-        if ($respuesta) {
+        if ($modificacionEstadoActual && $modificacionEstadoAnterior) {
+
+            $respuesta = true;
             // Obtener los ítems de la compra
             $arrCompraItem = $abmCompraItem->buscar(['idcompra' => $param['idcompra']]);
             $datosPDF['productos'] = [];

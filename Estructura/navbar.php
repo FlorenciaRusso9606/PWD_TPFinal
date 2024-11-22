@@ -18,9 +18,6 @@ $menus = $nav->getSubMenus($rol);
                         <?= $menuActual->getMedescripcion() ?>
                     </a>
                 <?php } ?>
-                <a href="compraEstado.php" class="item">
-                    Estado de compra
-                </a>
                 <a href="cerrarSesion.php" class="item">
                     <i class="sign out alternate icon"></i>
                     cerrarSesion
