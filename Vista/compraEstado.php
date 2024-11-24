@@ -51,7 +51,7 @@ include_once "../configuracion.php";
         }
 
         $idTipoEstado = $estado[$cantidadEstado]->getobjCompraEstadoTipo()->getidcompraestadotipo();
-        var_dump($idTipoEstado);
+        /* var_dump($idTipoEstado); */
         $descripcionEstado = $estado[$cantidadEstado]->getobjCompraEstadoTipo()->getCetDescripcion();
 
         echo "
