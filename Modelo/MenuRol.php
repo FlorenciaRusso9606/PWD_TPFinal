@@ -1,51 +1,65 @@
 <?php
 
-class MenuRol {
-    private $objMenu;  // Este será un objeto de la clase objMenu
-    private $objRol;      // Este será un objeto de la clase objRol
+class MenuRol
+{
+    private $objMenu;
+    private $objRol;
     private $mensajeoperacion;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->objMenu = new Menu();
-        $this->objRol =  new Rol();
+        $this->objRol = new Rol();
     }
 
-    // Getters y Setters
-    public function getobjMenu() {
+    public function getObjMenu()
+    {
         return $this->objMenu;
     }
-    public function setobjMenu($objMenu) {
+
+    public function setObjMenu($objMenu)
+    {
         $this->objMenu = $objMenu;
     }
-    public function getobjRol() {
+
+    public function getObjRol()
+    {
         return $this->objRol;
     }
-    public function setobjRol($objRol) {
+
+    public function setObjRol($objRol)
+    {
         $this->objRol = $objRol;
     }
-    public function getMensajeOperacion() {
+
+    public function getMensajeOperacion()
+    {
         return $this->mensajeoperacion;
     }
-    public function setMensajeOperacion($valor) {
+
+    public function setMensajeOperacion($valor)
+    {
         $this->mensajeoperacion = $valor;
     }
 
-    // Setear objetos objMenu y objRol
-    public function setear($objMenu, $objRol) {
+    public function setear($objMenu, $objRol)
+    {
         $this->setObjMenu($objMenu);
         $this->setObjRol($objRol);
     }
-    public function setearConClave($idmenu, $idrol) {
-        $this->getobjrol()->setIdRol($idrol);
-        $this->getobjMenu()->setIdmenu($idmenu);
+
+    public function setearConClave($idmenu, $idrol)
+    {
+        $this->getObjRol()->setIdRol($idrol);
+        $this->getObjMenu()->setIdmenu($idmenu);
     }
 
-    // Cargar desde la base de datos
-    public function cargar() {
+    public function cargar()
+    {
         $resp = false;
         $base = new BaseDatos();
-        $idmenu = $this->getobjMenu()->getIdmenu();
-        $idrol = $this->getobjRol()->getIdRol();
+        $idmenu = $this->getObjMenu()->getIdmenu();
+        $idrol = $this->getObjRol()->getIdRol();
 
         if ($idmenu && $idrol) {
             $sql = "SELECT * FROM menurol WHERE idmenu = " . $idmenu . " AND idrol = " . $idrol;
@@ -54,7 +68,6 @@ class MenuRol {
                 if ($res > -1) {
                     if ($res > 0) {
                         $row = $base->Registro();
-                        // Cargar el objeto objMenu y el objeto objRol
                         $objMenu = new Menu();
                         $objMenu->setIdmenu($row['idmenu']);
                         $objMenu->cargar();
@@ -74,11 +87,11 @@ class MenuRol {
         return $resp;
     }
 
-    // Insertar en la base de datos
-    public function insertar() {
+    public function insertar()
+    {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO menurol (idmenu, idrol) VALUES ('" . $this->getObjMenu()->getIdmenu() . "', '" . $this->getObjRol()->getIdrol() . "')";
+        $sql = "INSERT INTO menurol (idmenu, idrol) VALUES ('" . $this->getObjMenu()->getIdmenu() . "', '" . $this->getObjRol()->getIdRol() . "')";
 
         try {
             if ($base->Iniciar()) {
@@ -96,17 +109,17 @@ class MenuRol {
         return $resp;
     }
 
-    // Modificar
-    public function modificar() {
+    public function modificar()
+    {
         $resp = false;
         return $resp;
     }
 
-    // Eliminar
-    public function eliminar() {
+    public function eliminar()
+    {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "DELETE FROM menurol WHERE idmenu=" . $this->getobjMenu()->getIdmenu() . " AND idrol=" . $this->getobjRol()->getIdRol();
+        $sql = "DELETE FROM menurol WHERE idmenu=" . $this->getObjMenu()->getIdmenu() . " AND idrol=" . $this->getObjRol()->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -119,8 +132,21 @@ class MenuRol {
         return $resp;
     }
 
-    // Listar registros
-    public static function listar($parametro = "") {
+    public function eliminarPorMenu()
+    {
+        $resp = false;
+        $base = new BaseDatos();
+        $sql = "DELETE FROM menurol WHERE idmenu = " . $this->getObjMenu()->getIdmenu();
+        if ($base->Iniciar()) {
+            if ($base->Ejecutar($sql)) {
+                $resp = true;
+            }
+        }
+        return $resp;
+    }
+
+    public static function listar($parametro = "")
+    {
         $arreglo = [];
         $base = new BaseDatos();
         $sql = "SELECT * FROM menurol";
@@ -132,8 +158,8 @@ class MenuRol {
             if ($res > 0) {
                 while ($row = $base->Registro()) {
                     $obj = new MenuRol();
-                    $obj->getobjMenu()->setIdmenu($row['idmenu']);
-                    $obj->getobjrol()->setIdRol($row['idrol']);
+                    $obj->getObjMenu()->setIdmenu($row['idmenu']);
+                    $obj->getObjRol()->setIdRol($row['idrol']);
                     $obj->cargar();
                     array_push($arreglo, $obj);
                 }

@@ -116,7 +116,7 @@ class Compra {
         $base = new BaseDatos();
         $usuario = $this->getObjUsuario();
         if ($usuario != null) {
-            $sql = "INSERT INTO compra (cofecha, idusuario) VALUES ('" . $this->getcofecha() . "', '" . $this->getObjUsuario() . "')";
+            $sql = "INSERT INTO compra (cofecha, idusuario) VALUES ('" . $this->getcofecha() . "', '" . $this->getobjUsuario(). "')";
             try {
                 if ($base->Iniciar()) {
                     if ($base->Ejecutar($sql)) {

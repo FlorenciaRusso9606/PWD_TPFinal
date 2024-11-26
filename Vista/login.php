@@ -31,19 +31,17 @@ if (isset($data["error"])) {
 
             <?php
 
-            if ($mensaje != null) {
+            /*   if ($mensaje != null) {
                 echo $mensaje;
-            }
+            } */
 
             ?>
-           <div id="mensaje" class="ui red message"></div>
+            <div id="mensaje" class="ui red message hidden"></div>
 
-
-
-            <form class="ui form" id="loginForm" action="Accion/verificarLogin.php" method="post">
+            <form class="ui form" id="loginForm" method="post">
                 <div class="field">
                     <label for="username">Usuario:</label>
-                    <input type="text" id="username" name="usnombre" required>
+                    <input type="text" id="username" name="usnombre">
                 </div>
                 <div class="field">
                     <label for="password">Contraseña:</label>
@@ -59,36 +57,42 @@ if (isset($data["error"])) {
     </div>
 
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-  $(document).ready(function () {
-    $('#loginForm').on('submit', function (e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $('#loginForm').on('submit', function(e) {
+            e.preventDefault();
 
-        const password = $('#password').val();
-        const hashedPassword = CryptoJS.MD5(password).toString();
+            const password = $('#password').val();
+            const hashedPassword = CryptoJS.MD5(password).toString();
 
-        $('#hashedPassword').val(hashedPassword);
-        $('#password').val('');
+            $('#hashedPassword').val(hashedPassword);
+            $('#password').val('');
 
-        $.ajax({
-            url: 'Accion/verificarLogin.php',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                const result = JSON.parse(response);
-                if (result.success) {
-                    window.location.href = "index.php";
-                } else {
-                    $('#mensaje').html('<p>' + result.message + '</p>');
+            $.ajax({
+                url: 'Accion/verificarLogin.php',
+                type: 'POST',
+                dataType: 'json', // Asegura que la respuesta se trate como JSON
+                data: $(this).serialize(),
+                success: function(response) {
+                    console.log('Respuesta AJAX:', response); // Depuración
+                    if (response.success) {
+                        // Login exitoso, redirigir al usuario
+                        window.location.href = "index.php";
+                    } else {
+                        // Mostrar el mensaje de error
+                        $('#mensaje').html('<p>' + response.message + '</p>');
+                        $('#mensaje').removeClass('hidden');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de la solicitud AJAX
+                    $('#mensaje').html('<p>Error al procesar la solicitud. Inténtalo de nuevo.</p>');
+                    $('#mensaje').removeClass('hidden');
+                    console.error('Error AJAX:', textStatus, errorThrown);
                 }
-            },
-            error: function () {
-                $('#mensaje').html('<p>Error al procesar el login.</p>');
-            }
+            });
         });
     });
-});
-
 </script>
 <?php include_once "../Estructura/footer.php"; ?>

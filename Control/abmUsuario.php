@@ -20,7 +20,7 @@ class ABMUsuario
                 $resp = true;
             }
         }
-        
+
         return $resp;
     }
     /**
@@ -33,11 +33,15 @@ class ABMUsuario
         $obj = null;
 
         if (
-            array_key_exists('idusuario', $param)  and array_key_exists('usnombre', $param) and array_key_exists('uspass', $param)
-            and array_key_exists('usmail', $param) and array_key_exists('usdeshabilitado', $param)
+            array_key_exists('idusuario', $param) &&
+            array_key_exists('usnombre', $param) &&
+            array_key_exists('uspass', $param) &&
+            array_key_exists('usmail', $param)  &&
+            array_key_exists('usdeshabilitado', $param)
         ) {
             $obj = new Usuario();
-            $obj->cargar($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], $param['usdeshabilitado']);
+
+            $obj->setear($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], $param['usdeshabilitado']);
         }
         return $obj;
     }
@@ -53,7 +57,9 @@ class ABMUsuario
         $obj = null;
         if (isset($param['idusuario'])) {
             $obj = new Usuario();
-            $obj->cargar($param['idusuario'], null, null, null, null);
+            $obj->setear($param['idusuario'], null, null, null, null);
+            $obj->cargar();
+            /* var_dump($obj); */
         }
         return $obj;
     }
@@ -111,13 +117,20 @@ class ABMUsuario
      */
     public function modificacion($param)
     {
+
         $resp = false;
+        if(!isset($param["usdeshabilitado"])){
+            $param["usdeshabilitado"] = null;
+        }
         if ($this->seteadosCamposClaves($param)) {
-            $elObjtTabla = $this->cargarObjeto($param);
-            if ($elObjtTabla != null and $elObjtTabla->modificar()) {
+            // $param['usdeshabilitado'] = null;
+            $obj = $this->cargarObjeto($param);
+            /* var_dump($obj); */
+            if ($obj != null && $obj->modificar()) {
                 $resp = true;
             }
         }
+        /* var_dump($resp); */
         return $resp;
     }
 
@@ -139,15 +152,17 @@ class ABMUsuario
                 $where .= " and usmail ='" . $param['usmail'] . "'";
             if (isset($param['uspass']))
                 $where .= " and uspass ='" . $param['uspass'] . "'";
-            if (isset($param['usdeshabilitado']))
+            if (isset($param['usdeshabilitado']) && $param['usdeshabilitado'] = null)
                 $where .= " and usdeshabilitado is null";
+            if(isset($param['usdeshabilitado']) && $param['usdeshabilitado'] != null)
+                $where .= " and usdeshabilitado ='" . $param['usdeshabilitado'] . "'";
         }
         $obj = new Usuario();
         $arreglo = $obj->listar($where);
         return $arreglo;
     }
 
-   
+
 
 
     /*public function cargarComprasUser()
@@ -176,7 +191,7 @@ class ABMUsuario
         compras que tienen estadotipo 0 y 
         tienen fecha fin null de ese estado
         y tienen idusuario actual*/
-        /*$bd = new BaseDatos();
+    /*$bd = new BaseDatos();
         $sql = "SELECT * FROM compra c INNER JOIN compraestado ce ON c.idcompra = ce.idcompra WHERE ce.idcompraestadotipo = 0 AND ce.cefechafin IS NULL AND c.idusuario = " . $idUser;
         $res = $bd->Ejecutar($sql);
         if ($res > -1) {

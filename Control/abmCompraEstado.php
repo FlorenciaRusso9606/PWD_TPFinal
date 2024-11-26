@@ -45,7 +45,7 @@ class AbmCompraEstado {
             $objCompraEstadoTipo->cargar();
 
             $obj = new CompraEstado();
-            $obj->setear($param['idcompraestado'], $objCompraEstadoTipo, $objCompra, $param['cefechaini'], $param['cefechafin']);
+            $obj->setear($param['idcompraestado'], $objCompra, $objCompraEstadoTipo, $param['cefechaini'], $param['cefechafin']);
         }
         return $obj;
     }
@@ -235,8 +235,6 @@ class AbmCompraEstado {
 
 
     public function devolverStock($idCompra){
-        $resp = ["status"=>false,"msg"=>"No se pudo devolver el stock"];
-        
         //Devolver stock de los productos cancelados
         $compraItems = new CompraItem();
         $compraItems->listar("idcompra = ".$idCompra);

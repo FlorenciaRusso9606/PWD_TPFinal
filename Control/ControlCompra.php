@@ -1,17 +1,19 @@
 <?php
 
-class ControlCompra {
+class ControlCompra
+{
 
-  /**
-   * Da de alta una compra
-   * @return bool
-   */
-  public function getInicioCompra() {
-    // Obtener datos de la compra 
-    $idcompra = null;
-    $session = new Session();
-    $abmCompra = new AbmCompra();
-    $idusuario = $session->getUsuario();
+    /**
+     * Da de alta una compra
+     * @return bool
+     */
+    public function getInicioCompra()
+    {
+        // Obtener datos de la compra 
+        $idcompra = null;
+        $session = new Session();
+        $abmCompra = new AbmCompra();
+        $idusuario = $session->getUsuario();
 
     $param['idusuario'] = $idusuario;
     $param["cofecha"] = date('Y-m-d H:i:s');
@@ -26,30 +28,30 @@ class ControlCompra {
     return $idcompra;
   }
 
-  /**
-   * Modifica los datos de un producto
-   * @param Producto $objProducto
-   * @return array
-   */
-  public function modDatosProducto($objProducto) {
-    $datosModProd = [
-      'idproducto' => $objProducto->getIdProducto(),
-      'pronombre' => $objProducto->getProNombre(),
-      'prodetalle' => $objProducto->getProDetalle(),
-      'procantstock' => $objProducto->getProCantStock(),
-      'proprecio' => $objProducto->getProPrecio()
-    ];
-    return $datosModProd;
-  }
+    /**
+     * Modifica los datos de un producto
+     * @param Producto $objProducto
+     * @return array
+     */
+    public function modDatosProducto($objProducto) {
+        $datosModProd = [
+            'idproducto' => $objProducto->getIdProducto(),
+            'pronombre' => $objProducto->getProNombre(),
+            'prodetalle' => $objProducto->getProDetalle(),
+            'procantstock' => $objProducto->getProCantStock(),
+            'proprecio' => $objProducto->getProPrecio()
+        ];
+        return $datosModProd;
+    }
 
-  /**
-   * Confirmar Compra
-   * @return int
-   */
-  public function confirmarCompra() {
-    $compraExitosa = false;
-    $session = new Session();
-    $carrito = $session->getCarrito();
+    /**
+     * Confirmar Compra
+     * @return int
+     */
+    public function confirmarCompra() {
+        $compraExitosa = false;
+        $session = new Session();
+        $carrito = $session->getCarrito();
 
     if (count($carrito) > 0) {
       $idcompra = $this->getInicioCompra();
@@ -93,61 +95,61 @@ class ControlCompra {
       }
     }
 
-    $msj = ($compraExitosa) ? 5 : 4;
-    return $compraExitosa;
-  }
-
-  // Cambiar estado
-  // Eliminar compra
-
-  // Modificar stock
-
-  // Devolver Compras ?
-
-  // Cancelar
-  public function cancelarCompra($objIdProducto) {
-    $respuesta = false;
-
-    return $respuesta;
-  }
-
-  /**
-   * Verifica la cantidad de productos en el carrito con su
-   * @param int $j Cantidad de productos modificados
-   * @param int $i Cantidad de productos en el carrito
-   * @param int $idcompra Id de la compra
-   * @return bool
-   */
-  private function verificacionCompraItems($j, $i, $idcompra) {
-    $compraExitosa = false; // Inicializar la variable
-    $altaCompraEstado = false;
-    $session = new Session();
-    if ($j == $i) {
-      $datosCompraEstado = [
-        "idcompra" => $idcompra,
-        "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
-        "cefechaini" => date('Y-m-d H:i:s'),
-        "cefechafin" => '0000-00-00 00:00:00',
-      ];
-      $abmCompraEstado = new AbmCompraEstado();
-      $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
-      if ($altaCompraEstado) {
-        $compraExitosa = true;
-        /* Vacio el carrito */
-        $carrito = [];
-        $session->setCarrito($carrito);
-      }
-    } else if ($j < $i || $altaCompraEstado == false) {
-      $abmCompraItem = new AbmCompraItem();
-      $arrCompraItems = $abmCompraItem->buscar(["idcompra" => $idcompra]);
-      foreach ($arrCompraItems as $compraItem) {
-        $compraItem->baja(["idcompraitem" => $compraItem->getIdCompraItem()]);
-      }
-      $compraExitosa = false;
+        $msj = ($compraExitosa) ? 5 : 4;
+        return $compraExitosa;
     }
 
-    return $compraExitosa;
-  }
+    // Cambiar estado
+    // Eliminar compra
+
+    // Modificar stock
+
+    // Devolver Compras ?
+
+    // Cancelar
+    public function cancelarCompra($objIdProducto) {
+        $respuesta = false;
+
+        return $respuesta;
+    }
+
+    /**
+     * Verifica la cantidad de productos en el carrito con su
+     * @param int $j Cantidad de productos modificados
+     * @param int $i Cantidad de productos en el carrito
+     * @param int $idcompra Id de la compra
+     * @return bool
+     */
+    private function verificacionCompraItems($j, $i, $idcompra) {
+        $compraExitosa = false; // Inicializar la variable
+        $altaCompraEstado = false;
+        $session = new Session();
+        if ($j == $i) {
+            $datosCompraEstado = [
+                "idcompra" => $idcompra,
+                "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
+                "cefechaini" => date('Y-m-d H:i:s'),
+                "cefechafin" => null,
+            ];
+            $abmCompraEstado = new AbmCompraEstado();
+            $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
+            if ($altaCompraEstado) {
+                $compraExitosa = true;
+                /* Vacio el carrito */
+                $carrito = [];
+                $session->setCarrito($carrito);
+            }
+        } else if ($j < $i || $altaCompraEstado == false) {
+            $abmCompraItem = new AbmCompraItem();
+            $arrCompraItems = $abmCompraItem->buscar(["idcompra" => $idcompra]);
+            foreach ($arrCompraItems as $compraItem) {
+                $compraItem->baja(["idcompraitem" => $compraItem->getIdCompraItem()]);
+            }
+            $compraExitosa = false;
+        }
+
+        return $compraExitosa;
+    }
 
   // public function mensajesCompraControl($num) {
   //     $mensajes = [
@@ -163,5 +165,6 @@ class ControlCompra {
   //     ];
   //     return $mensajes[$num];
   //   }
+
 
 }
