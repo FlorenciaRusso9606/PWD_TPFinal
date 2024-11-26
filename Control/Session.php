@@ -15,7 +15,7 @@ class Session {
      * @return void
      */
     public function iniciar($nombreUsuario, $psw) {
-        $resp = false;
+
         $obj = new AbmUsuario();
 
         $param["usnombre"] = $nombreUsuario;
@@ -26,7 +26,6 @@ class Session {
         if (count($resultado) > 0) {
             $usuario = $resultado[0];
             $_SESSION['idUsuario'] = $usuario->getUsuarioId();
-            $resp = true;
         } else {
             $this->cerrar();
         }
@@ -58,7 +57,7 @@ class Session {
         return $_SESSION['idUsuario'] ?? null;
     }
 
-    
+
     /**
      * Devuelve el ID de la compra
      * @return mixed
@@ -67,9 +66,9 @@ class Session {
         return $_SESSION['idUsuario'] ?? null;
     }
 
- 
-    public function setCompra($id){
-        $_SESSION['idCompra'] =$id;
+
+    public function setCompra($id) {
+        $_SESSION['idCompra'] = $id;
     }
 
     /**
@@ -103,16 +102,16 @@ class Session {
     /**
      * 
      */
-    public function getCarrito(){
-        
-        if(!isset($_SESSION['carrito'])){
+    public function getCarrito() {
+
+        if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
         }
-        return $_SESSION['carrito'] ; 
+        return $_SESSION['carrito'];
     }
-    
-    public function setCarrito($array){
-        $_SESSION['carrito']= $array;
+
+    public function setCarrito($array) {
+        $_SESSION['carrito'] = $array;
     }
 
 
@@ -123,5 +122,4 @@ class Session {
     public function __toString() {
         return json_encode($_SESSION, JSON_PRETTY_PRINT);
     }
-
 }
