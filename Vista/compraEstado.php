@@ -101,76 +101,77 @@ include_once "../configuracion.php";
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    $(document).ready(function() {
         // Mostrar un mensaje en el modal
         const mostrarMensaje = (tipo, mensaje) => {
             const header = tipo === "success" ? "Éxito" : "Error";
-            document.querySelector("#mensajeModalHeader").textContent = header;
-            document.querySelector("#mensajeModalContent").textContent = mensaje;
+            $("#mensajeModalHeader").text(header);
+            $("#mensajeModalContent").text(mensaje);
             $("#mensajeModal").modal("show");
         };
 
-        // Recargar el contenedor de compras
-        const recargarCompras = async () => {
-            try {
-                const response = await fetch("compraEstado.php");
-                const html = await response.text();
-                document.querySelector("#comprasContainer").innerHTML = html;
-                // Reasignar eventos después de recargar el contenedor
-                asociarEventos();
-            } catch (error) {
-                console.error("Error al recargar compras:", error);
-            }
-        };
+        /*const recargarCompras = () => {
+            $.ajax({
+                url: "compraEstado.php",
+                method: "GET",
+                success: function (html) {
+                    $("#comprasContainer").html(html);
+                    asociarEventos();
+                },
+                error: function (error) {
+                    console.error("Error al recargar compras:", error);
+                }
+            });
+        };*/
 
-        // Enviar formulario con fetch
-        const enviarFormulario = async (event, form, url, mensajeExito, mensajeError) => {
-            event.preventDefault();
+        // Enviar formulario con AJAX
+        const enviarFormulario = (form, url, mensajeExito, mensajeError) => {
             const formData = new FormData(form);
 
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    mostrarMensaje("success", mensajeExito);
-                    recargarCompras(); // Recargar el contenido de compras
-                } else {
-                    mostrarMensaje("error", mensajeError);
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    if (data.success) {
+                        mostrarMensaje("success", mensajeExito);
+                        //recargarCompras(); // Recargar el contenido de compras
+                        setTimeout(function() {
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        mostrarMensaje("error", mensajeError);
+                    }
+                },
+                error: function(error) {
+                    console.error("Error:", error);
+                    mostrarMensaje("error", "Ocurrió un error. Intenta nuevamente.");
                 }
-            } catch (error) {
-                console.error("Error:", error);
-                mostrarMensaje("error", "Ocurrió un error. Intenta nuevamente.");
-            }
+            });
         };
 
         // Asociar eventos a formularios
         const asociarEventos = () => {
-            document.querySelectorAll(".form-cambiar-estado").forEach((form) => {
-                form.addEventListener("submit", (event) => {
-                    enviarFormulario(
-                        event,
-                        form,
-                        "Accion/cambiarEstado.php",
-                        "Estado cambiado exitosamente.",
-                        "No se pudo cambiar el estado."
-                    );
-                });
+            $(".form-cambiar-estado").on("submit", function(event) {
+                event.preventDefault();
+                enviarFormulario(
+                    this,
+                    "Accion/cambiarEstado.php",
+                    "Estado cambiado exitosamente.",
+                    "No se pudo cambiar el estado."
+                );
             });
 
-            document.querySelectorAll(".form-cancelar-compra").forEach((form) => {
-                form.addEventListener("submit", (event) => {
-                    enviarFormulario(
-                        event,
-                        form,
-                        "Accion/cambiarEstado.php",
-                        "Compra cancelada exitosamente.",
-                        "No se pudo cancelar la compra."
-                    );
-                });
+            $(".form-cancelar-compra").on("submit", function(event) {
+                event.preventDefault();
+                enviarFormulario(
+                    this,
+                    "Accion/cambiarEstado.php",
+                    "Compra cancelada exitosamente.",
+                    "No se pudo cancelar la compra."
+                );
             });
         };
 
