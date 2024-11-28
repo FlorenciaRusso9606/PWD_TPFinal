@@ -101,7 +101,7 @@ class ControlCompra
   }
 
 
- 
+
   /**
    * Verifica la cantidad de productos en el carrito con su
    * @param int $j Cantidad de productos modificados
@@ -178,7 +178,7 @@ class ControlCompra
       'idcompraestado' => $compraEstado[$ultimoEstado - 1]->getidcompraestado(),
       'idcompra' => $param['idcompra'],
       'idcompraestadotipo' => $compraEstado[$ultimoEstado - 1]->getobjCompraEstadoTipo()->getidcompraestadotipo(),
-      'cefechaini' => $compraEstado[0]->getcefechaini(),
+      'cefechaini' => $compraEstado[$ultimoEstado - 1]->getcefechaini(),
       'cefechafin' => date('Y-m-d H:i:s')
     ];
     $modificacionEstadoAnterior = $abmCompraEstado->modificacion($datosEstadoAnterior);
