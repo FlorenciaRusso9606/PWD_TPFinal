@@ -207,7 +207,7 @@ class ControlCompra
         ];
         $abmProducto->modificacion($datosProducto);
       }
-      $datosEstadoPosterior['cefechafin'] = date('Y-m-d H:i:s');
+      $datosEstadoPosterior['cefechafin'] = date('0000-00-00 00:00:00');
     }
 
     $modificacionEstadoActual = $abmCompraEstado->alta($datosEstadoPosterior);
